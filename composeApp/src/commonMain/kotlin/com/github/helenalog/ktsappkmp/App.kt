@@ -1,14 +1,14 @@
 package com.github.helenalog.ktsappkmp
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.navigation.NavigationGraph
+import com.github.helenalog.ktsappkmp.ui.theme.AppTheme
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    AppTheme {
         NavigationGraph()
     }
 }

@@ -46,7 +46,6 @@ fun OnboardingScreen(
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 placeholder = painterResource(Res.drawable.compose_multiplatform),
-                error = painterResource(Res.drawable.compose_multiplatform),
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(fraction = 0.5f)
