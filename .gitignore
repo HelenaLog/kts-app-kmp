@@ -1,0 +1,45 @@
+*.iml
+.kotlin
+.gradle
+**/build/
+xcuserdata
+!src/**/build/
+local.properties
+.idea
+.DS_Store
+captures
+.externalNativeBuild
+.cxx
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
+node_modules/
+
+# iOS / Xcode
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+Pods/
+Podfile.lock
+.build/
+
+# Android
+*.ap_
+*.aab
+keystore/
+*.jks
+*.keystore
+
+# KMP / Kotlin Native
+*.klib
+kotlin-js-store/
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.swp
+*.bak
