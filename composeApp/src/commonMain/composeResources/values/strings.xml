@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="get_starter">Начать</string>
+    <string name="login">Войти</string>
+    <string name="onboarding_title">Добро пожаловать</string>
+    <string name="login_title">Вход</string>
+    <string name="password">Пароль</string>
+    <string name="email">Почта</string>
+</resources>
