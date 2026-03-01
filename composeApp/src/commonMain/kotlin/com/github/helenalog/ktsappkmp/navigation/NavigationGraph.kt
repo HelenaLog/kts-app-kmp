@@ -18,14 +18,22 @@ fun NavigationGraph() {
         composable<Screen.Onboarding> {
             OnboardingScreen(
                 onNavigateToLogin = {
-                    navController.navigate(Screen.Login)
+                    navController.navigate(Screen.Login) {
+                        popUpTo(Screen.Onboarding) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
         composable<Screen.Login> {
             LoginScreen(
                 onNavigateToMain = {
-                    navController.navigate(Screen.Main)
+                    navController.navigate(Screen.Main) {
+                        popUpTo(Screen.Login) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
