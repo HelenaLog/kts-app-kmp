@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.screens.login
+package com.github.helenalog.ktsappkmp.screens.login.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
