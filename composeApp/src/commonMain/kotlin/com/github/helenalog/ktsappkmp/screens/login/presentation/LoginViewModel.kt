@@ -4,21 +4,17 @@ import com.github.helenalog.ktsappkmp.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.screens.login.presentation.models.LoginUiEvent
 import com.github.helenalog.ktsappkmp.screens.login.presentation.models.LoginUiState
 
-class LoginViewModel: BaseViewModel<LoginUiState, LoginUiEvent>(LoginUiState.Initial) {
-    fun onEmailChanged(value: String) {
-        updateState { copy(email = value) }
-    }
+class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>(LoginUiState.Initial) {
+    private val repository = LoginRepository()
 
-    fun onPasswordChanged(value: String) {
-        updateState { copy(password = value) }
-    }
+    fun onEmailChanged(value: String) = updateState { copy(email = value) }
+
+    fun onPasswordChanged(value: String) = updateState { copy(password = value) }
 
     fun onLoginClicked() {
-        val currentState = state.value
-        if (currentState.email == "admin@gmail.com" && currentState.password == "1234") {
-            sendEvent(LoginUiEvent.LoginSuccessEvent)
-        } else {
-            updateState { copy(error = "Invalid credentials") }
-        }
+        val (email, password) = state.value
+        repository.login(email, password)
+            .onSuccess { sendEvent(LoginUiEvent.LoginSuccessEvent) }
+            .onFailure { updateState { copy(error = it.message ?: "Unknown error") } }
     }
 }
