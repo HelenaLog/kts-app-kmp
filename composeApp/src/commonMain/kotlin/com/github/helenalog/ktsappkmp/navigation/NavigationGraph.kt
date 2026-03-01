@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
-import com.github.helenalog.ktsappkmp.screens.login.LoginsScreen
+import com.github.helenalog.ktsappkmp.screens.login.LoginScreen
 import com.github.helenalog.ktsappkmp.screens.onboarding.OnboardingScreen
 
 @Composable
@@ -22,7 +22,7 @@ fun NavigationGraph() {
             )
         }
         composable<Screen.Login> {
-            LoginsScreen()
+            LoginScreen()
         }
     }
 }

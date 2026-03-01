@@ -31,14 +31,14 @@ import com.github.helenalog.ktsappkmp.ui.components.AppButton
 import com.github.helenalog.ktsappkmp.ui.components.AppTextField
 import com.github.helenalog.ktsappkmp.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
-import ktsappkmp.composeapp.generated.resources.email
-import ktsappkmp.composeapp.generated.resources.login
+import ktsappkmp.composeapp.generated.resources.login_email_hint
+import ktsappkmp.composeapp.generated.resources.login_button_submit
 import ktsappkmp.composeapp.generated.resources.login_title
-import ktsappkmp.composeapp.generated.resources.password
+import ktsappkmp.composeapp.generated.resources.login_password_hint
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun LoginsScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(modifier: Modifier = Modifier) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
@@ -60,7 +60,7 @@ fun LoginsScreen(modifier: Modifier = Modifier) {
             AppTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = stringResource(Res.string.email),
+                label = stringResource(Res.string.login_email_hint),
                 modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
                     Icon(
@@ -77,7 +77,7 @@ fun LoginsScreen(modifier: Modifier = Modifier) {
             AppTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = stringResource(Res.string.password),
+                label = stringResource(Res.string.login_password_hint),
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
                 leadingIcon = {
@@ -93,7 +93,7 @@ fun LoginsScreen(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(Dimensions.spacingXLarge))
             AppButton(
-                text = stringResource(Res.string.login),
+                text = stringResource(Res.string.login_button_submit),
                 onClick = {}
             )
         }
@@ -103,5 +103,5 @@ fun LoginsScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun LoginScreenPrev() {
-    LoginsScreen()
+    LoginScreen()
 }

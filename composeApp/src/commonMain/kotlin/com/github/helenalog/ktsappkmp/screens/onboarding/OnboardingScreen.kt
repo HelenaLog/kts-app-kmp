@@ -4,7 +4,7 @@ import com.github.helenalog.ktsappkmp.ui.components.AppButton
 import com.github.helenalog.ktsappkmp.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.compose_multiplatform
-import ktsappkmp.composeapp.generated.resources.get_starter
+import ktsappkmp.composeapp.generated.resources.onboarding_button_get_started
 import ktsappkmp.composeapp.generated.resources.onboarding_title
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,7 +58,7 @@ fun OnboardingScreen(
             )
             Spacer(modifier = Modifier.height(Dimensions.spacingXLarge))
             AppButton(
-                text = stringResource(Res.string.get_starter),
+                text = stringResource(Res.string.onboarding_button_get_started),
                 onClick = onNavigateToLogin
             )
         }
