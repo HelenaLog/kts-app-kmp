@@ -27,6 +27,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.helenalog.ktsappkmp.ui.components.AppButton
 import com.github.helenalog.ktsappkmp.ui.components.AppTextField
 import com.github.helenalog.ktsappkmp.ui.theme.Dimensions
@@ -38,9 +40,11 @@ import ktsappkmp.composeapp.generated.resources.login_password_hint
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = viewModel { LoginViewModel() }
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(modifier = modifier) { innerPadding ->
         Column(
@@ -58,8 +62,8 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(Dimensions.spacingXLarge))
             AppTextField(
-                value = email,
-                onValueChange = { email = it },
+                value = state.email,
+                onValueChange = { viewModel.onEmailChanged(it) },
                 label = stringResource(Res.string.login_email_hint),
                 modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
@@ -75,8 +79,8 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(Dimensions.spacingMedium))
             AppTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = state.password,
+                onValueChange = { viewModel.onPasswordChanged(it) },
                 label = stringResource(Res.string.login_password_hint),
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
