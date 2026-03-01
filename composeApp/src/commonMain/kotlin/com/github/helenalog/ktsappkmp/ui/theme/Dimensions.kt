@@ -14,4 +14,8 @@ object Dimensions {
     // Avatar
     val avatarSize = 52.dp
     val avatarIconSize = 28.dp
+
+    // List Item
+    val onlineIndicatorSize = 6.dp
+    val onlineIndicatorSpacing = 4.dp
 }

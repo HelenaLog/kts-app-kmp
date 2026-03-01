@@ -24,6 +24,11 @@ val SurfaceDark = Color(0xFF1A1A2E)
 val OnBackgroundDark = Color(0xFFFAFAFA)
 val OnSurfaceDark = Color(0xFFFAFAFA)
 
+// Online/Offline status
+val OnlineColor = Color(0xFF4CAF50)
+val OfflineColor = Color(0xFFBDBDBD)
+val OfflineTextColor = Color(0xFF9E9E9E)
+
 val LightColorScheme = lightColorScheme(
     primary = Primary,
     onPrimary = OnPrimary,
@@ -32,7 +37,8 @@ val LightColorScheme = lightColorScheme(
     background = Background,
     surface = Surface,
     onBackground = OnBackground,
-    onSurface = OnSurface
+    onSurface = OnSurface,
+    onSurfaceVariant = OfflineTextColor
 )
 
 val DarkColorScheme = darkColorScheme(
@@ -43,5 +49,6 @@ val DarkColorScheme = darkColorScheme(
     background = BackgroundDark,
     surface = SurfaceDark,
     onBackground = OnBackgroundDark,
-    onSurface = OnSurfaceDark
+    onSurface = OnSurfaceDark,
+    onSurfaceVariant = OfflineTextColor
 )
