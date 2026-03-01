@@ -14,9 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
@@ -27,8 +24,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.helenalog.ktsappkmp.screens.login.presentation.models.LoginUiEvent
 import com.github.helenalog.ktsappkmp.ui.components.AppButton
 import com.github.helenalog.ktsappkmp.ui.components.AppTextField
 import com.github.helenalog.ktsappkmp.ui.theme.Dimensions
@@ -42,9 +41,18 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = viewModel { LoginViewModel() }
+    viewModel: LoginViewModel = viewModel { LoginViewModel() },
+    onNavigateToMain: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                is LoginUiEvent.LoginSuccessEvent -> onNavigateToMain()
+            }
+        }
+    }
 
     Scaffold(modifier = modifier) { innerPadding ->
         Column(
@@ -98,7 +106,9 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(Dimensions.spacingXLarge))
             AppButton(
                 text = stringResource(Res.string.login_button_submit),
-                onClick = {}
+                onClick = {
+                    viewModel.onLoginClicked()
+                }
             )
         }
     }
@@ -107,5 +117,7 @@ fun LoginScreen(
 @Preview
 @Composable
 private fun LoginScreenPrev() {
-    LoginScreen()
+    LoginScreen(
+        onNavigateToMain = {}
+    )
 }
