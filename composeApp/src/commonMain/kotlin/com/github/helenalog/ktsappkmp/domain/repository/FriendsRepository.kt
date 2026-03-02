@@ -1,0 +1,25 @@
+package com.github.helenalog.ktsappkmp.domain.repository
+
+import com.github.helenalog.ktsappkmp.domain.model.Friend
+
+class FriendsRepository {
+    fun getList(): List<Friend> {
+        return listOf(
+            Friend(
+                1,
+                "Иван",
+                "Иванов",
+                "https://static.vecteezy.com/system/resources/previews/036/463/807/non_2x/ai-generated-young-caucasian-man-in-business-attire-portrait-png.png",
+                1
+            ),
+            Friend(
+                2,
+                "Мария",
+                "Петрова",
+                "https://static.vecteezy.com/system/resources/previews/036/121/731/non_2x/ai-generated-teenage-girl-on-transparent-background-ai-png.png",
+                0
+            ),
+            Friend(3, "Алексей", "Сидоров", null, 1),
+        )
+    }
+}
