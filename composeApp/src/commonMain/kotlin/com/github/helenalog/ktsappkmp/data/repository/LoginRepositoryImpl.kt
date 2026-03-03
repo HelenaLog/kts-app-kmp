@@ -3,7 +3,7 @@ package com.github.helenalog.ktsappkmp.data.repository
 import com.github.helenalog.ktsappkmp.domain.repository.LoginRepository
 
 class LoginRepositoryImpl : LoginRepository {
-    override fun login(
+    override suspend fun login(
         username: String,
         password: String
     ): Result<Unit> {
