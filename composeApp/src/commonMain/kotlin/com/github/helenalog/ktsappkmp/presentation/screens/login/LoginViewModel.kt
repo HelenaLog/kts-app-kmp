@@ -11,14 +11,16 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>(LoginUiState.In
     fun onEmailChanged(value: String) = updateState {
         copy(
             email = value,
-            isLoginButtonActive = value.isNotBlank() && password.isNotBlank()
+            isLoginButtonActive = value.isNotBlank() && password.isNotBlank(),
+            error = ""
         )
     }
 
     fun onPasswordChanged(value: String) = updateState {
         copy(
             password = value,
-            isLoginButtonActive = email.isNotBlank() && value.isNotBlank()
+            isLoginButtonActive = email.isNotBlank() && value.isNotBlank(),
+            error = ""
         )
     }
 

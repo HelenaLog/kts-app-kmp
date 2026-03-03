@@ -108,6 +108,14 @@ fun LoginScreen(
                 onClick = { viewModel.onLoginClicked() },
                 enabled = state.isLoginButtonActive
             )
+            if (state.error.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(Dimensions.spacingMedium))
+                Text(
+                    text = state.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
         }
     }
 }
