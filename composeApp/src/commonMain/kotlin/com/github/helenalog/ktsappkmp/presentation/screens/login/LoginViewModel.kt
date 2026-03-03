@@ -8,9 +8,19 @@ import kotlinx.coroutines.launch
 class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>(LoginUiState.Initial) {
     private val repository = LoginRepositoryImpl()
 
-    fun onEmailChanged(value: String) = updateState { copy(email = value) }
+    fun onEmailChanged(value: String) = updateState {
+        copy(
+            email = value,
+            isLoginButtonActive = value.isNotBlank() && password.isNotBlank()
+        )
+    }
 
-    fun onPasswordChanged(value: String) = updateState { copy(password = value) }
+    fun onPasswordChanged(value: String) = updateState {
+        copy(
+            password = value,
+            isLoginButtonActive = email.isNotBlank() && value.isNotBlank()
+        )
+    }
 
     fun onLoginClicked() {
         viewModelScope.launch {

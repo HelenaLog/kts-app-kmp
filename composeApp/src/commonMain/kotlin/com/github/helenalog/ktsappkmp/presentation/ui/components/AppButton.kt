@@ -11,10 +11,12 @@ import androidx.compose.ui.Modifier
 fun AppButton(
     text: String,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier.fillMaxWidth()
     ) {
         Text(

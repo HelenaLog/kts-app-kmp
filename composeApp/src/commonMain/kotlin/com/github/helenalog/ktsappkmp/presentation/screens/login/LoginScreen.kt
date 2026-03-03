@@ -105,9 +105,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(Dimensions.spacingXLarge))
             AppButton(
                 text = stringResource(Res.string.login_button_submit),
-                onClick = {
-                    viewModel.onLoginClicked()
-                }
+                onClick = { viewModel.onLoginClicked() },
+                enabled = state.isLoginButtonActive
             )
         }
     }
