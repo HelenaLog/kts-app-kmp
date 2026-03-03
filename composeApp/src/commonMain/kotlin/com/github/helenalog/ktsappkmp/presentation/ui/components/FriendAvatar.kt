@@ -13,22 +13,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
+import ktsappkmp.composeapp.generated.resources.Res
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun FriendAvatar(
     photoUrl: String?,
     modifier: Modifier = Modifier
 ) {
-    val baseModifier = modifier
-        .size(Dimensions.avatarSize)
-        .clip(CircleShape)
-
     Box(
-        modifier = baseModifier
+        modifier = modifier
+            .size(Dimensions.avatarSize)
+            .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
@@ -37,14 +39,18 @@ fun FriendAvatar(
                 model = photoUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.matchParentSize()
+                error = rememberVectorPainter(Icons.Default.Person),
+                placeholder = rememberVectorPainter(Icons.Default.Person),
+                modifier = Modifier
+                    .matchParentSize()
             )
         } else {
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(Dimensions.avatarIconSize)
+                modifier = Modifier
+                    .matchParentSize()
             )
         }
     }

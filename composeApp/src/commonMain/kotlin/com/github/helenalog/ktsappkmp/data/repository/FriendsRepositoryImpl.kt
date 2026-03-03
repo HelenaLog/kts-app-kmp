@@ -11,16 +11,16 @@ class FriendsRepositoryImpl : FriendsRepository {
                 "Иван",
                 "Иванов",
                 "https://static.vecteezy.com/system/resources/previews/036/463/807/non_2x/ai-generated-young-caucasian-man-in-business-attire-portrait-png.png",
-                1
+                true
             ),
             Friend(
                 2,
                 "Мария",
                 "Петрова",
                 "https://static.vecteezy.com/system/resources/previews/036/121/731/non_2x/ai-generated-teenage-girl-on-transparent-background-ai-png.png",
-                0
+                false
             ),
-            Friend(3, "Алексей", "Сидоров", null, 1),
+            Friend(3, "Алексей", "Сидоров", null, true),
         )
     }
 }

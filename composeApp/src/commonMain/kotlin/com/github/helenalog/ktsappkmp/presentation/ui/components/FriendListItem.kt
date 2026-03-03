@@ -12,20 +12,20 @@ import com.github.helenalog.ktsappkmp.domain.model.Friend
 
 @Composable
 fun FriendListItem(
-    modifier: Modifier = Modifier,
-    friend: Friend
+    friend: Friend,
+    modifier: Modifier = Modifier
 ) {
     ListItem(
         modifier = modifier,
         headlineContent = {
             Text(
-                text = "${friend.firstName} ${friend.lastName}",
+                text = friend.fullName,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
         },
         supportingContent = {
-            OnlineStatus(isOnline = friend.online == 1)
+            OnlineStatus(isOnline = friend.isOnline)
         },
         leadingContent = {
             FriendAvatar(photoUrl = friend.photo)
@@ -42,7 +42,7 @@ private fun FriendListItemOnlinePreview() {
             firstName = "Иван",
             lastName = "Иванов",
             photo = null,
-            online = 1
+            isOnline = true
         )
     )
 }
@@ -56,7 +56,7 @@ private fun FriendListItemOfflinePreview() {
             firstName = "Мария",
             lastName = "Петрова",
             photo = null,
-            online = 0
+            isOnline = false
         )
     )
 }

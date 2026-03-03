@@ -5,5 +5,8 @@ data class Friend(
     val firstName: String,
     val lastName: String,
     val photo: String?,
-    val online: Int?
-)
+    val isOnline: Boolean
+) {
+    val fullName: String
+        get() = "$firstName $lastName"
+}
