@@ -4,7 +4,7 @@ import com.github.helenalog.ktsappkmp.domain.model.Friend
 import com.github.helenalog.ktsappkmp.domain.repository.FriendsRepository
 
 class FriendsRepositoryImpl : FriendsRepository {
-    override fun getList(): List<Friend> {
+    override suspend fun getList(): List<Friend> {
         return listOf(
             Friend(
                 1,
@@ -20,7 +20,13 @@ class FriendsRepositoryImpl : FriendsRepository {
                 "https://static.vecteezy.com/system/resources/previews/036/121/731/non_2x/ai-generated-teenage-girl-on-transparent-background-ai-png.png",
                 false
             ),
-            Friend(3, "Алексей", "Сидоров", null, true),
+            Friend(
+                3,
+                "Алексей",
+                "Сидоров",
+                null,
+                true
+            )
         )
     }
 }
