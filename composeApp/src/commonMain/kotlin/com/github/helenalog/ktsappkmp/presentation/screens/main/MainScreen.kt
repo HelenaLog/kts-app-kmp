@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.helenalog.ktsappkmp.presentation.ui.components.FriendListItem
+import com.github.helenalog.ktsappkmp.presentation.ui.components.ConversationListItem
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 
 @Composable
@@ -24,7 +24,7 @@ fun MainScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadFriends()
+        viewModel.loadConversations()
     }
 
     Scaffold(
@@ -37,10 +37,10 @@ fun MainScreen(
             contentPadding = innerPadding
         ) {
             items(
-                items = state.friends,
+                items = state.conversations,
                 key = { it.id }
             ) {
-                FriendListItem(friend = it)
+                ConversationListItem(conversation = it)
             }
         }
     }

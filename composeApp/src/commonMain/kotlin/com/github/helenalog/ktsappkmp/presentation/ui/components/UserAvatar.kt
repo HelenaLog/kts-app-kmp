@@ -20,7 +20,7 @@ import coil3.compose.AsyncImage
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 
 @Composable
-fun FriendAvatar(
+fun UserAvatar(
     photoUrl: String?,
     modifier: Modifier = Modifier
 ) {
@@ -57,9 +57,9 @@ fun FriendAvatar(
 @Composable
 private fun FriendAvatarPhotoPreview() {
     Row {
-        FriendAvatar(
+        UserAvatar(
             photoUrl = "https://static.vecteezy.com/system/resources/previews/036/463/807/non_2x/ai-generated-young-caucasian-man-in-business-attire-portrait-png.png"
         )
-        FriendAvatar(photoUrl = null)
+        UserAvatar(photoUrl = null)
     }
 }
