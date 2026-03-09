@@ -20,19 +20,20 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.helenalog.ktsappkmp.presentation.ui.components.AppButton
 import com.github.helenalog.ktsappkmp.presentation.ui.components.AppTextField
+import com.github.helenalog.ktsappkmp.presentation.ui.components.SocialLoginRow
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
+import ktsappkmp.composeapp.generated.resources.app_name
 import ktsappkmp.composeapp.generated.resources.login_email_hint
 import ktsappkmp.composeapp.generated.resources.login_button_submit
+import ktsappkmp.composeapp.generated.resources.login_forgot_password
+import ktsappkmp.composeapp.generated.resources.login_label_email
+import ktsappkmp.composeapp.generated.resources.login_label_password
 import ktsappkmp.composeapp.generated.resources.login_title
 import ktsappkmp.composeapp.generated.resources.login_password_hint
 import org.jetbrains.compose.resources.stringResource
@@ -60,49 +61,62 @@ fun LoginScreen(
                 .padding(innerPadding)
                 .padding(all = Dimensions.screenPadding)
                 .imePadding(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                stringResource(Res.string.login_title),
-                style = MaterialTheme.typography.headlineLarge
+                text = stringResource(Res.string.app_name),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(Dimensions.spacingXLarge))
+            Spacer(modifier = Modifier.height(Dimensions.loginSpacingLarge))
+            Text(
+                text = stringResource(Res.string.login_title),
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(Dimensions.loginSpacingLarge))
+            Text(
+                text = stringResource(Res.string.login_label_email),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Spacer(modifier = Modifier.height(Dimensions.loginSpacingSmall))
             AppTextField(
                 value = state.email,
                 onValueChange = { viewModel.onEmailChanged(it) },
-                label = stringResource(Res.string.login_email_hint),
+                placeholder = stringResource(Res.string.login_email_hint),
                 modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = null
-                    )
-                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
                 )
             )
-            Spacer(modifier = Modifier.height(Dimensions.spacingMedium))
+            Spacer(modifier = Modifier.height(Dimensions.loginSpacingMedium))
+            Text(
+                text = stringResource(Res.string.login_label_password),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Spacer(modifier = Modifier.height(Dimensions.loginSpacingSmall))
             AppTextField(
                 value = state.password,
                 onValueChange = { viewModel.onPasswordChanged(it) },
-                label = stringResource(Res.string.login_password_hint),
+                placeholder = stringResource(Res.string.login_password_hint),
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null
-                    )
-                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
                 )
             )
-            Spacer(modifier = Modifier.height(Dimensions.spacingXLarge))
+            Spacer(modifier = Modifier.height(Dimensions.loginSpacingLarge))
+            Text(
+                text = stringResource(Res.string.login_forgot_password),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(Dimensions.loginSpacingLarge))
             AppButton(
                 text = stringResource(Res.string.login_button_submit),
                 onClick = { viewModel.onLoginClicked() },
@@ -116,6 +130,8 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.error
                 )
             }
+            Spacer(modifier = Modifier.height(Dimensions.loginSpacingMedium))
+            SocialLoginRow()
         }
     }
 }

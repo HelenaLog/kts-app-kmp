@@ -14,11 +14,6 @@ object Dimensions {
 
     // Avatar
     val avatarSize = 52.dp
-    val avatarIconSize = 28.dp
-
-    // List Item
-    val onlineIndicatorSize = 6.dp
-    val onlineIndicatorSpacing = 4.dp
 
     // Name and Time Row
     val nameEndPadding = 8.dp
@@ -28,4 +23,21 @@ object Dimensions {
     val messageKindSpacing = 4.dp
 
     val channelIconSize = 16.dp
+
+    // TextField
+    val textFieldCornerRadius = 12.dp
+
+    // Login
+    val loginSpacingSmall = 8.dp
+    val loginSpacingMedium = 16.dp
+    val loginSpacingLarge = 24.dp
+
+    // Social Button
+    val socialButtonSize = 50.dp
+    val socialButtonIconSize = 32.dp
+    val socialButtonBorderWidth = 1.dp
+
+    // Button
+    val buttonHeight = 52.dp
+    val buttonCornerRadius = 12.dp
 }
