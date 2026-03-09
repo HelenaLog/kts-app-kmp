@@ -3,6 +3,7 @@ package com.github.helenalog.ktsappkmp.data.repository
 import com.github.helenalog.ktsappkmp.domain.model.ChannelDto
 import com.github.helenalog.ktsappkmp.domain.model.ConversationDto
 import com.github.helenalog.ktsappkmp.domain.model.MessageDto
+import com.github.helenalog.ktsappkmp.domain.model.MessageKind
 import com.github.helenalog.ktsappkmp.domain.model.StateDto
 import com.github.helenalog.ktsappkmp.domain.model.UserDto
 import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
@@ -30,6 +31,7 @@ class ConversationRepositoryImpl : ConversationRepository {
                 lastMessage = MessageDto(
                     id = "m1",
                     text = "Напиши, пожалуйста, имя и фамилию...",
+                    kind = MessageKind.BOT,
                     dateCreated = "2024-03-09T15:12:00"
                 )
             ),
@@ -53,6 +55,7 @@ class ConversationRepositoryImpl : ConversationRepository {
                 lastMessage = MessageDto(
                     id = "m2",
                     text = "Ах да! И обязательно подписывайся на нас...",
+                    kind = MessageKind.SERVICE,
                     dateCreated = "2024-03-09T15:09:00"
                 )
             ),
@@ -76,6 +79,7 @@ class ConversationRepositoryImpl : ConversationRepository {
                 lastMessage = MessageDto(
                     id = "m3",
                     text = "#отклик Новый чепчик хочет в команду!",
+                    kind = MessageKind.MANAGER,
                     dateCreated = "2024-03-09T15:08:00"
                 )
             )

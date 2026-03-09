@@ -8,4 +8,14 @@ data class ConversationDto(
     val channel: ChannelDto,
     val state: StateDto,
     val lastMessage: MessageDto? = null
-)
+) {
+    val channelKind: ChannelKind
+        get() = ChannelKind.fromString(channel.kind)
+
+    val formattedTime: String
+        get() = try {
+            dateUpdated.substring(11, 16)
+        } catch (e: Exception) {
+            ""
+        }
+}

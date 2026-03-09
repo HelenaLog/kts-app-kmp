@@ -19,4 +19,13 @@ object Dimensions {
     // List Item
     val onlineIndicatorSize = 6.dp
     val onlineIndicatorSpacing = 4.dp
+
+    // Name and Time Row
+    val nameEndPadding = 8.dp
+
+    // Message Kind Label
+    val messageKindIconSize = 12.dp
+    val messageKindSpacing = 4.dp
+
+    val channelIconSize = 16.dp
 }

@@ -24,10 +24,10 @@ val SurfaceDark = Color(0xFF1A1A2E)
 val OnBackgroundDark = Color(0xFFFAFAFA)
 val OnSurfaceDark = Color(0xFFFAFAFA)
 
-// Online/Offline status
-val OnlineColor = Color(0xFF4CAF50)
-val OfflineColor = Color(0xFFBDBDBD)
-val OfflineTextColor = Color(0xFF9E9E9E)
+// Channel colors
+val TelegramColor = Color(0xFF2AABEE)
+val WhatsAppColor = Color(0xFF25D366)
+val JivoColor = Color(0xFFFF6B35)
 
 val LightColorScheme = lightColorScheme(
     primary = Primary,
@@ -38,7 +38,6 @@ val LightColorScheme = lightColorScheme(
     surface = Surface,
     onBackground = OnBackground,
     onSurface = OnSurface,
-    onSurfaceVariant = OfflineTextColor
 )
 
 val DarkColorScheme = darkColorScheme(
@@ -50,5 +49,4 @@ val DarkColorScheme = darkColorScheme(
     surface = SurfaceDark,
     onBackground = OnBackgroundDark,
     onSurface = OnSurfaceDark,
-    onSurfaceVariant = OfflineTextColor
 )

@@ -1,16 +1,13 @@
 package com.github.helenalog.ktsappkmp.presentation.ui.components
 
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.domain.model.ChannelDto
 import com.github.helenalog.ktsappkmp.domain.model.ConversationDto
 import com.github.helenalog.ktsappkmp.domain.model.MessageDto
+import com.github.helenalog.ktsappkmp.domain.model.MessageKind
 import com.github.helenalog.ktsappkmp.domain.model.StateDto
 import com.github.helenalog.ktsappkmp.domain.model.UserDto
 
@@ -22,24 +19,23 @@ fun ConversationListItem(
     ListItem(
         modifier = modifier,
         headlineContent = {
-            Text(
-                text = conversation.user.fullName,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium
+            NameAndTimeRow(
+                name = conversation.user.fullName,
+                time = conversation.formattedTime,
+                isUnread = !conversation.isRead
             )
         },
         supportingContent = {
-            conversation.lastMessage?.text?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            MessagePreview(
+                kind = conversation.lastMessage?.kind,
+                text = conversation.lastMessage?.text.orEmpty(),
+            )
         },
         leadingContent = {
-            UserAvatar(photoUrl = conversation.user.photo?.url)
+            AvatarWithChannel(
+                photoUrl = conversation.user.photo?.url,
+                channelKind = conversation.channelKind,
+            )
         }
     )
 }
@@ -59,7 +55,11 @@ private fun ConversationListItemPreview() {
                 username = "borodinsky",
                 photo = null
             ),
-            channel = ChannelDto(id = "c1", kind = "telegram", name = "Telegram"),
+            channel = ChannelDto(
+                id = "c1",
+                kind = "tg",
+                name = "Telegram"
+            ),
             state = StateDto(
                 stoppedByManager = false,
                 operatorTagged = false,
@@ -68,6 +68,7 @@ private fun ConversationListItemPreview() {
             lastMessage = MessageDto(
                 id = "m1",
                 text = "Напиши, пожалуйста, имя и фамилию...",
+                kind = MessageKind.BOT,
                 dateCreated = "2024-03-09T15:12:00"
             )
         )
