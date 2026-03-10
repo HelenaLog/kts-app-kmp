@@ -4,36 +4,33 @@ import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.helenalog.ktsappkmp.data.remote.dto.ChannelDto
-import com.github.helenalog.ktsappkmp.data.remote.dto.ConversationDto
-import com.github.helenalog.ktsappkmp.data.remote.dto.MessageDto
-import com.github.helenalog.ktsappkmp.data.remote.dto.MessageKindDto
-import com.github.helenalog.ktsappkmp.data.remote.dto.StateDto
-import com.github.helenalog.ktsappkmp.data.remote.dto.UserDto
+import com.github.helenalog.ktsappkmp.domain.model.ChannelKind
+import com.github.helenalog.ktsappkmp.domain.model.Conversation
+import com.github.helenalog.ktsappkmp.domain.model.MessageKind
 
 @Composable
 fun ConversationListItem(
-    conversation: ConversationDto,
+    conversation: Conversation,
     modifier: Modifier = Modifier
 ) {
     ListItem(
         modifier = modifier,
         headlineContent = {
             NameAndTimeRow(
-                name = conversation.user.fullName,
+                name = conversation.userName,
                 time = conversation.formattedTime,
                 isUnread = !conversation.isRead
             )
         },
         supportingContent = {
             MessagePreview(
-                kind = conversation.lastMessage?.kind,
-                text = conversation.lastMessage?.text.orEmpty(),
+                kind = conversation.lastMessageKind,
+                text = conversation.lastMessageText,
             )
         },
         leadingContent = {
             AvatarWithChannel(
-                photoUrl = conversation.user.photo?.url,
+                photoUrl = conversation.photoUrl,
                 channelKind = conversation.channelKind,
             )
         }
@@ -44,33 +41,15 @@ fun ConversationListItem(
 @Composable
 private fun ConversationListItemPreview() {
     ConversationListItem(
-        conversation = ConversationDto(
+        conversation = Conversation(
             id = 1L,
             isRead = false,
-            dateUpdated = "2024-03-09T15:12:00",
-            user = UserDto(
-                id = "u1",
-                firstName = "Borodinsky",
-                lastName = null,
-                username = "borodinsky",
-                photo = null
-            ),
-            channel = ChannelDto(
-                id = "c1",
-                kind = "tg",
-                name = "Telegram"
-            ),
-            state = StateDto(
-                stoppedByManager = false,
-                operatorTagged = false,
-                hasUnansweredOperatorMessage = true
-            ),
-            lastMessage = MessageDto(
-                id = "m1",
-                text = "Напиши, пожалуйста, имя и фамилию...",
-                kind = MessageKindDto.BOT,
-                dateCreated = "2024-03-09T15:12:00"
-            )
+            formattedTime = "15:12",
+            userName = "Borodinsky",
+            photoUrl = null,
+            channelKind = ChannelKind.TG,
+            lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
+            lastMessageKind = MessageKind.BOT,
         )
     )
 }

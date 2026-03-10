@@ -11,28 +11,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.helenalog.ktsappkmp.data.remote.dto.ChannelKindDto
+import com.github.helenalog.ktsappkmp.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.JivoColor
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.TelegramColor
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.WhatsAppColor
 
+
 @Composable
 fun ChannelIcon(
-    kind: ChannelKindDto,
+    kind: ChannelKind,
     modifier: Modifier = Modifier,
 ) {
     val icon: ImageVector = when (kind) {
-        ChannelKindDto.TG -> Icons.Default.NearMe
-        ChannelKindDto.WZ -> Icons.Default.Phone
-        ChannelKindDto.JV -> Icons.Default.Email
-        ChannelKindDto.UNKNOWN -> Icons.Default.Info
+        ChannelKind.TG -> Icons.Default.NearMe
+        ChannelKind.WZ -> Icons.Default.Phone
+        ChannelKind.JV -> Icons.Default.Email
+        ChannelKind.UNKNOWN -> Icons.Default.Info
     }
 
     val tint = when (kind) {
-        ChannelKindDto.TG -> TelegramColor
-        ChannelKindDto.WZ -> WhatsAppColor
-        ChannelKindDto.JV -> JivoColor
-        ChannelKindDto.UNKNOWN -> MaterialTheme.colorScheme.primary
+        ChannelKind.TG -> TelegramColor
+        ChannelKind.WZ -> WhatsAppColor
+        ChannelKind.JV -> JivoColor
+        ChannelKind.UNKNOWN -> MaterialTheme.colorScheme.primary
     }
 
     Icon(
@@ -46,5 +47,5 @@ fun ChannelIcon(
 @Preview
 @Composable
 private fun ChannelIconPreview() {
-    ChannelIcon(kind = ChannelKindDto.TG)
+    ChannelIcon(kind = ChannelKind.TG)
 }

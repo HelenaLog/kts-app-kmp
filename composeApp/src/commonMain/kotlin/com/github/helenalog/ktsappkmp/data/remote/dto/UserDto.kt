@@ -1,6 +1,5 @@
 package com.github.helenalog.ktsappkmp.data.remote.dto
 
-import com.github.helenalog.ktsappkmp.data.remote.dto.PhotoDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,7 +13,4 @@ data class UserDto(
     val lastName: String? = null,
     val username: String? = null,
     val photo: PhotoDto? = null,
-) {
-    val fullName: String
-        get() = "${firstName.orEmpty()} ${lastName.orEmpty()}".trim()
-}
+)

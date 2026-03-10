@@ -2,7 +2,7 @@
 <resources>
     <string name="onboarding_title">Добро пожаловать</string>
     <string name="onboarding_button_get_started">Начать</string>
-    <string name="login_title">Вход</string>
+    <string name="login_title">Добро пожаловать!</string>
     <string name="login_password_hint">Пароль</string>
     <string name="login_email_hint">Почта</string>
     <string name="login_button_submit">Войти</string>
@@ -22,7 +22,6 @@
     <string name="search_placeholder">Поиск</string>
     <string name="search_clear">Очистить</string>
     <string name="filter_button_description">Фильтр</string>
-    <string name="main_empty_title">Ничего не найдено</string>
-    <string name="main_empty_subtitle">Попробуйте изменить поисковый запрос</string>
+    <string name="main_empty_title">У вас еще нет ни одного диалога</string>
     <string name="main_error_retry">Повторить</string>
 </resources>

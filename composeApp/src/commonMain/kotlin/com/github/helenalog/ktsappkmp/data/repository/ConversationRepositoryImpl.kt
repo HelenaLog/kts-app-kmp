@@ -1,7 +1,8 @@
 package com.github.helenalog.ktsappkmp.data.repository
 
+import com.github.helenalog.ktsappkmp.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.data.remote.api.SmartbotApi
-import com.github.helenalog.ktsappkmp.data.remote.dto.ConversationsPage
+import com.github.helenalog.ktsappkmp.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.data.remote.network.Networking
 import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
 import io.github.aakira.napier.Napier
@@ -22,7 +23,7 @@ class ConversationRepositoryImpl : ConversationRepository {
         )
         Napier.d("getConversations response: $response")
         ConversationsPage(
-            conversations = response.data.conversations,
+            conversations = response.data.conversations.map { it.toDomain() },
             hasMore = response.data.conversations.size >= limit
         )
     }

@@ -53,4 +53,11 @@ object Dimensions {
     val topBarHorizontalPadding = 16.dp
     val topBarVerticalPadding = 8.dp
     val topBarSpacing = 8.dp
+
+    // States
+    val stateIconSize = 40.dp
+    val stateSpacing = 12.dp
+
+    // Loader
+    val paginationLoaderSize = 28.dp
 }

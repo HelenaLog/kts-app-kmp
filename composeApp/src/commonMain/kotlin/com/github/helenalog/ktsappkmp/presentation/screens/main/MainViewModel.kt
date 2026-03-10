@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.main
 
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.data.remote.dto.ConversationsPage
+import com.github.helenalog.ktsappkmp.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.data.repository.ConversationRepositoryImpl
 import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
 import com.github.helenalog.ktsappkmp.presentation.common.BaseViewModel
@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -24,22 +25,9 @@ class MainViewModel(
 
     private val searchQueryFlow = MutableStateFlow("")
 
+
     init {
         observeSearch()
-    }
-
-    fun observeSearch() {
-        searchQueryFlow
-            .debounce(SEARCH_DEBOUNCE_MS)
-            .distinctUntilChanged()
-            .flatMapLatest { query ->
-                Napier.d("observeSearch query: $query")
-                flow { emit(repository.getConversations(query = query)) }
-            }
-            .onEach { result ->
-                Napier.d("observeSearch result: $result")
-                result.onSuccess(::handlePage).onFailure(::handleError) }
-            .launchIn(viewModelScope)
     }
 
     fun onSearchQueryChange(query: String) {
@@ -48,6 +36,66 @@ class MainViewModel(
     }
 
     fun clearSearch() = onSearchQueryChange("")
+
+    fun retry() {
+        updateState { copy(isLoading = true, error = null) }
+        loadFirstPage(searchQueryFlow.value)
+    }
+
+    fun onReachEnd() {
+        var shouldLoad = false
+        updateState {
+            if (!isLoading && !isPaginating && !hasReachedEnd) {
+                shouldLoad = true
+                copy(isPaginating = true, paginationError = null)
+            } else this
+        }
+        if (shouldLoad) loadNextPage()
+    }
+
+    private fun observeSearch() {
+        searchQueryFlow
+            .debounce(SEARCH_DEBOUNCE_MS)
+            .distinctUntilChanged()
+            .flatMapLatest { query ->
+                Napier.d("observeSearch query: $query")
+                flow { emit(repository.getConversations(query = query)) }
+            }
+            .onEach { result ->
+                Napier.d("observeSearch result size: ${result.getOrNull()?.conversations?.size}")
+                result.onSuccess(::handlePage).onFailure(::handleError)
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun loadNextPage() {
+        val s = state.value
+        viewModelScope.launch {
+            repository.getConversations(query = s.searchQuery, offset = s.offset)
+                .onSuccess(::handleNextPage)
+                .onFailure(::handlePaginationError)
+        }
+    }
+
+    private fun handleNextPage(page: ConversationsPage) {
+        Napier.d("handleNextPage: ${page.conversations.size} items")
+        updateState {
+            copy(
+                isPaginating = false,
+                conversations = conversations + page.conversations,
+                offset = offset + page.conversations.size,
+                hasReachedEnd = !page.hasMore
+            )
+        }
+    }
+
+    private fun handlePaginationError(e: Throwable) {
+        Napier.e("handlePaginationError: ${e.message}")
+        if (e is CancellationException) throw e
+        updateState {
+            copy(isPaginating = false, paginationError = e.message ?: PAGINATION_ERROR)
+        }
+    }
 
     private fun handlePage(page: ConversationsPage) {
         updateState {
@@ -63,10 +111,21 @@ class MainViewModel(
 
     private fun handleError(e: Throwable) {
         if (e is CancellationException) throw e
-        updateState { copy(isLoading = false, error = e.message ?: "Unknown error") }
+        updateState { copy(isLoading = false, error = e.message ?: UNKNOWN_ERROR) }
+    }
+
+    private fun loadFirstPage(query: String) {
+        viewModelScope.launch {
+            repository.getConversations(query = query)
+                .onSuccess(::handlePage)
+                .onFailure(::handleError)
+        }
     }
 
     companion object {
         private const val SEARCH_DEBOUNCE_MS = 300L
+        private const val PAGINATION_ERROR = "Pagination error"
+        private const val UNKNOWN_ERROR = "Unknown error"
+
     }
 }
