@@ -25,7 +25,7 @@ object Dimensions {
     val channelIconSize = 16.dp
 
     // TextField
-    val textFieldCornerRadius = 12.dp
+    val textFieldCornerRadius = 8.dp
 
     // Login
     val loginSpacingSmall = 8.dp
@@ -40,4 +40,17 @@ object Dimensions {
     // Button
     val buttonHeight = 52.dp
     val buttonCornerRadius = 12.dp
+
+    // Search
+    val SearchIconSize = 24.dp
+
+    // Filter Button
+    val filterButtonSize = 56.dp
+    val filterButtonCornerRadius = 8.dp
+    val filterButtonIconSize = 20.dp
+
+    // Top Bar
+    val topBarHorizontalPadding = 16.dp
+    val topBarVerticalPadding = 8.dp
+    val topBarSpacing = 8.dp
 }

@@ -24,6 +24,10 @@ class MainViewModel(
 
     private val searchQueryFlow = MutableStateFlow("")
 
+    init {
+        observeSearch()
+    }
+
     fun observeSearch() {
         searchQueryFlow
             .debounce(SEARCH_DEBOUNCE_MS)
@@ -37,6 +41,13 @@ class MainViewModel(
                 result.onSuccess(::handlePage).onFailure(::handleError) }
             .launchIn(viewModelScope)
     }
+
+    fun onSearchQueryChange(query: String) {
+        updateState { copy(searchQuery = query, isLoading = true, error = null) }
+        searchQueryFlow.value = query
+    }
+
+    fun clearSearch() = onSearchQueryChange("")
 
     private fun handlePage(page: ConversationsPage) {
         updateState {

@@ -19,4 +19,10 @@
     <string name="main_message_kind_bot">(Бот)</string>
     <string name="main_message_kind_service">(Сервис)</string>
     <string name="main_message_kind_manager">(Менеджер)</string>
+    <string name="search_placeholder">Поиск</string>
+    <string name="search_clear">Очистить</string>
+    <string name="filter_button_description">Фильтр</string>
+    <string name="main_empty_title">Ничего не найдено</string>
+    <string name="main_empty_subtitle">Попробуйте изменить поисковый запрос</string>
+    <string name="main_error_retry">Повторить</string>
 </resources>
