@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -6,6 +7,11 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.buildkonfig)
+}
+
+val localProperties = Properties().apply {
+    rootProject.file("local.properties").inputStream().use { load(it) }
 }
 
 kotlin {
@@ -90,4 +96,15 @@ android {
 
 dependencies {
     debugImplementation(libs.compose.uiTooling)
+}
+
+buildkonfig {
+    packageName = "com.github.helenalog.ktsappkmp"
+
+    defaultConfigs {
+        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "BASE_URL", localProperties["BASE_URL"].toString())
+        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "CABINET_ID", localProperties["CABINET_ID"].toString())
+        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "PROJECT_ID", localProperties["PROJECT_ID"].toString())
+        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "SESSION", localProperties["SESSION"].toString())
+    }
 }

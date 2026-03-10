@@ -24,7 +24,7 @@ fun MainScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadConversations()
+        viewModel.observeSearch()
     }
 
     Scaffold(

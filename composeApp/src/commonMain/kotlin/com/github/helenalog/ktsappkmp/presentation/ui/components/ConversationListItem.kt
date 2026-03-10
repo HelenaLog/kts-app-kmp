@@ -4,12 +4,12 @@ import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.helenalog.ktsappkmp.domain.model.ChannelDto
-import com.github.helenalog.ktsappkmp.domain.model.ConversationDto
-import com.github.helenalog.ktsappkmp.domain.model.MessageDto
-import com.github.helenalog.ktsappkmp.domain.model.MessageKind
-import com.github.helenalog.ktsappkmp.domain.model.StateDto
-import com.github.helenalog.ktsappkmp.domain.model.UserDto
+import com.github.helenalog.ktsappkmp.data.remote.dto.ChannelDto
+import com.github.helenalog.ktsappkmp.data.remote.dto.ConversationDto
+import com.github.helenalog.ktsappkmp.data.remote.dto.MessageDto
+import com.github.helenalog.ktsappkmp.data.remote.dto.MessageKindDto
+import com.github.helenalog.ktsappkmp.data.remote.dto.StateDto
+import com.github.helenalog.ktsappkmp.data.remote.dto.UserDto
 
 @Composable
 fun ConversationListItem(
@@ -68,7 +68,7 @@ private fun ConversationListItemPreview() {
             lastMessage = MessageDto(
                 id = "m1",
                 text = "Напиши, пожалуйста, имя и фамилию...",
-                kind = MessageKind.BOT,
+                kind = MessageKindDto.BOT,
                 dateCreated = "2024-03-09T15:12:00"
             )
         )

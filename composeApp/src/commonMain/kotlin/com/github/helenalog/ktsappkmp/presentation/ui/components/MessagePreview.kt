@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.helenalog.ktsappkmp.domain.model.MessageKind
+import com.github.helenalog.ktsappkmp.data.remote.dto.MessageKindDto
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.main_message_kind_bot
 import ktsappkmp.composeapp.generated.resources.main_message_kind_manager
@@ -20,28 +20,28 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MessagePreview(
-    kind: MessageKind?,
+    kind: MessageKindDto?,
     text: String,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         when (kind) {
-            MessageKind.BOT -> MessageKindLabel(
+            MessageKindDto.BOT -> MessageKindLabel(
                 icon = Icons.Default.SmartToy,
                 label = stringResource(Res.string.main_message_kind_bot),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            MessageKind.SERVICE -> MessageKindLabel(
+            MessageKindDto.SERVICE -> MessageKindLabel(
                 icon = Icons.Default.Settings,
                 label = stringResource(Res.string.main_message_kind_service),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            MessageKind.MANAGER -> MessageKindLabel(
+            MessageKindDto.MANAGER -> MessageKindLabel(
                 icon = Icons.Default.Person,
                 label = stringResource(Res.string.main_message_kind_manager),
                 tint = MaterialTheme.colorScheme.primary,
             )
-            MessageKind.USER -> Unit
+            MessageKindDto.USER -> Unit
             null -> Unit
         }
 
@@ -61,7 +61,7 @@ fun MessagePreview(
 @Composable
 private fun MessagePreviewBot() {
     MessagePreview(
-        kind = MessageKind.BOT,
+        kind = MessageKindDto.BOT,
         text = "Напиши, пожалуйста, имя и фамилию...",
     )
 }
@@ -70,7 +70,7 @@ private fun MessagePreviewBot() {
 @Composable
 private fun MessagePreviewUser() {
     MessagePreview(
-        kind = MessageKind.USER,
+        kind = MessageKindDto.USER,
         text = "Привет, как дела?",
     )
 }

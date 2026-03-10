@@ -6,13 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.helenalog.ktsappkmp.domain.model.ChannelKind
+import com.github.helenalog.ktsappkmp.data.remote.dto.ChannelKindDto
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 
 @Composable
 fun AvatarWithChannel(
     photoUrl: String?,
-    channelKind: ChannelKind,
+    channelKind: ChannelKindDto,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -31,6 +31,6 @@ fun AvatarWithChannel(
 private fun AvatarWithChannelPreview() {
     AvatarWithChannel(
         photoUrl = null,
-        channelKind = ChannelKind.TG,
+        channelKind = ChannelKindDto.TG,
     )
 }
