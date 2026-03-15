@@ -2,8 +2,26 @@
 <resources>
     <string name="onboarding_title">Добро пожаловать</string>
     <string name="onboarding_button_get_started">Начать</string>
-    <string name="login_title">Вход</string>
+    <string name="login_title">Добро пожаловать!</string>
     <string name="login_password_hint">Пароль</string>
     <string name="login_email_hint">Почта</string>
     <string name="login_button_submit">Войти</string>
+    <string name="login_forgot_password">Забыли пароль?</string>
+    <string name="login_label_email">Email</string>
+    <string name="login_label_password">Пароль</string>
+    <string name="login_social_google">Google login</string>
+    <string name="login_social_vk">VK login</string>
+    <string name="login_social_telegram">Telegram login</string>
+    <string name="login_social_elama">Elama login</string>
+    <string name="app_name">Smartbot</string>
+    <string name="main_status_online">Онлайн</string>
+    <string name="main_status_offline">Офлайн</string>
+    <string name="main_message_kind_bot">(Бот)</string>
+    <string name="main_message_kind_service">(Сервис)</string>
+    <string name="main_message_kind_manager">(Менеджер)</string>
+    <string name="search_placeholder">Поиск</string>
+    <string name="search_clear">Очистить</string>
+    <string name="filter_button_description">Фильтр</string>
+    <string name="main_empty_title">У вас еще нет ни одного диалога</string>
+    <string name="main_error_retry">Повторить</string>
 </resources>
