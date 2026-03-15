@@ -18,10 +18,13 @@ ktor = "3.4.0"
 icons = "1.7.3"
 kotlinx-serialization-json = "1.10.0"
 navigation-compose = "2.9.2"
-napier         = "2.7.1"
+napier = "2.7.1"
 security-crypto = "1.1.0-alpha06"
 buildkonfig = "0.15.1"
 multiplatformSettings = "1.1.1"
+datastore = "1.1.1"
+room = "2.7.0"
+sqlite = "2.5.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -52,10 +55,15 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "icons" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
-napier                   = { group = "io.github.aakira",   name = "napier",          version.ref = "napier" }
-androidx-security-crypto = { group = "androidx.security",  name = "security-crypto", version.ref = "security-crypto" }
+napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
+androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security-crypto" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
+androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore" }
+androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "datastore" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -65,3 +73,5 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.5" }
+androidx-room = { id = "androidx.room", version.ref = "room" }
