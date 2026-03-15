@@ -16,14 +16,15 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import com.github.helenalog.ktsappkmp.BuildKonfig
+import com.github.helenalog.ktsappkmp.data.storage.SessionProvider
 
 object Networking {
     var onUnauthorized: (() -> Unit)? = null
 
-    private val BASE_URL = BuildKonfig.BASE_URL
+    private val SPRO_URL = BuildKonfig.SPRO_URL
+    private val AUTH_URL = BuildKonfig.BASE_URL
     private val CABINET_ID = BuildKonfig.CABINET_ID
     private val PROJECT_ID = BuildKonfig.PROJECT_ID
-    private val SESSION = BuildKonfig.SESSION
 
     val httpClient = HttpClient {
         install(ContentNegotiation) {
@@ -32,7 +33,6 @@ object Networking {
                 isLenient = true
             })
         }
-
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
@@ -41,21 +41,42 @@ object Networking {
             }
             level = LogLevel.ALL
         }
-
         defaultRequest {
-            url(BASE_URL)
+            url(SPRO_URL)
             contentType(ContentType.Application.Json)
             header("X-SPro-Cabinet", CABINET_ID)
             header("X-SPro-Project", PROJECT_ID)
-            header("Cookie", "spro_session=$SESSION")
+            SessionProvider.instance.getSession()?.let {
+                header("Cookie", it)
+            }
         }
-
         HttpResponseValidator {
             validateResponse { response ->
                 if (response.status == HttpStatusCode.Unauthorized) {
                     onUnauthorized?.invoke()
                 }
             }
+        }
+    }
+
+    val authClient = HttpClient {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            })
+        }
+        install(Logging) {
+            logger = object : Logger {
+                override fun log(message: String) {
+                    Napier.d(tag = "Ktor", message = message)
+                }
+            }
+            level = LogLevel.ALL
+        }
+        defaultRequest {
+            url(AUTH_URL)
+            contentType(ContentType.Application.Json)
         }
     }
 }

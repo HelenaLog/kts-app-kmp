@@ -11,7 +11,6 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>(LoginUiState.In
     fun onEmailChanged(value: String) = updateState {
         copy(
             email = value,
-            isLoginButtonActive = value.isNotBlank() && password.isNotBlank(),
             error = ""
         )
     }
@@ -19,17 +18,24 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>(LoginUiState.In
     fun onPasswordChanged(value: String) = updateState {
         copy(
             password = value,
-            isLoginButtonActive = email.isNotBlank() && value.isNotBlank(),
             error = ""
         )
     }
 
+    fun onCaptchaTokenReceived(token: String) {
+        updateState { copy(captchaToken = token) }
+    }
+
     fun onLoginClicked() {
         viewModelScope.launch {
-            val (email, password) = state.value
-            repository.login(email, password)
-                .onSuccess { sendEvent(LoginUiEvent.LoginSuccessEvent) }
-                .onFailure { updateState { copy(error = it.message ?: "Unknown error") } }
+            updateState { copy(isLoading = true) }
+            val state = state.value
+            repository.login(state.email, state.password, state.captchaToken)
+                .onSuccess {
+                    updateState { copy(isLoading = false) }
+                    sendEvent(LoginUiEvent.LoginSuccessEvent)
+                }
+                .onFailure { updateState { copy(isLoading = false, error = it.message ?: "Unknown error") } }
         }
     }
 }

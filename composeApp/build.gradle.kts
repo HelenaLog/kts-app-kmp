@@ -57,6 +57,7 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.napier)
+            implementation(libs.multiplatform.settings.no.arg)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -103,8 +104,9 @@ buildkonfig {
 
     defaultConfigs {
         buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "BASE_URL", localProperties["BASE_URL"].toString())
+        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "SPRO_URL", localProperties["SPRO_URL"].toString())
         buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "CABINET_ID", localProperties["CABINET_ID"].toString())
         buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "PROJECT_ID", localProperties["PROJECT_ID"].toString())
-        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "SESSION", localProperties["SESSION"].toString())
+        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "CAPTCHA_SITE_KEY", localProperties["CAPTCHA_SITE_KEY"].toString())
     }
 }

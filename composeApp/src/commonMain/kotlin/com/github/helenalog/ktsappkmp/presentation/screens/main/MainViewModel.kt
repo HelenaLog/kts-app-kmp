@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlin.coroutines.cancellation.CancellationException
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class MainViewModel(
@@ -45,9 +44,9 @@ class MainViewModel(
     fun onReachEnd() {
         var shouldLoad = false
         updateState {
-            if (!isLoading && !isPaginating && !hasReachedEnd) {
+            if (!isLoading && !pagination.isPaginating && !pagination.hasReachedEnd) {
                 shouldLoad = true
-                copy(isPaginating = true, paginationError = null)
+                copy(pagination = pagination.copy(isPaginating = true, error = null))
             } else this
         }
         if (shouldLoad) loadNextPage()
@@ -71,7 +70,7 @@ class MainViewModel(
     private fun loadNextPage() {
         val s = state.value
         viewModelScope.launch {
-            repository.getConversations(query = s.searchQuery, offset = s.offset)
+            repository.getConversations(query = s.searchQuery, offset = s.pagination.offset)
                 .onSuccess(::handleNextPage)
                 .onFailure(::handlePaginationError)
         }
@@ -81,19 +80,20 @@ class MainViewModel(
         Napier.d("handleNextPage: ${page.conversations.size} items")
         updateState {
             copy(
-                isPaginating = false,
                 conversations = conversations + page.conversations,
-                offset = offset + page.conversations.size,
-                hasReachedEnd = !page.hasMore
+                pagination = pagination.copy(
+                    isPaginating = false,
+                    offset = pagination.offset + page.conversations.size,
+                    hasReachedEnd = !page.hasMore
+                )
             )
         }
     }
 
     private fun handlePaginationError(e: Throwable) {
         Napier.e("handlePaginationError: ${e.message}")
-        if (e is CancellationException) throw e
         updateState {
-            copy(isPaginating = false, paginationError = e.message ?: PAGINATION_ERROR)
+            copy(pagination = pagination.copy(isPaginating = false, error = e.message ?: PAGINATION_ERROR))
         }
     }
 
@@ -102,15 +102,16 @@ class MainViewModel(
             copy(
                 isLoading = false,
                 conversations = page.conversations,
-                offset = page.conversations.size,
-                hasReachedEnd = !page.hasMore,
-                error = null
+                error = null,
+                pagination = pagination.copy(
+                    offset = page.conversations.size,
+                    hasReachedEnd = !page.hasMore
+                )
             )
         }
     }
 
     private fun handleError(e: Throwable) {
-        if (e is CancellationException) throw e
         updateState { copy(isLoading = false, error = e.message ?: UNKNOWN_ERROR) }
     }
 

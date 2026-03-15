@@ -40,6 +40,8 @@ object Dimensions {
     // Button
     val buttonHeight = 52.dp
     val buttonCornerRadius = 12.dp
+    val buttonLoaderSize = 20.dp
+    val buttonLoaderStrokeWidth = 2.dp
 
     // Search
     val SearchIconSize = 24.dp
@@ -60,4 +62,7 @@ object Dimensions {
 
     // Loader
     val paginationLoaderSize = 28.dp
+
+    // Captcha
+    val captchaHeight = 120.dp
 }

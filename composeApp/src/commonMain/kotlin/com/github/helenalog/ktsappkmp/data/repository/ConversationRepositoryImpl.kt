@@ -6,6 +6,7 @@ import com.github.helenalog.ktsappkmp.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.data.remote.network.Networking
 import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
 import io.github.aakira.napier.Napier
+import kotlin.coroutines.cancellation.CancellationException
 
 class ConversationRepositoryImpl : ConversationRepository {
     private val api = SmartbotApi(Networking.httpClient)
@@ -15,16 +16,16 @@ class ConversationRepositoryImpl : ConversationRepository {
         limit: Int,
         offset: Int
     ): Result<ConversationsPage> = runCatching {
-        Napier.d("getConversations called")
         val response = api.getConversations(
             limit = limit,
             offset = offset,
             query = query.takeIf { it.isNotBlank() }.orEmpty()
         )
-        Napier.d("getConversations response: $response")
         ConversationsPage(
             conversations = response.data.conversations.map { it.toDomain() },
             hasMore = response.data.conversations.size >= limit
         )
+    }.onFailure { e ->
+        if (e is CancellationException) throw e
     }
 }

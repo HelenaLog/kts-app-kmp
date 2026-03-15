@@ -78,8 +78,8 @@ fun MainScreen(
                 else -> {
                     ConversationList(
                         conversations = state.conversations,
-                        isPaginating = state.isPaginating,
-                        paginationError = state.paginationError,
+                        isPaginating = state.pagination.isPaginating,
+                        paginationError = state.pagination.error,
                         onReachEnd = viewModel::onReachEnd,
                         onRetryPagination = viewModel::onReachEnd
                     )
