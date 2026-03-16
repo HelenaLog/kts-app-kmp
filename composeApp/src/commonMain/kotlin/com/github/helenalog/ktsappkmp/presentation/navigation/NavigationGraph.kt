@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.github.helenalog.ktsappkmp.data.storage.DataStoreSettingsStorage
+import com.github.helenalog.ktsappkmp.data.storage.SessionProvider
 import com.github.helenalog.ktsappkmp.data.storage.SettingsStorage
 import com.github.helenalog.ktsappkmp.presentation.screens.login.LoginScreen
 import com.github.helenalog.ktsappkmp.presentation.screens.main.MainScreen
@@ -22,8 +23,8 @@ fun NavigationGraph() {
 
     val startDestination = when (isOnboardingDone) {
         null -> return
-        true -> Screen.Login
         false -> Screen.Onboarding
+        true -> if (SessionProvider.instance.getSession() != null) Screen.Main else Screen.Login
     }
 
     NavHost(

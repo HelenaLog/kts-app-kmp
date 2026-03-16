@@ -50,6 +50,7 @@ private fun ConversationListItemPreview() {
             channelKind = ChannelKind.TG,
             lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
             lastMessageKind = MessageKind.BOT,
+            dateUpdated = "2009-07-31T00:58:36.852Z"
         )
     )
 }

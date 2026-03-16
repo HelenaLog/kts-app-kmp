@@ -9,6 +9,7 @@ data class MainUiState(
     val searchQuery: String = "",
     val isLoading: Boolean = true,
     val error: String? = null,
+    val isRefreshing: Boolean = false,
     val pagination: PaginationState = PaginationState(),
 ) {
     companion object {

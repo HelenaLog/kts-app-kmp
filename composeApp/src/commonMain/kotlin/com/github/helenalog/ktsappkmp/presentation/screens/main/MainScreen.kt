@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.helenalog.ktsappkmp.domain.model.Conversation
+import com.github.helenalog.ktsappkmp.presentation.ui.components.AppSwipeRefresh
 import com.github.helenalog.ktsappkmp.presentation.ui.components.ConversationListItem
 import com.github.helenalog.ktsappkmp.presentation.ui.components.EmptyState
 import com.github.helenalog.ktsappkmp.presentation.ui.components.ErrorState
@@ -63,7 +64,7 @@ fun MainScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-                state.error != null -> {
+                state.error != null && state.conversations.isEmpty() -> {
                     ErrorState(
                         message = state.error,
                         onRetry = viewModel::retry,
@@ -76,19 +77,23 @@ fun MainScreen(
                     )
                 }
                 else -> {
-                    ConversationList(
-                        conversations = state.conversations,
-                        isPaginating = state.pagination.isPaginating,
-                        paginationError = state.pagination.error,
-                        onReachEnd = viewModel::onReachEnd,
-                        onRetryPagination = viewModel::onReachEnd
-                    )
+                    AppSwipeRefresh(
+                        isRefreshing = state.isRefreshing,
+                        onRefresh = viewModel::refresh
+                    ) {
+                        ConversationList(
+                            conversations = state.conversations,
+                            isPaginating = state.pagination.isPaginating,
+                            paginationError = state.pagination.error,
+                            onReachEnd = viewModel::onReachEnd,
+                            onRetryPagination = viewModel::onReachEnd
+                        )
+                    }
                 }
             }
         }
     }
 }
-
 
 @Composable
 private fun ConversationList(
@@ -176,5 +181,7 @@ private fun MainTopBar(
 @Preview
 @Composable
 private fun MainScreenPrev() {
-    MainScreen()
+    MainScreen(
+        viewModel = MainViewModel()
+    )
 }

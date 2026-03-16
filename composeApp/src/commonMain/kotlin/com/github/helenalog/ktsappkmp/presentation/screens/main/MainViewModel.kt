@@ -52,6 +52,19 @@ class MainViewModel(
         if (shouldLoad) loadNextPage()
     }
 
+    fun refresh() {
+        viewModelScope.launch {
+            updateState { copy(isRefreshing = true) }
+            try {
+                repository.getConversations(query = searchQueryFlow.value)
+                    .onSuccess(::handlePage)
+                    .onFailure(::handleRefreshError)
+            } finally {
+                updateState { copy(isRefreshing = false) }
+            }
+        }
+    }
+
     private fun observeSearch() {
         searchQueryFlow
             .debounce(SEARCH_DEBOUNCE_MS)
@@ -91,9 +104,19 @@ class MainViewModel(
     }
 
     private fun handlePaginationError(e: Throwable) {
-        Napier.e("handlePaginationError: ${e.message}")
         updateState {
-            copy(pagination = pagination.copy(isPaginating = false, error = e.message ?: PAGINATION_ERROR))
+            copy(
+                pagination = pagination.copy(
+                    isPaginating = false,
+                    error = e.message ?: PAGINATION_ERROR
+                )
+            )
+        }
+    }
+
+    private fun handleRefreshError(e: Throwable) {
+        if (state.value.conversations.isEmpty()) {
+            handleError(e)
         }
     }
 
@@ -127,6 +150,5 @@ class MainViewModel(
         private const val SEARCH_DEBOUNCE_MS = 300L
         private const val PAGINATION_ERROR = "Pagination error"
         private const val UNKNOWN_ERROR = "Unknown error"
-
     }
 }

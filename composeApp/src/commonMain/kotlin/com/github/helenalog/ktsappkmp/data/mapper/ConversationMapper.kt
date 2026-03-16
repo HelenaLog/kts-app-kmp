@@ -16,6 +16,7 @@ fun ConversationDto.toDomain() = Conversation(
     lastMessageText = lastMessage?.text.orEmpty(),
     lastMessageKind = lastMessage?.kind?.toDomain(),
     formattedTime = formatTime(dateUpdated),
+    dateUpdated = dateUpdated,
 )
 
 private fun MessageKindDto.toDomain() = when (this) {

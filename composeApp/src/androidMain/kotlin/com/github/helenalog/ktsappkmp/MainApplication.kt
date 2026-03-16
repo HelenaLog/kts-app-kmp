@@ -11,7 +11,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Napier.base(DebugAntilog())
-        SessionProvider.init(SessionStorageImpl(this))
         appContext = this
+        SessionProvider.init(SessionStorageImpl(this))
     }
 }
