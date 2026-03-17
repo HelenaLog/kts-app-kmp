@@ -120,7 +120,7 @@ private fun ConversationList(
     LazyColumn(
         state = listState,
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(Dimensions.itemSpacing),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall),
     ) {
         items(items = conversations, key = { it.id }) {
             ConversationListItem(conversation = it)

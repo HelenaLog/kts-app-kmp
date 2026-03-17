@@ -11,12 +11,16 @@ import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 
 @Composable
 fun AvatarWithChannel(
+    name: String,
     photoUrl: String?,
     channelKind: ChannelKind,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
-        UserAvatar(photoUrl = photoUrl)
+        UserAvatar(
+            name = name,
+            photoUrl = photoUrl
+        )
         ChannelIcon(
             kind = channelKind,
             modifier = Modifier
@@ -30,6 +34,7 @@ fun AvatarWithChannel(
 @Composable
 private fun AvatarWithChannelPreview() {
     AvatarWithChannel(
+        name = "Иван",
         photoUrl = null,
         channelKind = ChannelKind.TG,
     )

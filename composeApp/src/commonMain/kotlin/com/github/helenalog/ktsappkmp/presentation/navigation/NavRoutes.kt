@@ -9,4 +9,8 @@ sealed interface Screen {
     data object Login: Screen
     @Serializable
     data object Main: Screen
+    @Serializable
+    data object Profile: Screen
+    @Serializable
+    data object Tabs : Screen
 }

@@ -30,6 +30,7 @@ fun ConversationListItem(
         },
         leadingContent = {
             AvatarWithChannel(
+                name = conversation.userName,
                 photoUrl = conversation.photoUrl,
                 channelKind = conversation.channelKind,
             )

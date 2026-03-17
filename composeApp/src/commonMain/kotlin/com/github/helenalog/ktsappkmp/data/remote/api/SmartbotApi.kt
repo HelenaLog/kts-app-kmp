@@ -1,14 +1,14 @@
 package com.github.helenalog.ktsappkmp.data.remote.api
 
-import com.github.helenalog.ktsappkmp.data.remote.dto.ApiResponse
-import com.github.helenalog.ktsappkmp.data.remote.dto.ConversationsResponse
-import io.github.aakira.napier.Napier
+import com.github.helenalog.ktsappkmp.data.remote.dto.response.ApiResponse
+import com.github.helenalog.ktsappkmp.data.remote.dto.response.AuthInfoResponse
+import com.github.helenalog.ktsappkmp.data.remote.dto.response.CabinetResponse
+import com.github.helenalog.ktsappkmp.data.remote.dto.response.ConversationsResponse
+import com.github.helenalog.ktsappkmp.data.remote.dto.response.ProjectResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
-import io.ktor.client.statement.bodyAsText
-import kotlinx.serialization.json.Json
 
 class SmartbotApi(private val httpClient: HttpClient) {
 
@@ -22,5 +22,17 @@ class SmartbotApi(private val httpClient: HttpClient) {
             parameter("offset", offset)
             if (query.isNotBlank()) parameter("q", query)
         }.body()
+    }
+
+    suspend fun getAuthInfo(): ApiResponse<AuthInfoResponse> {
+        return httpClient.get("api/auth/info").body()
+    }
+
+    suspend fun getCabinets(): ApiResponse<CabinetResponse> {
+        return httpClient.get("api/cabinets/list").body()
+    }
+
+    suspend fun getProjects(): ApiResponse<ProjectResponse> {
+        return httpClient.get("api/projects/get").body()
     }
 }

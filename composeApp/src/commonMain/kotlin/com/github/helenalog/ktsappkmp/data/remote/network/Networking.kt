@@ -16,6 +16,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import com.github.helenalog.ktsappkmp.BuildKonfig
+import com.github.helenalog.ktsappkmp.data.storage.SessionManager
 import com.github.helenalog.ktsappkmp.data.storage.SessionProvider
 
 object Networking {
@@ -53,6 +54,7 @@ object Networking {
         HttpResponseValidator {
             validateResponse { response ->
                 if (response.status == HttpStatusCode.Unauthorized) {
+                    SessionManager.logout()
                     onUnauthorized?.invoke()
                 }
             }

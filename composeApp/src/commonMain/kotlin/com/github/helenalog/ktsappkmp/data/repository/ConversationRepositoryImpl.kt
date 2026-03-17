@@ -8,6 +8,7 @@ import com.github.helenalog.ktsappkmp.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.data.remote.network.Networking
 import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
 import com.github.helenalog.ktsappkmp.utils.suspendRunCatching
+import kotlin.coroutines.cancellation.CancellationException
 
 class ConversationRepositoryImpl : ConversationRepository {
     private val api = SmartbotApi(Networking.httpClient)
@@ -49,6 +50,7 @@ class ConversationRepositoryImpl : ConversationRepository {
         offset: Int,
         e: Exception
     ): ConversationsPage {
+        if (e is CancellationException) throw e
         val cached = dao.getByQuery(query)
         if (cached.isEmpty()) throw e
         val pagedCached = cached.drop(offset).take(limit)

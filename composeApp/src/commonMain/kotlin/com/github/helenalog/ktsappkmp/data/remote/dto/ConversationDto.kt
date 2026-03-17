@@ -12,7 +12,7 @@ data class ConversationDto(
     val dateUpdated: String,
     val user: UserDto,
     val channel: ChannelDto,
-    val state: StateDto,
+    val state: ChatStateDto,
     @SerialName("last_message")
     val lastMessage: MessageDto? = null
 )

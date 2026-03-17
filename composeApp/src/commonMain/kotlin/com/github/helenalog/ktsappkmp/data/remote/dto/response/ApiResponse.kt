@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.data.remote.dto
+package com.github.helenalog.ktsappkmp.data.remote.dto.response
 
 import kotlinx.serialization.Serializable
 
