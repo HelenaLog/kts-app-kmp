@@ -1,14 +1,18 @@
 package com.github.helenalog.ktsappkmp.data.storage
 
 import com.github.helenalog.ktsappkmp.data.local.DatabaseProvider
-import com.github.helenalog.ktsappkmp.utils.suspendRunCatching
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
 
 object SessionManager {
-    suspend fun logout() {
-        suspendRunCatching { SessionProvider.instance.clearSession() }
-        suspendRunCatching { DatabaseProvider.instance.conversationDao().deleteAll() }
-        suspendRunCatching { DatabaseProvider.instance.profileDao().deleteAll() }
-        suspendRunCatching { DatabaseProvider.instance.projectDao().deleteAll() }
-        suspendRunCatching { DatabaseProvider.instance.cabinetDao().deleteAll() }
+    suspend fun logout() = withContext(Dispatchers.IO) {
+        SessionProvider.instance.clearSession()
+        DatabaseProvider.instance.let { db ->
+            db.conversationDao().deleteAll()
+            db.profileDao().deleteAll()
+            db.projectDao().deleteAll()
+            db.cabinetDao().deleteAll()
+        }
     }
 }

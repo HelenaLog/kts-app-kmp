@@ -33,6 +33,6 @@ class SmartbotApi(private val httpClient: HttpClient) {
     }
 
     suspend fun getProjects(): ApiResponse<ProjectResponse> {
-        return httpClient.get("api/projects/get").body()
+        return httpClient.get("api/projects/list").body()
     }
 }

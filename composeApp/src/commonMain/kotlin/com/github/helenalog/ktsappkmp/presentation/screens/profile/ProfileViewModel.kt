@@ -87,13 +87,12 @@ class ProfileViewModel(
                     projectsError = null
                 )
             }
-
             projectRepository
-                .getProject()
-                .onSuccess { project ->
+                .getProjects()
+                .onSuccess { projects ->
                     updateState {
                         copy(
-                            projectNames = listOf(project.name),
+                            projectNames = projects.map { it.name },
                             isProjectsLoading = false,
                             projectsError = null
                         )
@@ -107,16 +106,18 @@ class ProfileViewModel(
                         )
                     }
                 }
-
         }
     }
 
     fun logout() {
         viewModelScope.launch {
-            updateState { copy(isLoading = true) }
-            SessionManager.logout()
-            updateState { copy(isLoading = false) }
-            sendEvent(ProfileUiEvent.NavigateToLogin)
+            updateState { copy(isLoading = true, profileError = null) }
+            try {
+                SessionManager.logout()
+                sendEvent(ProfileUiEvent.NavigateToLogin)
+            } catch (e: Exception) {
+                updateState { copy(isLoading = false, profileError = e.message) }
+            }
         }
     }
 

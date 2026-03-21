@@ -10,11 +10,11 @@ import com.github.helenalog.ktsappkmp.domain.repository.ProjectRepository
 import com.github.helenalog.ktsappkmp.utils.suspendRunCatching
 import kotlin.coroutines.cancellation.CancellationException
 
-class ProjectRepositoryImpl: ProjectRepository {
+class ProjectRepositoryImpl : ProjectRepository {
     private val api = SmartbotApi(Networking.httpClient)
     private val dao = DatabaseProvider.instance.projectDao()
 
-    override suspend fun getProject(): Result<Project> = suspendRunCatching {
+    override suspend fun getProjects(): Result<List<Project>> = suspendRunCatching {
         try {
             fetchRemoteProject()
         } catch (e: Exception) {
@@ -22,17 +22,17 @@ class ProjectRepositoryImpl: ProjectRepository {
         }
     }
 
-    private suspend fun fetchRemoteProject(): Project {
-        val projectDto = api.getProjects().data.project ?: error("Project not found")
-        val project = projectDto.toDomain()
-        dao.upsertAll(listOf(project.toEntity()))
-        return project
+    private suspend fun fetchRemoteProject(): List<Project> {
+        val projectDto = api.getProjects().data.projects
+        val domainProjects = projectDto.map { it.toDomain() }
+        dao.upsertAll(domainProjects.map { it.toEntity() })
+        return domainProjects
     }
 
-    private suspend fun fetchCachedProject(e: Exception): Project {
+    private suspend fun fetchCachedProject(e: Exception): List<Project> {
         if (e is CancellationException) throw e
         val cached = dao.getAll()
-        val first = cached.firstOrNull() ?: throw e
-        return first.toDomain()
+        if (cached.isEmpty()) throw e
+        return cached.map { it.toDomain() }
     }
 }

@@ -35,7 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.helenalog.ktsappkmp.presentation.ui.components.AppButton
+import com.github.helenalog.ktsappkmp.presentation.ui.components.ErrorContent
 import com.github.helenalog.ktsappkmp.presentation.ui.components.UserAvatar
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.SocialButtonBorder
@@ -43,7 +43,6 @@ import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.profile_cabinets
 import ktsappkmp.composeapp.generated.resources.profile_logout
 import ktsappkmp.composeapp.generated.resources.profile_projects
-import ktsappkmp.composeapp.generated.resources.profile_retry
 import ktsappkmp.composeapp.generated.resources.profile_settings
 import ktsappkmp.composeapp.generated.resources.profile_seсtions_no_data
 import org.jetbrains.compose.resources.stringResource
@@ -76,17 +75,39 @@ fun ProfileScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 state.profileError != null -> {
-                    ProfileErrorView(
+                    ErrorContent(
                         message = state.profileError ?: "",
                         onRetry = { viewModel.retryProfile() }
                     )
                 }
+
                 else -> {
                     ProfileContent(
-                        state = state,
+                        name = state.name,
+                        email = state.email,
+                        avatarUrl = state.avatarUrl,
                         onLogout = { viewModel.logout() },
-                        onSettingsClick = {}
+                        onSettingsClick = {},
+                        cabinetsContent = {
+                            ProfileSectionList(
+                                items = state.cabinetNames,
+                                showArrow = true,
+                                isLoading = state.isCabinetsLoading,
+                                error = state.cabinetsError,
+                                onSectionClick = {},
+                            )
+                        },
+                        projectsContent = {
+                            ProfileSectionList(
+                                items = state.projectNames,
+                                showArrow = true,
+                                isLoading = state.isProjectsLoading,
+                                error = state.projectsError,
+                                onSectionClick = {},
+                            )
+                        }
                     )
                 }
             }
@@ -96,12 +117,16 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileContent(
-    state: ProfileUiState,
+    name: String,
+    email: String?,
+    avatarUrl: String?,
+    cabinetsContent: @Composable () -> Unit,
+    projectsContent: @Composable () -> Unit,
     onLogout: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val displayName = state.name.ifBlank { state.email.orEmpty() }
+    val displayName = name.ifBlank { email.orEmpty() }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -112,28 +137,16 @@ private fun ProfileContent(
     ) {
         ProfileHeader(
             name = displayName,
-            email = state.email,
-            avatarUrl = state.avatarUrl,
+            email = email,
+            avatarUrl = avatarUrl,
             onLogoutClick = onLogout,
         )
         Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
         SectionTitle(text = stringResource(Res.string.profile_cabinets))
-        ProfileSectionList(
-            isLoading = state.isCabinetsLoading,
-            error = state.cabinetsError,
-            items = state.cabinetNames,
-            showArrow = true,
-            onSectionClick = {}
-        )
+        cabinetsContent()
         Spacer(modifier = Modifier.height(Dimensions.spacingMedium))
         SectionTitle(text = stringResource(Res.string.profile_projects))
-        ProfileSectionList(
-            isLoading = state.isProjectsLoading,
-            error = state.projectsError,
-            items = state.projectNames,
-            showArrow = true,
-            onSectionClick = {}
-        )
+        projectsContent()
         Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(Dimensions.spacingSmall))
@@ -185,32 +198,6 @@ private fun ProfileHeader(
 }
 
 @Composable
-private fun ProfileErrorView(
-    message: String,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding((Dimensions.screenPadding)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.error
-        )
-        Spacer(modifier = Modifier.height(Dimensions.spacingSmall))
-        AppButton(
-            text = stringResource(Res.string.profile_retry),
-            onClick = onRetry
-        )
-    }
-}
-
-@Composable
 private fun SectionTitle(
     text: String,
     modifier: Modifier = Modifier
@@ -255,16 +242,19 @@ private fun ProfileSectionList(
                         strokeWidth = Dimensions.loaderStroke,
                         color = MaterialTheme.colorScheme.primary
                     )
+
                     error != null -> Text(
                         text = error,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error
                     )
+
                     items.isEmpty() -> Text(
                         text = stringResource(Res.string.profile_seсtions_no_data),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+
                     else -> Column {
                         items.forEach { item ->
                             Text(

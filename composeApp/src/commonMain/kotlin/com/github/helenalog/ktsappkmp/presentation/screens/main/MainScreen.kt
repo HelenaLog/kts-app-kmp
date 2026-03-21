@@ -26,8 +26,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.helenalog.ktsappkmp.domain.model.Conversation
 import com.github.helenalog.ktsappkmp.presentation.ui.components.AppSwipeRefresh
 import com.github.helenalog.ktsappkmp.presentation.ui.components.ConversationListItem
-import com.github.helenalog.ktsappkmp.presentation.ui.components.EmptyState
-import com.github.helenalog.ktsappkmp.presentation.ui.components.ErrorState
+import com.github.helenalog.ktsappkmp.presentation.ui.components.EmptyContent
+import com.github.helenalog.ktsappkmp.presentation.ui.components.ErrorContent
 import com.github.helenalog.ktsappkmp.presentation.ui.components.FilterButton
 import com.github.helenalog.ktsappkmp.presentation.ui.components.PaginationErrorFooter
 import com.github.helenalog.ktsappkmp.presentation.ui.components.SearchBar
@@ -65,14 +65,14 @@ fun MainScreen(
                     )
                 }
                 state.error != null && state.conversations.isEmpty() -> {
-                    ErrorState(
+                    ErrorContent(
                         message = state.error,
                         onRetry = viewModel::retry,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
                 state.conversations.isEmpty() -> {
-                    EmptyState(
+                    EmptyContent(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
