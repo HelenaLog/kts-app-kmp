@@ -19,6 +19,22 @@ class ProfileViewModel(
 ) : BaseViewModel<ProfileUiState, ProfileUiEvent>(ProfileUiState()) {
 
     init {
+        retryProfile()
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            updateState { copy(isLoading = true, profileError = null) }
+            try {
+                SessionManager.logout()
+                sendEvent(ProfileUiEvent.NavigateToLogin)
+            } catch (e: Exception) {
+                updateState { copy(isLoading = false, profileError = e.message) }
+            }
+        }
+    }
+
+    fun retryProfile() {
         loadProfile()
         loadCabinets()
         loadProjects()
@@ -107,24 +123,6 @@ class ProfileViewModel(
                     }
                 }
         }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            updateState { copy(isLoading = true, profileError = null) }
-            try {
-                SessionManager.logout()
-                sendEvent(ProfileUiEvent.NavigateToLogin)
-            } catch (e: Exception) {
-                updateState { copy(isLoading = false, profileError = e.message) }
-            }
-        }
-    }
-
-    fun retryProfile() {
-        loadProfile()
-        loadCabinets()
-        loadProjects()
     }
 
     companion object {
