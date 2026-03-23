@@ -22,7 +22,6 @@ class ConversationViewModel(
     private val getConversations: GetConversationsUseCase
 ) : BaseViewModel<ConversationUiState, Nothing>(ConversationUiState.Initial) {
     private val conversationMapper: ConversationUiMapper = ConversationUiMapper()
-
     private val searchQueryFlow = MutableStateFlow("")
 
 

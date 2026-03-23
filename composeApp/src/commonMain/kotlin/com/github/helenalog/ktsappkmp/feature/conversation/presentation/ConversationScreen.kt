@@ -39,7 +39,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ConversationScreen(
     modifier: Modifier = Modifier,
-    viewModel: ConversationViewModel = koinViewModel(),
+    viewModel: ConversationViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val pullToRefreshState = rememberPullToRefreshState()
