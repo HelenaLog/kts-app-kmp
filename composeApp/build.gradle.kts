@@ -40,6 +40,8 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.security.crypto)
             implementation(libs.androidx.swiperefreshlayout)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -65,6 +67,9 @@ kotlin {
             implementation(libs.androidx.datastore.core.okio)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -117,10 +122,30 @@ buildkonfig {
     packageName = "com.github.helenalog.ktsappkmp"
 
     defaultConfigs {
-        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "BASE_URL", localProperties["BASE_URL"].toString())
-        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "SPRO_URL", localProperties["SPRO_URL"].toString())
-        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "CABINET_ID", localProperties["CABINET_ID"].toString())
-        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "PROJECT_ID", localProperties["PROJECT_ID"].toString())
-        buildConfigField(com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING, "CAPTCHA_SITE_KEY", localProperties["CAPTCHA_SITE_KEY"].toString())
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "BASE_URL",
+            localProperties["BASE_URL"].toString()
+        )
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "SPRO_URL",
+            localProperties["SPRO_URL"].toString()
+        )
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "CABINET_ID",
+            localProperties["CABINET_ID"].toString()
+        )
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "PROJECT_ID",
+            localProperties["PROJECT_ID"].toString()
+        )
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "CAPTCHA_SITE_KEY",
+            localProperties["CAPTCHA_SITE_KEY"].toString()
+        )
     }
 }
