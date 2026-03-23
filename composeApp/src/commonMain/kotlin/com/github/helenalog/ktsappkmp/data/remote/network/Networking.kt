@@ -1,6 +1,5 @@
 package com.github.helenalog.ktsappkmp.data.remote.network
 
-import com.github.helenalog.ktsappkmp.data.storage.SessionStorage
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpResponseValidator
