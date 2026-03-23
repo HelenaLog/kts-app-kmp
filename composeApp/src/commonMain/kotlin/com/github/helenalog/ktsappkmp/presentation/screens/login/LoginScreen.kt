@@ -24,11 +24,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.helenalog.ktsappkmp.BuildKonfig
-import com.github.helenalog.ktsappkmp.presentation.ui.components.AppButton
-import com.github.helenalog.ktsappkmp.presentation.ui.components.AppTextField
-import com.github.helenalog.ktsappkmp.presentation.ui.components.CaptchaView
-import com.github.helenalog.ktsappkmp.presentation.ui.components.SocialLoginRow
-import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AppButton
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AppTextField
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.CaptchaView
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SocialLoginRow
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.app_name
 import ktsappkmp.composeapp.generated.resources.login_email_hint

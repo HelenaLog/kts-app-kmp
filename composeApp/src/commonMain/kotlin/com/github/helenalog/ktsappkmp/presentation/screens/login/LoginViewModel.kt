@@ -1,8 +1,8 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.login
 
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.data.repository.LoginRepositoryImpl
-import com.github.helenalog.ktsappkmp.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.core.data.repository.LoginRepositoryImpl
+import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import kotlinx.coroutines.launch
 
 class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>(LoginUiState.Initial) {

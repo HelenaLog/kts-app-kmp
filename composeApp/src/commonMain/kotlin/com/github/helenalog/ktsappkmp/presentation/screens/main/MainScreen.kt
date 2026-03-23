@@ -25,14 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.helenalog.ktsappkmp.presentation.ui.models.ConversationUi
-import com.github.helenalog.ktsappkmp.presentation.ui.components.ConversationListItem
-import com.github.helenalog.ktsappkmp.presentation.ui.components.EmptyContent
-import com.github.helenalog.ktsappkmp.presentation.ui.components.ErrorContent
-import com.github.helenalog.ktsappkmp.presentation.ui.components.FilterButton
-import com.github.helenalog.ktsappkmp.presentation.ui.components.PaginationErrorFooter
-import com.github.helenalog.ktsappkmp.presentation.ui.components.SearchBar
-import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ConversationListItem
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.EmptyContent
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorContent
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.FilterButton
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PaginationErrorFooter
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SearchBar
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
+import com.github.helenalog.ktsappkmp.domain.model.Conversation
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 

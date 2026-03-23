@@ -2,8 +2,6 @@ package com.github.helenalog.ktsappkmp.presentation.screens.onboarding
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
-import com.github.helenalog.ktsappkmp.presentation.ui.components.AppButton
-import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,10 +22,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.helenalog.ktsappkmp.presentation.ui.components.AppButtonStyle
-import com.github.helenalog.ktsappkmp.presentation.ui.components.PageContent
-import com.github.helenalog.ktsappkmp.presentation.ui.components.PageIndicator
-import com.github.helenalog.ktsappkmp.presentation.ui.theme.AppTheme
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AppButton
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AppButtonStyle
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PageContent
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PageIndicator
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
+import ktsappkmp.composeapp.generated.resources.onboarding_button_back
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.onboarding_background
 import ktsappkmp.composeapp.generated.resources.onboarding_button_back
 import ktsappkmp.composeapp.generated.resources.onboarding_button_get_started

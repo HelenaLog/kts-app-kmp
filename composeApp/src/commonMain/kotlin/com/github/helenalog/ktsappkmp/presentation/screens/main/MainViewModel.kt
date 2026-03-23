@@ -1,11 +1,11 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.main
 
 import androidx.lifecycle.viewModelScope
+import com.github.helenalog.ktsappkmp.core.data.repository.ConversationRepositoryImpl
 import com.github.helenalog.ktsappkmp.data.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.domain.model.ConversationsPage
-import com.github.helenalog.ktsappkmp.data.repository.ConversationRepositoryImpl
 import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
-import com.github.helenalog.ktsappkmp.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

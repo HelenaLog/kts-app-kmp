@@ -1,9 +1,9 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.onboarding
 
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.data.storage.DataStoreSettingsStorage
-import com.github.helenalog.ktsappkmp.data.storage.SettingsStorage
-import com.github.helenalog.ktsappkmp.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.core.data.storage.DataStoreSettingsStorage
+import com.github.helenalog.ktsappkmp.core.data.storage.SettingsStorage
+import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import kotlinx.coroutines.launch
 
 

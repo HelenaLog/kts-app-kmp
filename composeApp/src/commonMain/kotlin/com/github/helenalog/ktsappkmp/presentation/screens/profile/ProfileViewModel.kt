@@ -1,15 +1,14 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.profile
 
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.data.mapper.ProfileUiMapper
-import com.github.helenalog.ktsappkmp.data.repository.CabinetRepositoryImpl
-import com.github.helenalog.ktsappkmp.data.repository.ProfileRepositoryImpl
-import com.github.helenalog.ktsappkmp.data.repository.ProjectRepositoryImpl
-import com.github.helenalog.ktsappkmp.data.storage.SessionManager
+import com.github.helenalog.ktsappkmp.core.data.repository.CabinetRepositoryImpl
+import com.github.helenalog.ktsappkmp.core.data.repository.ProfileRepositoryImpl
+import com.github.helenalog.ktsappkmp.core.data.repository.ProjectRepositoryImpl
+import com.github.helenalog.ktsappkmp.core.data.storage.SessionManager
 import com.github.helenalog.ktsappkmp.domain.repository.CabinetRepository
 import com.github.helenalog.ktsappkmp.domain.repository.ProfileRepository
 import com.github.helenalog.ktsappkmp.domain.repository.ProjectRepository
-import com.github.helenalog.ktsappkmp.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.utils.suspendRunCatching
 import kotlinx.coroutines.launch
 
