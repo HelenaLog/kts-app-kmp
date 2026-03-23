@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.helenalog.ktsappkmp.domain.model.MessageKind
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.main_message_kind_bot
 import ktsappkmp.composeapp.generated.resources.main_message_kind_manager

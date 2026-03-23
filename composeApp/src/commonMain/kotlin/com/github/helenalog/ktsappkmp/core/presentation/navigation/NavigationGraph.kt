@@ -4,17 +4,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
-import com.github.helenalog.ktsappkmp.presentation.screens.login.LoginScreen
-import com.github.helenalog.ktsappkmp.presentation.screens.onboarding.OnboardingScreen
+import com.github.helenalog.ktsappkmp.feature.login.presentation.LoginScreen
+import com.github.helenalog.ktsappkmp.feature.onboarding.presentation.OnboardingScreen
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun NavigationGraph(
-    viewModel: NavigationViewModel = viewModel { NavigationViewModel() },
+    viewModel: NavigationViewModel = koinViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()

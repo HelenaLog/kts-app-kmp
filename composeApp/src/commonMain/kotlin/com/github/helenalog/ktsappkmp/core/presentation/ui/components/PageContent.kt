@@ -16,8 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
-import com.github.helenalog.ktsappkmp.domain.model.OnboardingPage
-import com.github.helenalog.ktsappkmp.domain.model.pages
+import com.github.helenalog.ktsappkmp.feature.onboarding.domain.model.OnboardingPage
+import com.github.helenalog.ktsappkmp.feature.onboarding.domain.model.pages
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

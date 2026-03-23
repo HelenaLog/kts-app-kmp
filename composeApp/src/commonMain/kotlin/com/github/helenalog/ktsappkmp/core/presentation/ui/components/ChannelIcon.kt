@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.JivoColor
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.TelegramColor
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.WhatsAppColor
-import com.github.helenalog.ktsappkmp.domain.model.ChannelKind
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 
 
 @Composable

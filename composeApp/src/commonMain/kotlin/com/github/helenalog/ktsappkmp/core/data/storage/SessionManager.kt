@@ -1,11 +1,20 @@
 package com.github.helenalog.ktsappkmp.core.data.storage
 
-import com.github.helenalog.ktsappkmp.core.data.local.DatabaseProvider
+import com.github.helenalog.ktsappkmp.feature.profile.data.local.dao.CabinetDao
+import com.github.helenalog.ktsappkmp.feature.conversation.data.local.dao.ConversationDao
+import com.github.helenalog.ktsappkmp.feature.profile.data.local.dao.ProfileDao
+import com.github.helenalog.ktsappkmp.feature.profile.data.local.dao.ProjectDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
-object SessionManager {
+class SessionManager(
+    private val sessionStorage: SessionStorage,
+    private val conversationDao: ConversationDao,
+    private val profileDao: ProfileDao,
+    private val projectDao: ProjectDao,
+    private val cabinetDao: CabinetDao
+) {
     suspend fun logout() = withContext(Dispatchers.IO) {
         SessionProvider.instance.clearSession()
         DataStoreProfileStorage().clear()

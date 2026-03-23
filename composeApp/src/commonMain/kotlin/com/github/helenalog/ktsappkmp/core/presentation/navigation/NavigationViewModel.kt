@@ -1,18 +1,18 @@
 package com.github.helenalog.ktsappkmp.core.presentation.navigation
 
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.core.data.remote.network.Networking
-import com.github.helenalog.ktsappkmp.core.data.storage.DataStoreSettingsStorage
-import com.github.helenalog.ktsappkmp.core.data.storage.SessionProvider
-import com.github.helenalog.ktsappkmp.core.data.storage.SettingsStorage
+import com.github.helenalog.ktsappkmp.core.data.remote.network.OnUnauthorizedCallback
+import com.github.helenalog.ktsappkmp.core.data.storage.SessionStorage
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
-import kotlinx.coroutines.flow.first
+import com.github.helenalog.ktsappkmp.feature.onboarding.domain.usecase.IsOnboardingDoneUseCase
 import kotlinx.coroutines.launch
 
-    BaseViewModel<NavigationState, NavigationEvent>(NavigationState.Loading) {
-class NavigationViewModel :
-    private val settings: SettingsStorage = DataStoreSettingsStorage()
-    private val sessionProvider = SessionProvider.instance
+
+class NavigationViewModel(
+    private val sessionStorage: SessionStorage,
+    private val isOnboardingDoneUseCase: IsOnboardingDoneUseCase,
+    private val onUnauthorizedCallback: OnUnauthorizedCallback,
+) : BaseViewModel<NavigationState, NavigationEvent>(NavigationState.Loading) {
 
     init {
         observeAppStatus()
@@ -32,7 +32,7 @@ class NavigationViewModel :
     }
 
     private fun setupUnauthorizedHandler() {
-        Networking.onUnauthorized = {
+        onUnauthorizedCallback.onUnauthorized = {
             sendEvent(NavigationEvent.NavigateToLogin)
         }
     }
