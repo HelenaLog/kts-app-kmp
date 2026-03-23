@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProjectResponse(
     @SerialName("project")
-    val project: ProjectDto,
+    val project: ProjectDto? = null,
     @SerialName("projects")
-    val projects: List<ProjectDto>
+    val projects: List<ProjectDto>? = null
 )

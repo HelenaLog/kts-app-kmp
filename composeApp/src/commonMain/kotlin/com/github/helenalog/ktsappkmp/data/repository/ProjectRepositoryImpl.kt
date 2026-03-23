@@ -23,7 +23,7 @@ class ProjectRepositoryImpl : ProjectRepository {
     }
 
     private suspend fun fetchRemoteProject(): List<Project> {
-        val projectDto = api.getProjects().data.projects
+        val projectDto = api.getProjects().data.projects.orEmpty()
         val domainProjects = projectDto.map { it.toDomain() }
         dao.upsertAll(domainProjects.map { it.toEntity() })
         return domainProjects
