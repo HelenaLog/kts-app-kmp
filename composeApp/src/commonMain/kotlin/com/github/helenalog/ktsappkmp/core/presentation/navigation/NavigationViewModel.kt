@@ -8,7 +8,6 @@ import com.github.helenalog.ktsappkmp.feature.onboarding.domain.usecase.IsOnboar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-
 class NavigationViewModel(
     private val sessionStorage: SessionStorage,
     private val isOnboardingDoneUseCase: IsOnboardingDoneUseCase,
