@@ -44,7 +44,7 @@ object Dimensions {
     val buttonLoaderStrokeWidth = 2.dp
 
     // Search
-    val SearchIconSize = 24.dp
+    val searchIconSize = 24.dp
 
     // Filter Button
     val filterButtonSize = 56.dp
@@ -79,4 +79,10 @@ object Dimensions {
     val onboardingIndicatorSpacing = 8.dp
     val onboardingButtonSpacing = 8.dp
     val onboardingTextHorizontalPadding = 8.dp
+
+    val timeBottomPadding = 4.dp
+    val bubbleCornerRadius = 8.dp
+    val bubbleSmallRadius = 2.dp
+
+    val attachmentMaxSize = 295.dp
 }
