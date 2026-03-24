@@ -8,6 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatScreen
 import com.github.helenalog.ktsappkmp.feature.login.presentation.LoginScreen
 import com.github.helenalog.ktsappkmp.feature.onboarding.presentation.OnboardingScreen
 import org.koin.compose.viewmodel.koinViewModel
@@ -70,7 +72,15 @@ fun NavigationGraph(
                         }
                     )
                 }
-
+                composable<Screen.Chat> { backStack ->
+                    val args = backStack.toRoute<Screen.Chat>()
+                    ChatScreen(
+                        conversationId = args.conversationId,
+                        userId = args.userId,
+                        onNavigateBack = { navController.popBackStack() },
+                        onUserInfo = {},
+                    )
+                }
             }
         }
     }

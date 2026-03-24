@@ -1,13 +1,43 @@
 package com.github.helenalog.ktsappkmp.feature.chat.data.mapper
 
+import com.github.helenalog.ktsappkmp.core.utils.DateFormatter
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatAttachmentUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatListItemUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 
 class ChatUiMapper {
+
+    fun mapToList(
+        messages: List<ChatMessage>,
+        userName: String,
+        userPhotoUrl: String?,
+    ): List<ChatListItemUi> {
+        val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+        return buildList {
+            var lastDate: LocalDate? = null
+            messages.forEach { message ->
+                val localDate = message.date?.let { DateFormatter.parseToLocalDate(it) }
+                if (localDate != null && localDate != lastDate) {
+                    add(
+                        ChatListItemUi.DateHeader(
+                            text = DateFormatter.formatDateLabel(message.date, today),
+                            dateKey = message.date,
+                        )
+                    )
+                    lastDate = localDate
+                }
+                add(ChatListItemUi.Message(mapMessage(message, userName, userPhotoUrl)))
+            }
+        }
+    }
 
     private fun mapMessage(
         domain: ChatMessage,

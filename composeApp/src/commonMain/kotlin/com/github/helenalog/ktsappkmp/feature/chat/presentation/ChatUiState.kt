@@ -4,5 +4,6 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class ChatUiState(
-    var messages: List<ChatListItemUi> = emptyList()
+    val messages: List<ChatListItemUi> = emptyList(),
+    val pendingAttachments: List<ChatAttachmentUi> = emptyList()
 )
