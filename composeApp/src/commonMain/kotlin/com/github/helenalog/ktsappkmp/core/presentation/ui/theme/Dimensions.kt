@@ -39,7 +39,7 @@ object Dimensions {
 
     // Button
     val buttonHeight = 52.dp
-    val buttonCornerRadius = 12.dp
+    val buttonCornerRadius = 8.dp
     val buttonLoaderSize = 20.dp
     val buttonLoaderStrokeWidth = 2.dp
 
@@ -85,4 +85,10 @@ object Dimensions {
     val bubbleSmallRadius = 2.dp
 
     val attachmentMaxSize = 295.dp
+
+    val chatInputHorizontalPadding = 12.dp
+    val chatInputTextVerticalPadding = 12.dp
+    val inputIconSize = 16.dp
+    val sendButtonSize = 48.dp
+    val sendButtonIconSize = 24.dp
 }
