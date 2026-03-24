@@ -30,7 +30,7 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatAttachmentUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 import ktsappkmp.composeapp.generated.resources.Res
-import ktsappkmp.composeapp.generated.resources.compose_multiplatform
+import ktsappkmp.composeapp.generated.resources.chat_bot_avatar
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -98,7 +98,7 @@ fun OutgoingMessageBubble(
             AttachmentsList(message.attachments)
         }
         Image(
-            painter = painterResource(Res.drawable.compose_multiplatform),
+            painter = painterResource(Res.drawable.chat_bot_avatar),
             contentDescription = null,
             modifier = Modifier
                 .size(Dimensions.avatarSize)

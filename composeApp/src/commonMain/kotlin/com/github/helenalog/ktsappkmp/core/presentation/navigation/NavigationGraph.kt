@@ -69,6 +69,9 @@ fun NavigationGraph(
                             navController.navigate(Screen.Login) {
                                 popUpTo(0)
                             }
+                        },
+                        onNavigateToChat = { conversation ->
+                            navController.navigate(Screen.Chat(conversation.id, conversation.userId))
                         }
                     )
                 }

@@ -33,4 +33,7 @@ data class ConversationEntity(
 
     @ColumnInfo(name = "date_updated")
     val dateUpdated: String,
+
+    @ColumnInfo(name = "user_id")
+    val userId: String,
 )
