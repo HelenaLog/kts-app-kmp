@@ -38,9 +38,9 @@ import kotlinx.coroutines.flow.filter
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun MainScreen(
+fun ConversationScreen(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = koinViewModel(),
+    viewModel: ConversationViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val pullToRefreshState = rememberPullToRefreshState()
@@ -188,7 +188,7 @@ private fun MainTopBar(
 @Preview
 @Composable
 private fun MainScreenPrev() {
-    MainScreen(
+    ConversationScreen(
         viewModel = koinViewModel()
     )
 }

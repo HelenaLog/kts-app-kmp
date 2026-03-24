@@ -20,10 +20,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-class MainViewModel(
+class ConversationViewModel(
     private val getConversations: GetConversationsUseCase
+) : BaseViewModel<ConversationUiState, Nothing>(ConversationUiState.Initial) {
     private val conversationMapper: ConversationUiMapper = ConversationUiMapper()
-) : BaseViewModel<MainUiState, Nothing>(MainUiState.Initial) {
 
     private val searchQueryFlow = MutableStateFlow("")
 
