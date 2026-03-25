@@ -7,7 +7,9 @@ import kotlinx.serialization.Serializable
 data class CabinetDto(
     @SerialName("_id")
     val id: String,
+    @SerialName("domain")
     val domain: String,
+    @SerialName("name")
     val name: String,
     @SerialName("created_by")
     val createdBy: String? = null

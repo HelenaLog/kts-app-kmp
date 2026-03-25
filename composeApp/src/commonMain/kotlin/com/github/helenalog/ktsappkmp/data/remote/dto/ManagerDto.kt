@@ -7,7 +7,9 @@ import kotlinx.serialization.Serializable
 data class ManagerDto(
     @SerialName("_id")
     val id: String,
+    @SerialName("email")
     val email: String,
+    @SerialName("name")
     val name: String? = null,
     @SerialName("external_ids")
     val externalIds: ExternalIdsDto? = null

@@ -11,6 +11,8 @@ data class UserDto(
     val firstName: String? = null,
     @SerialName("last_name")
     val lastName: String? = null,
+    @SerialName("username")
     val username: String? = null,
+    @SerialName("photo")
     val photo: PhotoDto? = null,
 )

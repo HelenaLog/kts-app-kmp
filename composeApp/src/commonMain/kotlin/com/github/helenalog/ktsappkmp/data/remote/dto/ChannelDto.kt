@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class ChannelDto(
     @SerialName("_id")
     val id: String,
+    @SerialName("kind")
     val kind: String,
+    @SerialName("name")
     val name: String
 )
