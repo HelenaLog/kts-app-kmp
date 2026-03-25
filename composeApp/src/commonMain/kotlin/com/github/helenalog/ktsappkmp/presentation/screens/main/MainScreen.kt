@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.helenalog.ktsappkmp.presentation.ui.models.ConversationUi
-import com.github.helenalog.ktsappkmp.presentation.ui.components.AppSwipeRefresh
 import com.github.helenalog.ktsappkmp.presentation.ui.components.ConversationListItem
 import com.github.helenalog.ktsappkmp.presentation.ui.components.EmptyContent
 import com.github.helenalog.ktsappkmp.presentation.ui.components.ErrorContent
@@ -41,6 +42,7 @@ fun MainScreen(
     viewModel: MainViewModel = viewModel { MainViewModel() },
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val pullToRefreshState = rememberPullToRefreshState()
 
     Scaffold(
         modifier = modifier,
@@ -68,7 +70,7 @@ fun MainScreen(
                 state.error != null && state.conversations.isEmpty() -> {
                     ErrorContent(
                         message = state.error,
-                        onRetry = viewModel::retry,
+                        onRetry = { viewModel.retry() },
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -80,9 +82,10 @@ fun MainScreen(
                 }
 
                 else -> {
-                    AppSwipeRefresh(
+                    PullToRefreshBox(
                         isRefreshing = state.isRefreshing,
-                        onRefresh = viewModel::refresh
+                        onRefresh = { viewModel.refresh() },
+                        state = pullToRefreshState
                     ) {
                         ConversationList(
                             conversations = state.conversations,
