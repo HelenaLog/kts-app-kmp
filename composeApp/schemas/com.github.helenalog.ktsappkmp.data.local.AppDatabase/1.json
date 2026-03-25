@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3473b2509cd1c1255a198444c07ff9e3",
+    "identityHash": "7c6af2d945b871a4838a55e12de48c73",
     "entities": [
       {
         "tableName": "conversations",
@@ -59,40 +59,6 @@
             "columnName": "date_updated",
             "affinity": "TEXT",
             "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "id"
-          ]
-        }
-      },
-      {
-        "tableName": "profile",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `email` TEXT, `name` TEXT NOT NULL, `avatar_url` TEXT, PRIMARY KEY(`id`))",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "email",
-            "columnName": "email",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "avatarUrl",
-            "columnName": "avatar_url",
-            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -164,7 +130,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3473b2509cd1c1255a198444c07ff9e3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c6af2d945b871a4838a55e12de48c73')"
     ]
   }
 }

@@ -8,9 +8,9 @@ import kotlinx.coroutines.withContext
 object SessionManager {
     suspend fun logout() = withContext(Dispatchers.IO) {
         SessionProvider.instance.clearSession()
+        DataStoreProfileStorage().clear()
         DatabaseProvider.instance.let { db ->
             db.conversationDao().deleteAll()
-            db.profileDao().deleteAll()
             db.projectDao().deleteAll()
             db.cabinetDao().deleteAll()
         }

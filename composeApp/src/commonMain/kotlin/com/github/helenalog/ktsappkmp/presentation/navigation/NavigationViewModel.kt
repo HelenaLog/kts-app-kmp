@@ -6,10 +6,11 @@ import com.github.helenalog.ktsappkmp.data.storage.DataStoreSettingsStorage
 import com.github.helenalog.ktsappkmp.data.storage.SessionProvider
 import com.github.helenalog.ktsappkmp.data.storage.SettingsStorage
 import com.github.helenalog.ktsappkmp.presentation.common.BaseViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class NavigationViewModel(
-) : BaseViewModel<NavigationState, NavigationEvent>(NavigationState.Loading) {
+class NavigationViewModel :
+    BaseViewModel<NavigationState, NavigationEvent>(NavigationState.Loading) {
     private val settings: SettingsStorage = DataStoreSettingsStorage()
     private val sessionProvider = SessionProvider.instance
 
@@ -20,14 +21,13 @@ class NavigationViewModel(
 
     private fun observeAppStatus() {
         viewModelScope.launch {
-            settings.isOnboardingDone().collect { isOnboardingDone ->
-                val destination = when {
-                    !isOnboardingDone -> Screen.Onboarding
-                    sessionProvider.getSession() != null -> Screen.Tabs
-                    else -> Screen.Login
-                }
-                updateState { NavigationState.Content(destination) }
+            val isOnboardingDone = settings.isOnboardingDone().first()
+            val destination = when {
+                !isOnboardingDone -> Screen.Onboarding
+                sessionProvider.getSession() != null -> Screen.Tabs
+                else -> Screen.Login
             }
+            updateState { NavigationState.Content(destination) }
         }
     }
 
