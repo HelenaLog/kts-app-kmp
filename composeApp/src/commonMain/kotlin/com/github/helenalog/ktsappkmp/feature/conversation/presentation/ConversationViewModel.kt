@@ -1,9 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.data.mapper.ConversationUiMapper
-import com.github.helenalog.ktsappkmp.domain.model.ConversationsPage
-import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
+import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase

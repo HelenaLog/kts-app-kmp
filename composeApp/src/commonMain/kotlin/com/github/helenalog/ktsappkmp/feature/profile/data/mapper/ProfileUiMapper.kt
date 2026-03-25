@@ -1,7 +1,8 @@
-package com.github.helenalog.ktsappkmp.data.mapper
+package com.github.helenalog.ktsappkmp.feature.profile.data.mapper
 
-import com.github.helenalog.ktsappkmp.domain.model.Profile
-import com.github.helenalog.ktsappkmp.presentation.ui.models.ProfileUi
+import com.github.helenalog.ktsappkmp.core.data.mapper.UserAvatarUiMapper
+import com.github.helenalog.ktsappkmp.feature.profile.domain.model.Profile
+import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileUi
 
 class ProfileUiMapper(
     private val avatarMapper: UserAvatarUiMapper = UserAvatarUiMapper()

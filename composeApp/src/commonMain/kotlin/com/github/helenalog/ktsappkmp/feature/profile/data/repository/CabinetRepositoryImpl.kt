@@ -14,12 +14,12 @@ class CabinetRepositoryImpl(
     private val cabinetDao: CabinetDao
 ) : CabinetRepository {
 
-    override suspend fun getCabinets(): Result<List<Cabinet>> = suspendRunCatching {
-        try {
-            fetchRemoteCabinets()
-        } catch (e: Exception) {
-            fetchCachedCabinets(e)
-        }
+    override suspend fun getCabinets(): Result<List<Cabinet>> {
+        return suspendRunCatching { fetchRemoteCabinets() }
+            .fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { fetchCachedCabinets(it) }
+            )
     }
 
     private suspend fun fetchRemoteCabinets(): List<Cabinet> {
@@ -29,10 +29,10 @@ class CabinetRepositoryImpl(
         return domainCabinets
     }
 
-    private suspend fun fetchCachedCabinets(e: Exception): List<Cabinet> {
+    private suspend fun fetchCachedCabinets(e: Throwable): Result<List<Cabinet>> {
         if (e is CancellationException) throw e
         val cached = cabinetDao.getAll()
-        if (cached.isEmpty()) throw e
-        return cached.map { it.toDomain() }
+        if (cached.isEmpty()) return Result.failure(e)
+        return Result.success(cached.map { it.toDomain() })
     }
 }

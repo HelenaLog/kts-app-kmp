@@ -4,12 +4,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.github.helenalog.ktsappkmp.domain.model.Profile
-import com.github.helenalog.ktsappkmp.utils.suspendRunCatching
+import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
+import com.github.helenalog.ktsappkmp.feature.profile.domain.model.Profile
 import kotlinx.coroutines.flow.first
 
 class DataStoreProfileStorage(
-    private val dataStore: DataStore<Preferences> = DataStoreProvider.instance
+    private val dataStore: DataStore<Preferences>
 ) : ProfileStorage {
 
     override suspend fun save(profile: Profile): Result<Unit> = suspendRunCatching {

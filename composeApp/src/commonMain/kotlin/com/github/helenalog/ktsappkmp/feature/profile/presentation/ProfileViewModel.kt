@@ -2,11 +2,12 @@ package com.github.helenalog.ktsappkmp.feature.profile.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
+import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.ProfileUiMapper
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetCabinetsUseCase
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetProfileUseCase
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetProjectsUseCase
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.LogoutUseCase
-import com.github.helenalog.ktsappkmp.utils.suspendRunCatching
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
@@ -14,7 +15,7 @@ class ProfileViewModel(
     private val getCabinets: GetCabinetsUseCase,
     private val getProjects: GetProjectsUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val profileMapper: ProfileUiMapper = ProfileUiMapper()
+    private val profileMapper: ProfileUiMapper
 ) : BaseViewModel<ProfileUiState, ProfileUiEvent>(ProfileUiState()) {
 
     init {
@@ -24,7 +25,7 @@ class ProfileViewModel(
     fun logout() {
         viewModelScope.launch {
             updateState { copy(isLoading = true, profileError = null) }
-            suspendRunCatching { SessionManager.logout() }
+            suspendRunCatching { logoutUseCase() }
                 .onSuccess {
                     updateState { copy(isLoading = false, profileError = null) }
                     sendEvent(ProfileUiEvent.NavigateToLogin)

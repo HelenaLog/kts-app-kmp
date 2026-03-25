@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
 import androidx.compose.runtime.Immutable
-import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationUi
 
 @Immutable
 data class ConversationUiState(

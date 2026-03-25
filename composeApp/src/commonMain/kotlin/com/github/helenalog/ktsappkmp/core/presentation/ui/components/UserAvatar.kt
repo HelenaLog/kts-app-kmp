@@ -19,9 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
-import com.github.helenalog.ktsappkmp.presentation.ui.models.UserAvatarUi
-import com.github.helenalog.ktsappkmp.presentation.ui.theme.AppTheme
-import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
+import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 
 @Composable
 fun UserAvatar(

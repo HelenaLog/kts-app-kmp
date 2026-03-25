@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.presentation.ui.models
+package com.github.helenalog.ktsappkmp.core.presentation.ui.model
 
 import androidx.compose.runtime.Immutable
 

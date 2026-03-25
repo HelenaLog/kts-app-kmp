@@ -34,15 +34,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorContent
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.UserAvatar
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.SocialButtonBorder
-import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileUiEvent
-import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileViewModel
-import com.github.helenalog.ktsappkmp.presentation.ui.models.UserAvatarUi
-import com.github.helenalog.ktsappkmp.presentation.ui.models.ProfileUi
+import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
+import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileUi
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.profile_cabinets
 import ktsappkmp.composeapp.generated.resources.profile_logout

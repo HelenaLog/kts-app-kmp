@@ -1,6 +1,6 @@
 package com.github.helenalog.ktsappkmp.data.storage
 
-import com.github.helenalog.ktsappkmp.domain.model.Profile
+import com.github.helenalog.ktsappkmp.feature.profile.domain.model.Profile
 
 interface ProfileStorage {
     suspend fun save(profile: Profile): Result<Unit>

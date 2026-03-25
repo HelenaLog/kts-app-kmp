@@ -1,8 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.profile.data.repository
 
 import com.github.helenalog.ktsappkmp.feature.profile.data.local.dao.ProjectDao
-import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toDomain
-import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toEntity
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.toEntity
@@ -16,12 +14,12 @@ class ProjectRepositoryImpl(
     private val projectDao: ProjectDao,
 ) : ProjectRepository {
 
-    override suspend fun getProjects(): Result<List<Project>> = suspendRunCatching {
-        try {
-            fetchRemoteProject()
-        } catch (e: Exception) {
-            fetchCachedProject(e)
-        }
+    override suspend fun getProjects(): Result<List<Project>> {
+        return suspendRunCatching { fetchRemoteProject() }
+            .fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { fetchCachedProject(it) }
+            )
     }
 
     private suspend fun fetchRemoteProject(): List<Project> {
@@ -31,10 +29,10 @@ class ProjectRepositoryImpl(
         return domainProjects
     }
 
-    private suspend fun fetchCachedProject(e: Exception): List<Project> {
+    private suspend fun fetchCachedProject(e: Throwable): Result<List<Project>> {
         if (e is CancellationException) throw e
         val cached = projectDao.getAll()
-        if (cached.isEmpty()) throw e
-        return cached.map { it.toDomain() }
+        if (cached.isEmpty()) return Result.failure(e)
+        return Result.success(cached.map { it.toDomain() })
     }
 }

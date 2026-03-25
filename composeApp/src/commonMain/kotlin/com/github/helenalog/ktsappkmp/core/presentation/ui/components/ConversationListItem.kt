@@ -4,11 +4,10 @@ import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.helenalog.ktsappkmp.presentation.ui.models.ConversationUi
-import com.github.helenalog.ktsappkmp.presentation.ui.models.UserAvatarUi
-import com.github.helenalog.ktsappkmp.presentation.ui.theme.AppTheme
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationUi
+import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
-import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 
 @Composable
