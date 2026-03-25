@@ -28,8 +28,8 @@ import com.github.helenalog.ktsappkmp.presentation.ui.components.AppButtonStyle
 import com.github.helenalog.ktsappkmp.presentation.ui.components.PageContent
 import com.github.helenalog.ktsappkmp.presentation.ui.components.PageIndicator
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.AppTheme
-import ktsappkmp.composeapp.generated.resources.onboarding_button_back
 import ktsappkmp.composeapp.generated.resources.onboarding_background
+import ktsappkmp.composeapp.generated.resources.onboarding_button_back
 import ktsappkmp.composeapp.generated.resources.onboarding_button_get_started
 import ktsappkmp.composeapp.generated.resources.onboarding_button_next
 import org.jetbrains.compose.resources.painterResource

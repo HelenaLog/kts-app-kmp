@@ -34,9 +34,8 @@ fun PageContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(Dimensions.onboardingImageHeight),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.height(Dimensions.onboardingContentSpacing))
         Text(
             text = page.title,
             style = MaterialTheme.typography.headlineMedium,
