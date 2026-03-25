@@ -14,12 +14,12 @@ class ProfileRepositoryImpl : ProfileRepository {
     private val api = SmartbotApi(Networking.httpClient)
     private val dao = DatabaseProvider.instance.profileDao()
 
-    override suspend fun getProfile(): Result<Profile> = suspendRunCatching {
-        try {
-            fetchRemoteProfile()
-        } catch (e: Exception) {
-            fetchCachedProfile(e)
-        }
+    override suspend fun getProfile(): Result<Profile> {
+        return suspendRunCatching { fetchRemoteProfile() }
+            .fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { fetchCachedProfile(it) }
+            )
     }
 
     private suspend fun fetchRemoteProfile(): Profile {
@@ -29,9 +29,9 @@ class ProfileRepositoryImpl : ProfileRepository {
         return profile
     }
 
-    private suspend fun fetchCachedProfile(e: Exception): Profile {
+    private suspend fun fetchCachedProfile(e: Throwable): Result<Profile> {
         if (e is CancellationException) throw e
-        val cached = dao.get() ?: throw e
-        return cached.toDomain()
+        val cached = dao.get() ?: return Result.failure(e)
+        return Result.success(cached.toDomain())
     }
 }

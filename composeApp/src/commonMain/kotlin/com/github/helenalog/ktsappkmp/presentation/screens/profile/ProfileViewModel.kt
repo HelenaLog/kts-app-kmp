@@ -10,6 +10,7 @@ import com.github.helenalog.ktsappkmp.domain.repository.CabinetRepository
 import com.github.helenalog.ktsappkmp.domain.repository.ProfileRepository
 import com.github.helenalog.ktsappkmp.domain.repository.ProjectRepository
 import com.github.helenalog.ktsappkmp.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.utils.suspendRunCatching
 import kotlinx.coroutines.launch
 
 
@@ -27,12 +28,14 @@ class ProfileViewModel(
     fun logout() {
         viewModelScope.launch {
             updateState { copy(isLoading = true, profileError = null) }
-            try {
-                SessionManager.logout()
-                sendEvent(ProfileUiEvent.NavigateToLogin)
-            } catch (e: Exception) {
-                updateState { copy(isLoading = false, profileError = e.message) }
-            }
+            suspendRunCatching { SessionManager.logout() }
+                .onSuccess {
+                    updateState { copy(isLoading = false, profileError = null) }
+                    sendEvent(ProfileUiEvent.NavigateToLogin)
+                }
+                .onFailure { e ->
+                    updateState { copy(isLoading = false, profileError = e.message) }
+                }
         }
     }
 

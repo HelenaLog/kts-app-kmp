@@ -14,12 +14,12 @@ class ProjectRepositoryImpl : ProjectRepository {
     private val api = SmartbotApi(Networking.httpClient)
     private val dao = DatabaseProvider.instance.projectDao()
 
-    override suspend fun getProjects(): Result<List<Project>> = suspendRunCatching {
-        try {
-            fetchRemoteProject()
-        } catch (e: Exception) {
-            fetchCachedProject(e)
-        }
+    override suspend fun getProjects(): Result<List<Project>> {
+        return suspendRunCatching { fetchRemoteProject() }
+            .fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { fetchCachedProject(it) }
+            )
     }
 
     private suspend fun fetchRemoteProject(): List<Project> {
@@ -29,10 +29,10 @@ class ProjectRepositoryImpl : ProjectRepository {
         return domainProjects
     }
 
-    private suspend fun fetchCachedProject(e: Exception): List<Project> {
+    private suspend fun fetchCachedProject(e: Throwable): Result<List<Project>> {
         if (e is CancellationException) throw e
         val cached = dao.getAll()
-        if (cached.isEmpty()) throw e
-        return cached.map { it.toDomain() }
+        if (cached.isEmpty()) return Result.failure(e)
+        return Result.success(cached.map { it.toDomain() })
     }
 }
