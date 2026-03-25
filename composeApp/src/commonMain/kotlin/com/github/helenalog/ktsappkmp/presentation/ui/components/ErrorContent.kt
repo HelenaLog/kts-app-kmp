@@ -21,7 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
-fun ErrorState(
+fun ErrorContent(
     message: String?,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
@@ -53,7 +53,7 @@ fun ErrorState(
 @Preview
 @Composable
 private fun ErrorStatePreview() {
-    ErrorState(
+    ErrorContent(
         message = "Что-то пошло не так",
         onRetry = {}
     )

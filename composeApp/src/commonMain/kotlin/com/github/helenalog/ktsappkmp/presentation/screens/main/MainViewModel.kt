@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.main
 
 import androidx.lifecycle.viewModelScope
+import com.github.helenalog.ktsappkmp.data.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.data.repository.ConversationRepositoryImpl
 import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class MainViewModel(
-    private val repository: ConversationRepository = ConversationRepositoryImpl()
+    private val repository: ConversationRepository = ConversationRepositoryImpl(),
+    private val conversationMapper: ConversationUiMapper = ConversationUiMapper()
 ) : BaseViewModel<MainUiState, Nothing>(MainUiState.Initial) {
 
     private val searchQueryFlow = MutableStateFlow("")
@@ -52,6 +54,19 @@ class MainViewModel(
         if (shouldLoad) loadNextPage()
     }
 
+    fun refresh() {
+        viewModelScope.launch {
+            updateState { copy(isRefreshing = true) }
+            try {
+                repository.getConversations(query = searchQueryFlow.value)
+                    .onSuccess(::handlePage)
+                    .onFailure(::handleRefreshError)
+            } finally {
+                updateState { copy(isRefreshing = false) }
+            }
+        }
+    }
+
     private fun observeSearch() {
         searchQueryFlow
             .debounce(SEARCH_DEBOUNCE_MS)
@@ -80,7 +95,7 @@ class MainViewModel(
         Napier.d("handleNextPage: ${page.conversations.size} items")
         updateState {
             copy(
-                conversations = conversations + page.conversations,
+                conversations = conversations + conversationMapper.mapList(page.conversations),
                 pagination = pagination.copy(
                     isPaginating = false,
                     offset = pagination.offset + page.conversations.size,
@@ -91,9 +106,19 @@ class MainViewModel(
     }
 
     private fun handlePaginationError(e: Throwable) {
-        Napier.e("handlePaginationError: ${e.message}")
         updateState {
-            copy(pagination = pagination.copy(isPaginating = false, error = e.message ?: PAGINATION_ERROR))
+            copy(
+                pagination = pagination.copy(
+                    isPaginating = false,
+                    error = e.message ?: PAGINATION_ERROR
+                )
+            )
+        }
+    }
+
+    private fun handleRefreshError(e: Throwable) {
+        if (state.value.conversations.isEmpty()) {
+            handleError(e)
         }
     }
 
@@ -101,7 +126,7 @@ class MainViewModel(
         updateState {
             copy(
                 isLoading = false,
-                conversations = page.conversations,
+                conversations = conversationMapper.mapList(page.conversations),
                 error = null,
                 pagination = pagination.copy(
                     offset = page.conversations.size,
@@ -127,6 +152,5 @@ class MainViewModel(
         private const val SEARCH_DEBOUNCE_MS = 300L
         private const val PAGINATION_ERROR = "Pagination error"
         private const val UNKNOWN_ERROR = "Unknown error"
-
     }
 }

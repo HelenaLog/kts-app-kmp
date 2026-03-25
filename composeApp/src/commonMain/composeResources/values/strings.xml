@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="onboarding_title">Добро пожаловать</string>
     <string name="onboarding_button_get_started">Начать</string>
+    <string name="onboarding_button_next">Вперед</string>
+    <string name="onboarding_button_back">Назад</string>
     <string name="login_title">Добро пожаловать!</string>
     <string name="login_password_hint">Пароль</string>
     <string name="login_email_hint">Почта</string>
@@ -24,4 +25,13 @@
     <string name="filter_button_description">Фильтр</string>
     <string name="main_empty_title">У вас еще нет ни одного диалога</string>
     <string name="main_error_retry">Повторить</string>
+    <string name="tabs_chats">Чаты</string>
+    <string name="tabs_profile">Профиль</string>
+    <string name="profile_logout">Выйти</string>
+    <string name="profile_retry">Повторить</string>
+    <string name="profile_error_load">Ошибка загрузки</string>
+    <string name="profile_cabinets">Кабинеты</string>
+    <string name="profile_projects">Проекты</string>
+    <string name="profile_settings">Настройки профиля</string>
+    <string name="profile_seсtions_no_data">Нет данных</string>
 </resources>

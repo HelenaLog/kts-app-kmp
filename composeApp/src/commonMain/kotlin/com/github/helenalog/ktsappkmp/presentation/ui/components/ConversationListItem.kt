@@ -5,12 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.domain.model.ChannelKind
-import com.github.helenalog.ktsappkmp.domain.model.Conversation
 import com.github.helenalog.ktsappkmp.domain.model.MessageKind
+import com.github.helenalog.ktsappkmp.presentation.ui.models.ConversationUi
+import com.github.helenalog.ktsappkmp.presentation.ui.models.UserAvatarUi
+import com.github.helenalog.ktsappkmp.presentation.ui.theme.AppTheme
 
 @Composable
 fun ConversationListItem(
-    conversation: Conversation,
+    conversation: ConversationUi,
     modifier: Modifier = Modifier
 ) {
     ListItem(
@@ -30,7 +32,7 @@ fun ConversationListItem(
         },
         leadingContent = {
             AvatarWithChannel(
-                photoUrl = conversation.photoUrl,
+                avatar = conversation.avatar,
                 channelKind = conversation.channelKind,
             )
         }
@@ -40,16 +42,21 @@ fun ConversationListItem(
 @Preview
 @Composable
 private fun ConversationListItemPreview() {
-    ConversationListItem(
-        conversation = Conversation(
-            id = 1L,
-            isRead = false,
-            formattedTime = "15:12",
-            userName = "Borodinsky",
-            photoUrl = null,
-            channelKind = ChannelKind.TG,
-            lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
-            lastMessageKind = MessageKind.BOT,
+    AppTheme {
+        ConversationListItem(
+            conversation = ConversationUi(
+                id = 1L,
+                isRead = false,
+                formattedTime = "15:12",
+                userName = "Borodinsky",
+                avatar = UserAvatarUi(
+                    initials = "B",
+                    photoUrl = null
+                ),
+                channelKind = ChannelKind.TG,
+                lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
+                lastMessageKind = MessageKind.BOT,
+            )
         )
-    )
+    }
 }

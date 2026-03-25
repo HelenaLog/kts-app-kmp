@@ -20,7 +20,7 @@ import ktsappkmp.composeapp.generated.resources.main_empty_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun EmptyState(modifier: Modifier = Modifier) {
+fun EmptyContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.padding(Dimensions.screenPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,5 +44,5 @@ fun EmptyState(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun EmptyStatePreview() {
-    EmptyState()
+    EmptyContent()
 }

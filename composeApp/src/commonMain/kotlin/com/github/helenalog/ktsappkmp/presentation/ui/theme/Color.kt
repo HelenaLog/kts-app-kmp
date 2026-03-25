@@ -44,7 +44,8 @@ val LightColorScheme = lightColorScheme(
     onBackground = OnBackground,
     surface = Surface,
     onSurface = OnSurface,
-    outline = Outline
+    outline = Outline,
+    tertiary = Fill
 )
 
 val DarkColorScheme = darkColorScheme(
@@ -58,5 +59,6 @@ val DarkColorScheme = darkColorScheme(
     onBackground = DarkOnBackground,
     surface = DarkSurface,
     onSurface = DarkOnBackground,
-    outline = DarkOutline
+    outline = DarkOutline,
+    tertiary = Fill
 )

@@ -21,7 +21,7 @@ abstract class BaseViewModel<State, Event>(initialState: State) : ViewModel() {
     private val mutableState = MutableStateFlow(initialState)
     private val mutableEvent = MutableSharedFlow<Event>()
 
-    fun updateState(block: State.() -> State) {
+    protected fun updateState(block: State.() -> State) {
         mutableState.update { it.block() }
     }
 

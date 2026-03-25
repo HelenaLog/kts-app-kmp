@@ -27,7 +27,7 @@ fun PaginationErrorFooter(
             .fillMaxWidth()
             .padding(Dimensions.screenPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Dimensions.itemSpacing)
+        verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall)
     ) {
         Text(
             text = message,

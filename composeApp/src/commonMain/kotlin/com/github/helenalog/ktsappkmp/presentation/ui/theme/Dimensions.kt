@@ -9,8 +9,7 @@ object Dimensions {
     // Spacing
     val spacingMedium = 16.dp
     val spacingLarge = 24.dp
-    val spacingXLarge = 32.dp
-    val itemSpacing = 8.dp
+    val spacingSmall = 8.dp
 
     // Avatar
     val avatarSize = 52.dp
@@ -26,6 +25,7 @@ object Dimensions {
 
     // TextField
     val textFieldCornerRadius = 8.dp
+    val textFieldPadding = 10.dp
 
     // Login
     val loginSpacingSmall = 8.dp
@@ -62,7 +62,21 @@ object Dimensions {
 
     // Loader
     val paginationLoaderSize = 28.dp
+    val loaderSize = 20.dp
+    val loaderStroke = 2.dp
 
     // Captcha
     val captchaHeight = 120.dp
+
+    // Onboarding
+    val onboardingImageHeight = 240.dp
+    val onboardingContentSpacing = 40.dp
+    val onboardingTextSpacing = 24.dp
+    val onboardingBottomSpacing = 28.dp
+    val onboardingHorizontalPadding = 32.dp
+    val onboardingVerticalPadding = 48.dp
+    val onboardingIndicatorSize = 14.dp
+    val onboardingIndicatorSpacing = 8.dp
+    val onboardingButtonSpacing = 8.dp
+    val onboardingTextHorizontalPadding = 8.dp
 }

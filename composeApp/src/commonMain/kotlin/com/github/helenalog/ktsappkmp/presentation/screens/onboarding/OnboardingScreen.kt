@@ -1,66 +1,127 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.onboarding
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.Image
 import com.github.helenalog.ktsappkmp.presentation.ui.components.AppButton
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
-import ktsappkmp.composeapp.generated.resources.compose_multiplatform
-import ktsappkmp.composeapp.generated.resources.onboarding_button_get_started
-import ktsappkmp.composeapp.generated.resources.onboarding_title
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import coil3.compose.AsyncImage
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.helenalog.ktsappkmp.presentation.ui.components.AppButtonStyle
+import com.github.helenalog.ktsappkmp.presentation.ui.components.PageContent
+import com.github.helenalog.ktsappkmp.presentation.ui.components.PageIndicator
+import com.github.helenalog.ktsappkmp.presentation.ui.theme.AppTheme
+import ktsappkmp.composeapp.generated.resources.onboarding_background
+import ktsappkmp.composeapp.generated.resources.onboarding_button_back
+import ktsappkmp.composeapp.generated.resources.onboarding_button_get_started
+import ktsappkmp.composeapp.generated.resources.onboarding_button_next
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+
 @Composable
 fun OnboardingScreen(
-    onNavigateToLogin: () -> Unit,
-    modifier: Modifier = Modifier
+    onNavigateToLogin: () -> Unit = {},
+    viewModel: OnboardingViewModel = viewModel { OnboardingViewModel() }
 ) {
-    Scaffold(modifier = modifier) { innerPadding ->
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                is OnboardingUiEvent.OnboardingCompleted -> onNavigateToLogin()
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.onboarding_background),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillHeight
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(all = Dimensions.screenPadding),
+                .padding(
+                    horizontal = Dimensions.onboardingHorizontalPadding,
+                    vertical = Dimensions.onboardingVerticalPadding
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            AsyncImage(
-                model = "https://cdni.iconscout.com/illustration/premium/thumb/login-6262949-5253376.png",
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                placeholder = painterResource(Res.drawable.compose_multiplatform),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(fraction = 0.5f)
-            )
             Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
-            Text(
-                stringResource(Res.string.onboarding_title).uppercase(),
-                style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(Dimensions.spacingXLarge))
-            AppButton(
-                text = stringResource(Res.string.onboarding_button_get_started),
-                onClick = onNavigateToLogin
-            )
+            AnimatedContent(
+                targetState = state.currentPage,
+                label = "pageContent"
+            ) { index ->
+                state.currentPageContent?.let { page ->
+                    PageContent(page = page)
+                }
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(Dimensions.onboardingBottomSpacing)
+            ) {
+                PageIndicator(
+                    pageSize = state.totalPages,
+                    selectedPage = state.currentPage,
+                    selectedColor = MaterialTheme.colorScheme.primary,
+                    unselectedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                    onPageClick = { page -> viewModel.onPageSelected(page) }
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement =
+                        if (state.isFirstPage) Arrangement.Center
+                        else Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (!state.isFirstPage) {
+                        AppButton(
+                            text = stringResource(Res.string.onboarding_button_back),
+                            onClick = { viewModel.previousPage() },
+                            style = AppButtonStyle.Outline,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = Dimensions.onboardingButtonSpacing)
+                        )
+                    }
+                    AppButton(
+                        text = if (state.isLastPage) stringResource(Res.string.onboarding_button_get_started)
+                        else stringResource(Res.string.onboarding_button_next),
+                        onClick = { viewModel.nextPage() },
+                        style = AppButtonStyle.Primary,
+                        modifier = Modifier
+                            .weight(1f)
+                            .then(
+                                if (!state.isFirstPage)
+                                    Modifier.padding(start = Dimensions.onboardingButtonSpacing)
+                                else Modifier
+                            )
+                    )
+                }
+            }
         }
     }
 }
@@ -68,7 +129,9 @@ fun OnboardingScreen(
 @Preview
 @Composable
 private fun OnboardingScreenPrev() {
-    OnboardingScreen(
-        onNavigateToLogin = {}
-    )
+    AppTheme {
+        OnboardingScreen(
+            onNavigateToLogin = {}
+        )
+    }
 }

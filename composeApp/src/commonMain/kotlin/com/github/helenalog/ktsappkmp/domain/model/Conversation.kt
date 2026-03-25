@@ -9,6 +9,7 @@ data class Conversation(
     val lastMessageText: String,
     val lastMessageKind: MessageKind?,
     val formattedTime: String,
+    val dateUpdated: String,
 )
 
 enum class ChannelKind {

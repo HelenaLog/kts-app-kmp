@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 val localProperties = Properties().apply {
@@ -37,6 +39,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.security.crypto)
+            implementation(libs.androidx.swiperefreshlayout)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -58,6 +61,10 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.napier)
             implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.androidx.datastore.preferences.core)
+            implementation(libs.androidx.datastore.core.okio)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -95,7 +102,14 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     debugImplementation(libs.compose.uiTooling)
 }
 

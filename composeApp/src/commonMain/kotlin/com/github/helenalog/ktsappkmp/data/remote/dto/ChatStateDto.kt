@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StateDto(
+data class ChatStateDto(
     @SerialName("stopped_by_manager")
     val stoppedByManager: Boolean,
     @SerialName("operator_tagged")
