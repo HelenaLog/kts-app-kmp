@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,23 +17,15 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
+import com.github.helenalog.ktsappkmp.presentation.ui.models.UserAvatarUi
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 
 @Composable
 fun UserAvatar(
-    name: String,
-    photoUrl: String?,
+    avatar: UserAvatarUi,
     modifier: Modifier = Modifier
 ) {
-    val initials = name
-        .trim()
-        .split(" ")
-        .filter { it.isNotBlank() }
-        .take(2)
-        .mapNotNull { it.firstOrNull()?.uppercaseChar() }
-        .joinToString("")
-        .ifBlank { "?" }
     Box(
         modifier = modifier
             .size(Dimensions.avatarSize)
@@ -42,19 +33,18 @@ fun UserAvatar(
             .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
-        if (!photoUrl.isNullOrEmpty()) {
+        if (avatar.showPhoto) {
             AsyncImage(
-                model = photoUrl,
+                model = avatar.photoUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 error = rememberVectorPainter(Icons.Default.Person),
                 placeholder = rememberVectorPainter(Icons.Default.Person),
-                modifier = Modifier
-                    .matchParentSize()
+                modifier = Modifier.matchParentSize()
             )
         } else {
             Text(
-                text = initials,
+                text = avatar.initials,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.tertiary
             )
@@ -68,12 +58,16 @@ private fun FriendAvatarPhotoPreview() {
     AppTheme {
         Row {
             UserAvatar(
-                name = "Иван",
-                photoUrl = "https://static.vecteezy.com/system/resources/previews/036/463/807/non_2x/ai-generated-young-caucasian-man-in-business-attire-portrait-png.png"
+                avatar = UserAvatarUi(
+                    initials = "И",
+                    photoUrl = "https://static.vecteezy.com/system/resources/previews/036/463/807/non_2x/ai-generated-young-caucasian-man-in-business-attire-portrait-png.png"
+                )
             )
             UserAvatar(
-                name = "Иван",
-                photoUrl = null
+                avatar = UserAvatarUi(
+                    initials = "И",
+                    photoUrl = null
+                )
             )
         }
     }

@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.helenalog.ktsappkmp.domain.model.Conversation
+import com.github.helenalog.ktsappkmp.presentation.ui.models.ConversationUi
 import com.github.helenalog.ktsappkmp.presentation.ui.components.AppSwipeRefresh
 import com.github.helenalog.ktsappkmp.presentation.ui.components.ConversationListItem
 import com.github.helenalog.ktsappkmp.presentation.ui.components.EmptyContent
@@ -47,8 +47,8 @@ fun MainScreen(
         topBar = {
             MainTopBar(
                 searchQuery = state.searchQuery,
-                onSearchQueryChange = viewModel::onSearchQueryChange,
-                onClearSearch = viewModel::clearSearch
+                onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
+                onClearSearch = { viewModel.clearSearch() }
             )
         },
         contentWindowInsets = WindowInsets()
@@ -64,6 +64,7 @@ fun MainScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 state.error != null && state.conversations.isEmpty() -> {
                     ErrorContent(
                         message = state.error,
@@ -71,11 +72,13 @@ fun MainScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 state.conversations.isEmpty() -> {
                     EmptyContent(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 else -> {
                     AppSwipeRefresh(
                         isRefreshing = state.isRefreshing,
@@ -85,8 +88,8 @@ fun MainScreen(
                             conversations = state.conversations,
                             isPaginating = state.pagination.isPaginating,
                             paginationError = state.pagination.error,
-                            onReachEnd = viewModel::onReachEnd,
-                            onRetryPagination = viewModel::onReachEnd
+                            onReachEnd = { viewModel.onReachEnd() },
+                            onRetryPagination = { viewModel.onReachEnd() }
                         )
                     }
                 }
@@ -97,7 +100,7 @@ fun MainScreen(
 
 @Composable
 private fun ConversationList(
-    conversations: List<Conversation>,
+    conversations: List<ConversationUi>,
     isPaginating: Boolean,
     paginationError: String?,
     onReachEnd: () -> Unit,

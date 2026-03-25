@@ -1,12 +1,16 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.profile
 
 import androidx.compose.runtime.Immutable
+import com.github.helenalog.ktsappkmp.presentation.ui.models.ProfileUi
+import com.github.helenalog.ktsappkmp.presentation.ui.models.UserAvatarUi
 
 @Immutable
 data class ProfileUiState(
-    val name: String = "",
-    val email: String? = null,
-    val avatarUrl: String? = null,
+    val profile: ProfileUi = ProfileUi(
+        displayName = "",
+        email = null,
+        avatar = UserAvatarUi(initials = "?", photoUrl = null)
+    ),
     val isLoading: Boolean = false,
     val isProfileLoading: Boolean = false,
     val profileError: String? = null,

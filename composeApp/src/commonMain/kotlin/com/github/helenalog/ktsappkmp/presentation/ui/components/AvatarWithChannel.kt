@@ -7,20 +7,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.domain.model.ChannelKind
+import com.github.helenalog.ktsappkmp.presentation.ui.models.UserAvatarUi
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 
 @Composable
 fun AvatarWithChannel(
-    name: String,
-    photoUrl: String?,
+    avatar: UserAvatarUi,
     channelKind: ChannelKind,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
-        UserAvatar(
-            name = name,
-            photoUrl = photoUrl
-        )
+        UserAvatar(avatar = avatar)
         ChannelIcon(
             kind = channelKind,
             modifier = Modifier
@@ -34,8 +31,9 @@ fun AvatarWithChannel(
 @Composable
 private fun AvatarWithChannelPreview() {
     AvatarWithChannel(
-        name = "Иван",
-        photoUrl = null,
+        avatar = UserAvatarUi(
+            initials = "Иван",
+            photoUrl = ""),
         channelKind = ChannelKind.TG,
     )
 }

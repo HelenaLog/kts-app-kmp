@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.main
 
 import androidx.lifecycle.viewModelScope
+import com.github.helenalog.ktsappkmp.data.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.data.repository.ConversationRepositoryImpl
 import com.github.helenalog.ktsappkmp.domain.repository.ConversationRepository
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class MainViewModel(
-    private val repository: ConversationRepository = ConversationRepositoryImpl()
+    private val repository: ConversationRepository = ConversationRepositoryImpl(),
+    private val conversationMapper: ConversationUiMapper = ConversationUiMapper()
 ) : BaseViewModel<MainUiState, Nothing>(MainUiState.Initial) {
 
     private val searchQueryFlow = MutableStateFlow("")
@@ -93,7 +95,7 @@ class MainViewModel(
         Napier.d("handleNextPage: ${page.conversations.size} items")
         updateState {
             copy(
-                conversations = conversations + page.conversations,
+                conversations = conversations + conversationMapper.mapList(page.conversations),
                 pagination = pagination.copy(
                     isPaginating = false,
                     offset = pagination.offset + page.conversations.size,
@@ -124,7 +126,7 @@ class MainViewModel(
         updateState {
             copy(
                 isLoading = false,
-                conversations = page.conversations,
+                conversations = conversationMapper.mapList(page.conversations),
                 error = null,
                 pagination = pagination.copy(
                     offset = page.conversations.size,

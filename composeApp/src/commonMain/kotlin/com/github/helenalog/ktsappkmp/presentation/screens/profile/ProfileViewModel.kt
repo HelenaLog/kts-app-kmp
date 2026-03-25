@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.presentation.screens.profile
 
 import androidx.lifecycle.viewModelScope
+import com.github.helenalog.ktsappkmp.data.mapper.ProfileUiMapper
 import com.github.helenalog.ktsappkmp.data.repository.CabinetRepositoryImpl
 import com.github.helenalog.ktsappkmp.data.repository.ProfileRepositoryImpl
 import com.github.helenalog.ktsappkmp.data.repository.ProjectRepositoryImpl
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val repository: ProfileRepository = ProfileRepositoryImpl(),
     private val cabinetRepository: CabinetRepository = CabinetRepositoryImpl(),
-    private val projectRepository: ProjectRepository = ProjectRepositoryImpl()
+    private val projectRepository: ProjectRepository = ProjectRepositoryImpl(),
+    private val profileMapper: ProfileUiMapper = ProfileUiMapper()
 ) : BaseViewModel<ProfileUiState, ProfileUiEvent>(ProfileUiState()) {
 
     init {
@@ -47,9 +49,7 @@ class ProfileViewModel(
                 .onSuccess { profile ->
                     updateState {
                         copy(
-                            name = profile.name,
-                            email = profile.email,
-                            avatarUrl = profile.avatarUrl,
+                            profile = profileMapper.map(profile),
                             isProfileLoading = false,
                             profileError = null
                         )

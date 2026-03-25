@@ -35,8 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.helenalog.ktsappkmp.presentation.ui.models.UserAvatarUi
 import com.github.helenalog.ktsappkmp.presentation.ui.components.ErrorContent
 import com.github.helenalog.ktsappkmp.presentation.ui.components.UserAvatar
+import com.github.helenalog.ktsappkmp.presentation.ui.models.ProfileUi
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.presentation.ui.theme.SocialButtonBorder
 import ktsappkmp.composeapp.generated.resources.Res
@@ -85,9 +87,7 @@ fun ProfileScreen(
 
                 else -> {
                     ProfileContent(
-                        name = state.name,
-                        email = state.email,
-                        avatarUrl = state.avatarUrl,
+                        profile = state.profile,
                         onLogout = { viewModel.logout() },
                         onSettingsClick = {},
                         cabinetsContent = {
@@ -117,16 +117,13 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileContent(
-    name: String,
-    email: String?,
-    avatarUrl: String?,
+    profile: ProfileUi,
     cabinetsContent: @Composable () -> Unit,
     projectsContent: @Composable () -> Unit,
     onLogout: () -> Unit,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val displayName = name.ifBlank { email.orEmpty() }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -136,10 +133,10 @@ private fun ProfileContent(
         horizontalAlignment = Alignment.Start,
     ) {
         ProfileHeader(
-            name = displayName,
-            email = email,
-            avatarUrl = avatarUrl,
-            onLogoutClick = onLogout,
+            name = profile.displayName,
+            email = profile.email,
+            avatar = profile.avatar,
+            onLogoutClick = onLogout
         )
         Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
         SectionTitle(text = stringResource(Res.string.profile_cabinets))
@@ -162,7 +159,7 @@ private fun ProfileContent(
 private fun ProfileHeader(
     name: String,
     email: String?,
-    avatarUrl: String?,
+    avatar: UserAvatarUi,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -173,7 +170,7 @@ private fun ProfileHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingMedium),
     ) {
-        UserAvatar(name = name, photoUrl = avatarUrl)
+        UserAvatar(avatar = avatar)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = name,
