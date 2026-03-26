@@ -60,6 +60,7 @@ private fun ConversationListItemPreview() {
                 channelKind = ChannelKind.TG,
                 lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
                 lastMessageKind = MessageKind.BOT,
+                userId = "1"
             ),
             onConversationClick = {}
         )

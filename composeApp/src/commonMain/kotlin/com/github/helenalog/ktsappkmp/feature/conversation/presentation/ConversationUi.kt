@@ -15,4 +15,5 @@ data class ConversationUi(
     val lastMessageKind: MessageKind?,
     val lastMessageText: String,
     val channelKind: ChannelKind,
+    val userId: String
 )

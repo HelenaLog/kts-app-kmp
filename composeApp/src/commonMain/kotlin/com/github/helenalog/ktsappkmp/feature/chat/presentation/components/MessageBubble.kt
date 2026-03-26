@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.UserAvatar
+import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.SocialButtonBorder
@@ -119,8 +120,7 @@ fun IncomingMessageBubble(
         verticalAlignment = Alignment.Bottom
     ) {
         UserAvatar(
-            photoUrl = message.userPhotoUrl,
-            name = message.userName,
+            avatar = message.avatar,
         )
         ChatBubbleContainer(
             modifier = Modifier.weight(1f, fill = false),
@@ -170,7 +170,8 @@ fun IncomingMessageBubblePreview() {
                 kind = MessageKind.USER,
                 userName = "Иван",
                 userPhotoUrl = "",
-                attachments = emptyList()
+                attachments = emptyList(),
+                avatar = UserAvatarUi("?", "")
             )
         )
     }

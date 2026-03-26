@@ -93,8 +93,8 @@ fun ConversationScreen(
                             isPaginating = state.pagination.isPaginating,
                             paginationError = state.pagination.error,
                             onReachEnd = { viewModel.onReachEnd() },
-                            onRetryPagination = { viewModel.onReachEnd() }
-                            onConversationClick = onConversationClick,
+                            onRetryPagination = { viewModel.onReachEnd() },
+                            onConversationClick = onConversationClick
                         )
                     }
                 }

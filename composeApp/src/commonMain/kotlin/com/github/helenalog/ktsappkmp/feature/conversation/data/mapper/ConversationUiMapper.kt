@@ -20,6 +20,7 @@ class ConversationUiMapper(
             lastMessageKind = conversation.lastMessageKind,
             lastMessageText = conversation.lastMessageText,
             channelKind = conversation.channelKind,
+            userId = conversation.userId,
         )
     }
 }

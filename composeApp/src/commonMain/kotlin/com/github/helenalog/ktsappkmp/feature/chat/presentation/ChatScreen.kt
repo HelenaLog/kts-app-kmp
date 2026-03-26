@@ -7,11 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -47,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AvatarWithChannel
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.EmptyContent
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorContent
+import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatDateDivider
@@ -83,7 +81,7 @@ fun ChatScreen(
         pendingAttachments = state.pendingAttachments,
         messageInput = viewModel.messageInputState,
         userName = state.userName,
-        photoUrl = state.userPhotoUrl,
+        avatar = state.avatar,
         channelKind = state.channelKind,
         isLoading = state.isLoading,
         error = state.error,
@@ -104,7 +102,7 @@ fun ChatContent(
     pendingAttachments: List<ChatAttachmentUi>,
     messageInput: TextFieldState,
     userName: String,
-    photoUrl: String?,
+    avatar: UserAvatarUi,
     channelKind: ChannelKind,
     isLoading: Boolean,
     error: String?,
@@ -123,7 +121,7 @@ fun ChatContent(
         topBar = {
             ChatTopBar(
                 channelKind = channelKind,
-                photoUrl = photoUrl ?: "",
+                avatar = avatar,
                 userName = userName,
                 onBack = onBack,
                 onToggleBot = onToggleBot,
@@ -197,7 +195,7 @@ private fun MessageList(
 @Composable
 private fun ChatTopBar(
     userName: String = "",
-    photoUrl: String? = null,
+    avatar: UserAvatarUi,
     channelKind: ChannelKind = ChannelKind.TG,
     onBack: () -> Unit,
     onToggleBot: () -> Unit,
@@ -215,9 +213,8 @@ private fun ChatTopBar(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 AvatarWithChannel(
-                    name = userName,
-                    photoUrl = photoUrl,
                     channelKind = channelKind,
+                    avatar = avatar
                 )
                 Spacer(Modifier.width(Dimensions.spacingSmall))
                 Text(
@@ -294,7 +291,10 @@ fun ChatTopBarPreview() {
         ChatTopBar(
             onBack = {},
             onToggleBot = {},
-            onUserInfo = {}
+            onUserInfo = {},
+            userName = "Имя",
+            avatar = UserAvatarUi("?", photoUrl = ""),
+            channelKind = ChannelKind.TG
         )
     }
 }

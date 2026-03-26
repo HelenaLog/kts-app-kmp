@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.chat.data.mapper
 
+import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.core.utils.DateFormatter
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
@@ -52,6 +53,7 @@ class ChatUiMapper {
         userName = userName,
         userPhotoUrl = userPhotoUrl.orEmpty(),
         attachments = domain.attachments.map { it.toUi() },
+        avatar = UserAvatarUi(userName, userPhotoUrl)
     )
 
     fun mapAttachment(domain: ChatAttachment): ChatAttachmentUi = domain.toUi()
