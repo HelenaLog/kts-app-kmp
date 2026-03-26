@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.chat.di
 
+import com.github.helenalog.ktsappkmp.core.data.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
 import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.api.ChatApi
@@ -23,13 +24,16 @@ val chatModule = module {
     single { GetConversationDetailUseCase(get()) }
     single { GetMessagesUseCase(get()) }
 
-    single { ChatUiMapper() }
+    single { UserAvatarUiMapper() }
+    single { ChatUiMapper(get()) }
+
 
     viewModel {
         ChatViewModel(
             getDetailUseCase = get(),
             getMessagesUseCase = get(),
             mapper = get(),
+            avatarUiMapper = get()
         )
     }
 }

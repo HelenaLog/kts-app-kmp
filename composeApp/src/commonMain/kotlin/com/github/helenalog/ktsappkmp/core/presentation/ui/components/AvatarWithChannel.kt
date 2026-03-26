@@ -33,7 +33,8 @@ private fun AvatarWithChannelPreview() {
     AvatarWithChannel(
         avatar = UserAvatarUi(
             initials = "Иван",
-            photoUrl = ""),
+            photoUrl = ""
+        ),
         channelKind = ChannelKind.TG,
     )
 }

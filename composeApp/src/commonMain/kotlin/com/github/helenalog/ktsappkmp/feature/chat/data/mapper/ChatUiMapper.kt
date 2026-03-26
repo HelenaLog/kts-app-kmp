@@ -1,6 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.chat.data.mapper
 
-import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
+import com.github.helenalog.ktsappkmp.core.data.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.utils.DateFormatter
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
@@ -14,7 +14,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 
-class ChatUiMapper {
+class ChatUiMapper(
+    private val avatarMapper: UserAvatarUiMapper
+) {
 
     fun mapToList(
         messages: List<ChatMessage>,
@@ -53,7 +55,7 @@ class ChatUiMapper {
         userName = userName,
         userPhotoUrl = userPhotoUrl.orEmpty(),
         attachments = domain.attachments.map { it.toUi() },
-        avatar = UserAvatarUi(userName, userPhotoUrl)
+        avatar = avatarMapper.map(userName, userPhotoUrl)
     )
 
     fun mapAttachment(domain: ChatAttachment): ChatAttachmentUi = domain.toUi()
@@ -77,32 +79,32 @@ class ChatUiMapper {
         "start_bot" -> "Пользователь переведён на бота"
         else -> text.orEmpty()
     }
-}
 
-private fun ChatAttachment.toUi(): ChatAttachmentUi = when (type) {
-    ChatAttachmentType.IMAGE -> ChatAttachmentUi.Image(id = id, url = url.orEmpty())
-    ChatAttachmentType.FILE -> ChatAttachmentUi.File(
-        id = id,
-        name = name ?: "Файл",
-        typeLabel = formatTypeLabel(mimeType),
-        sizeLabel = formatSize(size ?: 0L),
-        extension = mimeType?.substringAfterLast('/').orEmpty(),
-    )
-}
-
-private fun formatTypeLabel(mimeType: String?): String {
-    val raw = mimeType?.substringBefore('/')?.uppercase() ?: "FILE"
-    return when (raw) {
-        "DOCUMENT" -> "DOC"
-        "AUDIO" -> "AUD"
-        "VIDEO" -> "VID"
-        "IMAGE" -> "IMG"
-        else -> raw.take(3)
+    private fun ChatAttachment.toUi(): ChatAttachmentUi = when (type) {
+        ChatAttachmentType.IMAGE -> ChatAttachmentUi.Image(id = id, url = url.orEmpty())
+        ChatAttachmentType.FILE -> ChatAttachmentUi.File(
+            id = id,
+            name = name ?: "Файл",
+            typeLabel = formatTypeLabel(mimeType),
+            sizeLabel = formatSize(size ?: 0L),
+            extension = mimeType?.substringAfterLast('/').orEmpty(),
+        )
     }
-}
 
-private fun formatSize(bytes: Long): String = when {
-    bytes >= 1024 * 1024 -> "${bytes / (1024 * 1024)} MB"
-    bytes >= 1024 -> "${bytes / 1024} KB"
-    else -> "$bytes B"
+    private fun formatTypeLabel(mimeType: String?): String {
+        val raw = mimeType?.substringBefore('/')?.uppercase() ?: "FILE"
+        return when (raw) {
+            "DOCUMENT" -> "DOC"
+            "AUDIO" -> "AUD"
+            "VIDEO" -> "VID"
+            "IMAGE" -> "IMG"
+            else -> raw.take(3)
+        }
+    }
+
+    private fun formatSize(bytes: Long): String = when {
+        bytes >= 1024 * 1024 -> "${bytes / (1024 * 1024)} MB"
+        bytes >= 1024 -> "${bytes / 1024} KB"
+        else -> "$bytes B"
+    }
 }

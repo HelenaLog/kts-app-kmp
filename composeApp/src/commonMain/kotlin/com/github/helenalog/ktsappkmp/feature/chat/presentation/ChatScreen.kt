@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,6 +50,9 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatI
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatMessageItem
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.PendingAttachmentsRow
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
+import ktsappkmp.composeapp.generated.resources.Res
+import ktsappkmp.composeapp.generated.resources.chat_ic_user_info
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -92,7 +93,8 @@ fun ChatScreen(
         onEmoji = {},
         onSend = {},
         onRemoveAttachment = {},
-        onRetry = { viewModel.loadScreen(conversationId, userId) }
+        onRetry = { viewModel.loadScreen(conversationId, userId) },
+        botName = state.botName
     )
 }
 
@@ -103,6 +105,7 @@ fun ChatContent(
     messageInput: TextFieldState,
     userName: String,
     avatar: UserAvatarUi,
+    botName: String,
     channelKind: ChannelKind,
     isLoading: Boolean,
     error: String?,
@@ -124,6 +127,7 @@ fun ChatContent(
                 avatar = avatar,
                 userName = userName,
                 onBack = onBack,
+                botName = botName,
                 onToggleBot = onToggleBot,
                 onUserInfo = onUserInfo
             )
@@ -196,6 +200,7 @@ private fun MessageList(
 private fun ChatTopBar(
     userName: String = "",
     avatar: UserAvatarUi,
+    botName: String,
     channelKind: ChannelKind = ChannelKind.TG,
     onBack: () -> Unit,
     onToggleBot: () -> Unit,
@@ -206,7 +211,8 @@ private fun ChatTopBar(
             IconButton(onClick = onBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         },
@@ -217,13 +223,24 @@ private fun ChatTopBar(
                     avatar = avatar
                 )
                 Spacer(Modifier.width(Dimensions.spacingSmall))
-                Text(
-                    text = userName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall)
+                ) {
+                    Text(
+                        text = userName,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        text = botName,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.secondary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
         },
         actions = {
@@ -244,9 +261,9 @@ private fun ChatTopBar(
             }
             IconButton(onClick = onUserInfo) {
                 Icon(
-                    imageVector = Icons.Default.Person,
+                    painter = painterResource(Res.drawable.chat_ic_user_info),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             }
         }
@@ -294,7 +311,8 @@ fun ChatTopBarPreview() {
             onUserInfo = {},
             userName = "Имя",
             avatar = UserAvatarUi("?", photoUrl = ""),
-            channelKind = ChannelKind.TG
+            channelKind = ChannelKind.TG,
+            botName = "имя бота"
         )
     }
 }
