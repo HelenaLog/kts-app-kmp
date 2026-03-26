@@ -39,7 +39,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.components.UserAvatar
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.SocialButtonBorder
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
-import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileUi
+import com.github.helenalog.ktsappkmp.feature.profile.presentation.model.ProfileUi
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.profile_cabinets
 import ktsappkmp.composeapp.generated.resources.profile_logout

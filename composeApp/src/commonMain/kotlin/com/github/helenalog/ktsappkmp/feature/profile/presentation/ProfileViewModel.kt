@@ -3,7 +3,7 @@ package com.github.helenalog.ktsappkmp.feature.profile.presentation
 import androidx.lifecycle.viewModelScope
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
-import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.ProfileUiMapper
+import com.github.helenalog.ktsappkmp.feature.profile.presentation.mapper.ProfileUiMapper
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetCabinetsUseCase
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetProfileUseCase
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetProjectsUseCase

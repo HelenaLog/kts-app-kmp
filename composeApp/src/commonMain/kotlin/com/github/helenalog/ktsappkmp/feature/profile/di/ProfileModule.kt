@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.profile.di
 
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
-import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.ProfileUiMapper
+import com.github.helenalog.ktsappkmp.feature.profile.presentation.mapper.ProfileUiMapper
 import com.github.helenalog.ktsappkmp.feature.profile.data.remote.api.ProfileApi
 import com.github.helenalog.ktsappkmp.feature.profile.data.repository.CabinetRepositoryImpl
 import com.github.helenalog.ktsappkmp.feature.profile.data.repository.ProfileRepositoryImpl

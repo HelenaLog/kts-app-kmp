@@ -28,9 +28,6 @@ data class ConversationEntity(
     @ColumnInfo(name = "last_message_kind")
     val lastMessageKind: String?,
 
-    @ColumnInfo(name = "formatted_time")
-    val formattedTime: String,
-
     @ColumnInfo(name = "date_updated")
-    val dateUpdated: String,
+    val dateUpdated: String
 )

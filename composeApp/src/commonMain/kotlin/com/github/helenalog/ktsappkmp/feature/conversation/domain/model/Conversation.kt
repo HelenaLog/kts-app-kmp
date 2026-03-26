@@ -8,19 +8,5 @@ data class Conversation(
     val channelKind: ChannelKind,
     val lastMessageText: String,
     val lastMessageKind: MessageKind?,
-    val formattedTime: String,
-    val dateUpdated: String,
+    val dateUpdated: String
 )
-
-enum class ChannelKind {
-    TG, WZ, JV, UNKNOWN;
-
-    val displayName: String
-        get() = when (this) {
-            TG -> "Telegram"
-            WZ -> "WhatsApp"
-            JV -> "Jivo"
-            UNKNOWN -> "Unknown"
-        }
-}
-enum class MessageKind { BOT, SERVICE, MANAGER, USER }

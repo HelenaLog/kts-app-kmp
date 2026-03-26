@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7c6af2d945b871a4838a55e12de48c73",
+    "identityHash": "23d92443afc8e8a9402062fdee9e8472",
     "entities": [
       {
         "tableName": "conversations",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `is_read` INTEGER NOT NULL, `user_name` TEXT NOT NULL, `photo_url` TEXT, `channel_kind` TEXT NOT NULL, `last_message_text` TEXT NOT NULL, `last_message_kind` TEXT, `formatted_time` TEXT NOT NULL, `date_updated` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `is_read` INTEGER NOT NULL, `user_name` TEXT NOT NULL, `photo_url` TEXT, `channel_kind` TEXT NOT NULL, `last_message_text` TEXT NOT NULL, `last_message_kind` TEXT, `date_updated` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -47,12 +47,6 @@
             "fieldPath": "lastMessageKind",
             "columnName": "last_message_kind",
             "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "formattedTime",
-            "columnName": "formatted_time",
-            "affinity": "TEXT",
-            "notNull": true
           },
           {
             "fieldPath": "dateUpdated",
@@ -130,7 +124,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c6af2d945b871a4838a55e12de48c73')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '23d92443afc8e8a9402062fdee9e8472')"
     ]
   }
 }

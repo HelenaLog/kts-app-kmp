@@ -31,7 +31,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.components.FilterButt
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PaginationErrorFooter
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SearchBar
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
-import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationUi
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import org.koin.compose.viewmodel.koinViewModel
