@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.chat.data.remote.api
 
 import com.github.helenalog.ktsappkmp.core.data.remote.response.ApiResponse
-import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.AttachmentUploadDto
+import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.AttachmentDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.ConversationLiteDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.request.SendMessageRequestDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.response.MessagesResponseDto
@@ -52,7 +52,7 @@ class ChatApi(private val client: HttpClient) {
     suspend fun uploadAttachment(
         fileName: String,
         bytes: ByteArray,
-    ): ApiResponse<AttachmentUploadDto> {
+    ): ApiResponse<AttachmentDto> {
         val response = client.post("api/attachments/upload") {
             setBody(
                 MultiPartFormDataContent(formData {

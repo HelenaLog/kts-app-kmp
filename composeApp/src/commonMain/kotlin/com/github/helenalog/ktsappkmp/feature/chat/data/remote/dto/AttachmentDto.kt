@@ -19,4 +19,6 @@ data class AttachmentDto(
     val type: String? = null,
     @SerialName("size")
     val size: Long? = null,
+    @SerialName("extension")
+    val extension: String? = null
 )

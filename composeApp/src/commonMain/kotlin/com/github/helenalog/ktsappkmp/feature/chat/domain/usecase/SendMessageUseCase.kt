@@ -6,14 +6,15 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.ChatReposit
 class SendMessageUseCase(private val repository: ChatRepository) {
     suspend operator fun invoke(
         conversationId: Long,
-        text: String,
+        text: String?,
         attachments: List<ChatAttachment>
     ): Result<Unit> {
-        if (text.isBlank() && attachments.isEmpty())
+        val trimmedText = text?.trim()?.ifBlank { null }
+        if (trimmedText == null && attachments.isEmpty())
             return Result.failure(
                 IllegalArgumentException(EMPTY_MESSAGE_ERROR)
             )
-        return repository.sendMessage(conversationId, text, attachments = attachments)
+        return repository.sendMessage(conversationId, trimmedText, attachments = attachments)
     }
 
     private companion object {

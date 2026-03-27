@@ -5,12 +5,17 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.viewModelScope
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachmentUseCase
+import io.github.aakira.napier.Napier
+import io.github.vinceglb.filekit.core.PlatformFile
+import io.github.vinceglb.filekit.core.extension
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -29,13 +34,16 @@ class ChatViewModel(
             updateState { copy(isLoading = true, error = null) }
             getDetailUseCase(conversationId, userId)
                 .onSuccess { detail ->
+                    val userAvatar = withContext(Dispatchers.Default) {
+                        avatarUiMapper.map(detail.userName, detail.photoUrl)
+                    }
                     updateState {
                         copy(
                             userName = detail.userName,
                             userPhotoUrl = detail.photoUrl,
                             botName = detail.botName,
                             channelKind = detail.channelKind,
-                            avatar = avatarUiMapper.map(detail.userName, detail.photoUrl),
+                            avatar = userAvatar,
                             userId = detail.userId,
                             channelId = detail.channelId
                         )
@@ -52,28 +60,32 @@ class ChatViewModel(
 
     private suspend fun loadMessages(conversationId: Long) {
         val state = state.value
+        Napier.d("loadMessages: userId=${state.userId}, channelId=${state.channelId}", tag = "CHAT")
         updateState { copy(isLoading = true, error = null) }
         getMessagesUseCase(conversationId, state.userId, state.channelId)
             .onSuccess { messages ->
+                Napier.d("loadMessages success: ${messages.size} messages", tag = "CHAT")
                 val items = withContext(Dispatchers.Default) {
                     mapper.mapToList(messages, state.userName, state.userPhotoUrl)
                 }
                 updateState { copy(messages = items, isLoading = false) }
-            }
-            .onFailure { e ->
+            }.onFailure { e ->
                 updateState { copy(error = e.message ?: UNKNOWN_ERROR, isLoading = false) }
             }
     }
 
     fun sendMessage(conversationId: Long) {
-        val text = messageInputState.text.toString().trim()
+        val text = messageInputState.text.toString()
         val attachments = state.value.pendingAttachments
-            .map { mapper.mapAttachmentToDomain(it) }
+            .map { mapper.toDomain(it) }
+
         viewModelScope.launch {
+            Napier.d("sendMessage: text='$text', attachments=${attachments.size}", tag = "CHAT")
             updateState { copy(isLoading = true, error = null) }
             sendMessageUseCase(conversationId, text, attachments)
                 .onSuccess {
                     messageInputState.clearText()
+                    updateState { copy(pendingAttachments = emptyList()) }
                     loadMessages(conversationId)
                 }
                 .onFailure { e ->
@@ -82,7 +94,62 @@ class ChatViewModel(
         }
     }
 
+    fun uploadAttachment(bytes: ByteArray, fileName: String, mimeType: String) {
+        Napier.d(
+            "uploadFile: fileName=$fileName, mimeType=$mimeType, size=${bytes.size}",
+            tag = "UPLOAD"
+        )
+        viewModelScope.launch {
+            updateState { copy(isLoading = true, error = null) }
+            uploadAttachmentUseCase(fileName, bytes, mimeType)
+                .onSuccess { attachment ->
+                    val uiModel = withContext(Dispatchers.Default) {
+                        mapper.mapAttachment(attachment)
+                    }
+                    Napier.d("uploadFile success: id=${attachment.id}", tag = "UPLOAD")
+                    updateState {
+                        copy(
+                            isLoading = false,
+                            pendingAttachments = pendingAttachments + uiModel
+                        )
+                    }
+                }
+                .onFailure { e ->
+                    Napier.e("uploadFile failed: ${e.message}", tag = "UPLOAD")
+                    updateState { copy(isLoading = false, error = e.message ?: UNKNOWN_ERROR) }
+                }
+        }
+    }
+
+    fun onFileSelected(file: PlatformFile) {
+        viewModelScope.launch {
+            updateState { copy(isLoading = true, error = null) }
+            val result = withContext(Dispatchers.IO) {
+                suspendRunCatching {
+                    val bytes = file.readBytes()
+                    if (bytes.isEmpty()) throw IllegalStateException(EMPTY_FILE_ERROR)
+                    bytes
+                }
+            }
+            result.onSuccess { bytes ->
+                uploadAttachment(bytes, file.name, file.extension)
+            }.onFailure { e ->
+                updateState {
+                    copy(
+                        isLoading = false,
+                        error = e.message ?: FILE_READ_ERROR
+                    )
+                }
+            }
+        }
+    }
+
+    fun removeAttachment(id: String) =
+        updateState { copy(pendingAttachments = pendingAttachments.filter { it.id != id }) }
+
     private companion object {
         const val UNKNOWN_ERROR = "Неизвестная ошибка"
+        const val EMPTY_FILE_ERROR = "Файл пуст"
+        const val FILE_READ_ERROR = "Не удалось прочитать файл"
     }
 }

@@ -52,6 +52,7 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.Pendi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
+import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_ic_user_info
 import org.jetbrains.compose.resources.painterResource
@@ -66,6 +67,9 @@ fun ChatScreen(
     viewModel: ChatViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val filePickerLauncher = rememberFilePickerLauncher { file ->
+        file?.let { viewModel.onFileSelected(it) }
+    }
 
     LaunchedEffect(conversationId) {
         viewModel.loadScreen(conversationId, userId)
@@ -91,10 +95,10 @@ fun ChatScreen(
         onBack = onNavigateBack,
         onUserInfo = onUserInfo,
         onToggleBot = {},
-        onAttach = {},
+        onAttach = { filePickerLauncher.launch() },
         onEmoji = {},
         onSend = { viewModel.sendMessage(conversationId) },
-        onRemoveAttachment = {},
+        onRemoveAttachment = { viewModel.removeAttachment(it) },
         onRetry = { viewModel.loadScreen(conversationId, userId) },
         botName = state.botName
     )

@@ -35,12 +35,7 @@ class ChatRepositoryImpl(
             SendMessageRequestDto(
                 conversationId = conversationId,
                 messageText = text,
-                attachments = attachments.map {
-                    SendMessageAttachmentDto(
-                        id = it.id,
-                        asDocument = it.type != ChatAttachmentType.IMAGE,
-                    )
-                },
+                attachments = attachments.map { it.toDto() },
             )
         )
         Unit
@@ -51,20 +46,13 @@ class ChatRepositoryImpl(
         bytes: ByteArray,
         mimeType: String
     ): Result<ChatAttachment> = suspendRunCatching {
-        val response = api.uploadAttachment(fileName, bytes).data
-        ChatAttachment(
-            id = response.id.orEmpty(),
-            type = if (response.type?.contains(IMAGE_TYPE, ignoreCase = true) == true) {
-                ChatAttachmentType.IMAGE
-            } else {
-                ChatAttachmentType.FILE
-            },
-            url = response.url,
-            name = response.filename,
-            mimeType = response.type,
-            size = response.size
-        )
+        api.uploadAttachment(fileName, bytes).data.toDomain()
     }
+
+    private fun ChatAttachment.toDto() = SendMessageAttachmentDto(
+        id = id,
+        asDocument = type != ChatAttachmentType.IMAGE,
+    )
 
     private companion object {
         const val IMAGE_TYPE = "image"

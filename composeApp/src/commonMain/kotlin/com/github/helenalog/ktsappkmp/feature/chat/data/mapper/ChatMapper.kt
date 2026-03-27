@@ -43,4 +43,5 @@ fun AttachmentDto.toDomain() = ChatAttachment(
     name = filename ?: name,
     mimeType = type,
     size = size,
+    extension = extension
 )

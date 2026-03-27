@@ -60,7 +60,7 @@ class ChatUiMapper(
 
     fun mapAttachment(domain: ChatAttachment): ChatAttachmentUi = domain.toUi()
 
-    fun mapAttachmentToDomain(ui: ChatAttachmentUi): ChatAttachment = when (ui) {
+    fun toDomain(ui: ChatAttachmentUi): ChatAttachment = when (ui) {
         is ChatAttachmentUi.Image -> ChatAttachment(
             id = ui.id,
             type = ChatAttachmentType.IMAGE,
@@ -77,6 +77,7 @@ class ChatUiMapper(
     private fun normalizeServiceText(text: String?): String = when (text?.trim()) {
         "stop_bot" -> "Бот остановлен и не будет реагировать на сообщения пользователя. " +
                 "Вы можете задать время для автоматического перевода диалога с оператора на бота в настройках"
+
         "start_bot" -> "Пользователь переведён на бота"
         else -> text.orEmpty()
     }
