@@ -91,4 +91,8 @@ object Dimensions {
     val inputIconSize = 16.dp
     val sendButtonSize = 48.dp
     val sendButtonIconSize = 24.dp
+
+    val imagePreviewSize = 100.dp
+    val filePreviewHeight = 58.dp
+    val filePreviewWidth = 270.dp
 }

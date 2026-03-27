@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +33,9 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
+import ktsappkmp.composeapp.generated.resources.Res
+import ktsappkmp.composeapp.generated.resources.chat_ic_delete
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun PendingAttachmentsRow(
@@ -83,9 +84,12 @@ private fun ImagePreview(
 ) {
     Box(
         modifier = Modifier
-            .size(Dimensions.attachmentMaxSize)
+            .size(Dimensions.imagePreviewSize)
             .clip(MaterialTheme.shapes.medium)
-            .border(Dimensions.socialButtonBorderWidth, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.medium)
+            .border(
+                Dimensions.socialButtonBorderWidth,
+                MaterialTheme.colorScheme.outline, MaterialTheme.shapes.medium
+            )
     ) {
         AsyncImage(
             model = data.url,
@@ -96,7 +100,8 @@ private fun ImagePreview(
         if (onRemove != null) {
             RemoveButton(
                 onClick = onRemove,
-                modifier = Modifier.align(Alignment.TopEnd).padding(Dimensions.spacingMedium)
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
             )
         }
     }
@@ -110,16 +115,19 @@ private fun FilePreview(
 ) {
     Surface(
         modifier = modifier
-            .heightIn(min = Dimensions.attachmentMaxSize)
-            .widthIn(max = Dimensions.attachmentMaxSize),
+            .heightIn(min = Dimensions.filePreviewHeight)
+            .widthIn(max = Dimensions.filePreviewWidth),
         shape = MaterialTheme.shapes.small,
-        border = BorderStroke(Dimensions.socialButtonBorderWidth, MaterialTheme.colorScheme.outlineVariant),
+        border = BorderStroke(
+            Dimensions.socialButtonBorderWidth,
+            MaterialTheme.colorScheme.outlineVariant
+        ),
         color = MaterialTheme.colorScheme.secondaryContainer
     ) {
         Row(
             modifier = Modifier.padding(
-                horizontal = Dimensions.spacingMedium,
-                vertical = Dimensions.spacingMedium
+                horizontal = Dimensions.spacingSmall,
+                vertical = Dimensions.spacingSmall
             ),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -138,7 +146,7 @@ private fun FilePreview(
                 )
                 Text(
                     text = data.sizeLabel,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.secondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -162,7 +170,7 @@ private fun RemoveButton(
         modifier = modifier.size(Dimensions.stateIconSize)
     ) {
         Icon(
-            imageVector = Icons.Default.Delete,
+            painter = painterResource(Res.drawable.chat_ic_delete),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.error
         )
@@ -191,7 +199,7 @@ fun PendingAttachmentsRowPreview() {
                     typeLabel = "DOC",
                     extension = "",
                     type = ChatAttachmentType.FILE
-                    )
+                )
             ),
             onRemove = {}
         )
