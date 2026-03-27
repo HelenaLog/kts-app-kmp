@@ -1,13 +1,14 @@
 package com.github.helenalog.ktsappkmp.feature.chat.presentation
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.viewModelScope
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
-import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -15,6 +16,7 @@ import kotlinx.coroutines.withContext
 class ChatViewModel(
     private val getDetailUseCase: GetConversationDetailUseCase,
     private val getMessagesUseCase: GetMessagesUseCase,
+    private val sendMessageUseCase: SendMessageUseCase,
     private val mapper: ChatUiMapper,
     private val avatarUiMapper: UserAvatarUiMapper,
 ) : BaseViewModel<ChatUiState, ChatUiEvent>(initialState = ChatUiState()) {
@@ -59,6 +61,21 @@ class ChatViewModel(
             .onFailure { e ->
                 updateState { copy(error = e.message ?: UNKNOWN_ERROR, isLoading = false) }
             }
+    }
+
+    fun sendMessage(conversationId: Long) {
+        val text = messageInputState.text.toString().trim()
+        viewModelScope.launch {
+            updateState { copy(isLoading = true, error = null) }
+            sendMessageUseCase(conversationId, text)
+                .onSuccess {
+                    messageInputState.clearText()
+                    loadMessages(conversationId)
+                }
+                .onFailure { e ->
+                    updateState { copy(error = e.message ?: UNKNOWN_ERROR, isLoading = false) }
+                }
+        }
     }
 
     private companion object {

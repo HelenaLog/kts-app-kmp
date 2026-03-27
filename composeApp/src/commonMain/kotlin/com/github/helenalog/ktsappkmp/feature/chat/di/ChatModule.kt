@@ -34,6 +34,7 @@ val chatModule = module {
         ChatViewModel(
             getDetailUseCase = get(),
             getMessagesUseCase = get(),
+            sendMessageUseCase = get(),
             mapper = get(),
             avatarUiMapper = get()
         )

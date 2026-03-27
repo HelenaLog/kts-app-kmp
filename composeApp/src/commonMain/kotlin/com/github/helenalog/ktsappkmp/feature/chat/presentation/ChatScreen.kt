@@ -93,7 +93,7 @@ fun ChatScreen(
         onToggleBot = {},
         onAttach = {},
         onEmoji = {},
-        onSend = {},
+        onSend = { viewModel.sendMessage(conversationId) },
         onRemoveAttachment = {},
         onRetry = { viewModel.loadScreen(conversationId, userId) },
         botName = state.botName
