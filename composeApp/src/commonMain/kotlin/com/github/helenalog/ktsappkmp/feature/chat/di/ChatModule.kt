@@ -10,6 +10,7 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.ChatReposit
 import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.ConversationDetailRepository
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -23,6 +24,7 @@ val chatModule = module {
 
     single { GetConversationDetailUseCase(get()) }
     single { GetMessagesUseCase(get()) }
+    single { SendMessageUseCase(get()) }
 
     single { UserAvatarUiMapper() }
     single { ChatUiMapper(get()) }
