@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil3.compose.SubcomposeAsyncImage
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatAttachmentUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
 
 @Composable
 fun MessageAttachmentItem(

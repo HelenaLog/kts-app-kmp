@@ -1,8 +1,8 @@
 package com.github.helenalog.ktsappkmp.feature.chat.di
 
-import com.github.helenalog.ktsappkmp.core.data.mapper.UserAvatarUiMapper
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
-import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.ChatUiMapper
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.api.ChatApi
 import com.github.helenalog.ktsappkmp.feature.chat.data.repository.ChatRepositoryImpl
 import com.github.helenalog.ktsappkmp.feature.chat.data.repository.ConversationDetailRepositoryImpl

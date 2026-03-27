@@ -18,7 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationScreen
-import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationUi
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileScreen
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.tabs_chats

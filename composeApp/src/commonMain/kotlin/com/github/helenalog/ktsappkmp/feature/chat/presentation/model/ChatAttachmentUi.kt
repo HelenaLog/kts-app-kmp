@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.feature.chat.presentation
+package com.github.helenalog.ktsappkmp.feature.chat.presentation.model
 
 import androidx.compose.runtime.Immutable
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType

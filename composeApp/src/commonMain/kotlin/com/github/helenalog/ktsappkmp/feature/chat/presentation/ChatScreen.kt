@@ -49,6 +49,8 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatD
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatInputField
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatMessageItem
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.PendingAttachmentsRow
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_ic_user_info

@@ -4,9 +4,9 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class LoginUiState(
-    val email: String,
-    val password: String,
-    val error: String,
+    val email: String = "",
+    val password: String = "",
+    val error: String? = null,
     val captchaToken: String = "",
     val isLoading: Boolean = false,
 ) {
@@ -14,10 +14,6 @@ data class LoginUiState(
         get() = email.isNotBlank() && password.isNotBlank() && captchaToken.isNotBlank()
 
     companion object {
-        val Initial = LoginUiState(
-            email = "",
-            password = "",
-            error = ""
-        )
+        val Initial = LoginUiState()
     }
 }

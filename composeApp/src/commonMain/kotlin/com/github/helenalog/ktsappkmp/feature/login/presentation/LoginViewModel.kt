@@ -12,24 +12,24 @@ class LoginViewModel(
     fun onEmailChanged(value: String) = updateState {
         copy(
             email = value,
-            error = ""
+            error = null
         )
     }
 
     fun onPasswordChanged(value: String) = updateState {
         copy(
             password = value,
-            error = ""
+            error = null
         )
     }
 
     fun onCaptchaTokenReceived(token: String) {
-        updateState { copy(captchaToken = token) }
+        updateState { copy(captchaToken = token, error = null) }
     }
 
     fun onLoginClicked() {
         viewModelScope.launch {
-            updateState { copy(isLoading = true) }
+            updateState { copy(isLoading = true, error = null) }
             val state = state.value
             loginUseCase(
                 username = state.email,
@@ -44,10 +44,14 @@ class LoginViewModel(
                     updateState {
                         copy(
                             isLoading = false,
-                            error = it.message ?: "Unknown error"
+                            error = it.message ?: UNKNOWN_ERROR
                         )
                     }
                 }
         }
+    }
+
+    companion object {
+        private const val UNKNOWN_ERROR = "Unknown error"
     }
 }

@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.ConversationUiMapper
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase
@@ -19,9 +19,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class ConversationViewModel(
-    private val getConversations: GetConversationsUseCase
+    private val getConversations: GetConversationsUseCase,
+    private val conversationMapper: ConversationUiMapper
 ) : BaseViewModel<ConversationUiState, Nothing>(ConversationUiState.Initial) {
-    private val conversationMapper: ConversationUiMapper = ConversationUiMapper()
     private val searchQueryFlow = MutableStateFlow("")
 
 

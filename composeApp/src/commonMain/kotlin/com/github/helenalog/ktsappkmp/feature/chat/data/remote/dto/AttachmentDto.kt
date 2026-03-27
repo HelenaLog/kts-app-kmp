@@ -5,11 +5,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AttachmentDto(
-    @SerialName("_id") val id: String? = null,
+    @SerialName("_id")
+    val id: String? = null,
     val url: String? = null,
-    @SerialName("preview_url") val previewUrl: String? = null,
+    @SerialName("preview_url")
+    val previewUrl: String? = null,
+    @SerialName("filename")
     val filename: String? = null,
+    @SerialName("name")
     val name: String? = null,
+    @SerialName("type")
     val type: String? = null,
+    @SerialName("size")
     val size: Long? = null,
 )

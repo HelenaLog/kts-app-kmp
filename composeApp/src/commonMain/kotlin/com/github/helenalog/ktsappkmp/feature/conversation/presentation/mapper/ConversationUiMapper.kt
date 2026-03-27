@@ -1,8 +1,8 @@
-package com.github.helenalog.ktsappkmp.feature.conversation.data.mapper
+package com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper
 
-import com.github.helenalog.ktsappkmp.core.data.mapper.UserAvatarUiMapper
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
-import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationUi
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 
 class ConversationUiMapper(
     private val avatarMapper: UserAvatarUiMapper = UserAvatarUiMapper()

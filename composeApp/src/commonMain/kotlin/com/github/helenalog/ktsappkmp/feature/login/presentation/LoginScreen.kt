@@ -140,10 +140,10 @@ fun LoginScreen(
                 enabled = state.isLoginButtonActive,
                 isLoading = state.isLoading
             )
-            if (state.error.isNotEmpty()) {
+            if (state.error != null) {
                 Spacer(modifier = Modifier.height(Dimensions.spacingMedium))
                 Text(
-                    text = state.error,
+                    text = state.error.orEmpty(),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error
                 )

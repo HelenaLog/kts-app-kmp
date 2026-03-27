@@ -1,7 +1,8 @@
 package com.github.helenalog.ktsappkmp.feature.profile.di
 
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
-import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.ProfileUiMapper
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
+import com.github.helenalog.ktsappkmp.feature.profile.presentation.mapper.ProfileUiMapper
 import com.github.helenalog.ktsappkmp.feature.profile.data.remote.api.ProfileApi
 import com.github.helenalog.ktsappkmp.feature.profile.data.repository.CabinetRepositoryImpl
 import com.github.helenalog.ktsappkmp.feature.profile.data.repository.ProfileRepositoryImpl
@@ -29,7 +30,8 @@ val profileModule = module {
     single { GetCabinetsUseCase(get()) }
     single { GetProjectsUseCase(get()) }
     single { LogoutUseCase(get()) }
-    single { ProfileUiMapper() }
+    single { UserAvatarUiMapper() }
+    single { ProfileUiMapper(get()) }
 
     viewModel {
         ProfileViewModel(

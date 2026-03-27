@@ -34,7 +34,7 @@ import coil3.compose.AsyncImage
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatAttachmentUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
 
 @Composable
 fun PendingAttachmentsRow(

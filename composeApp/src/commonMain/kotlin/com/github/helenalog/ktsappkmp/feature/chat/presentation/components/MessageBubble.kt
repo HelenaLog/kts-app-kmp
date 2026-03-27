@@ -27,8 +27,8 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.SocialButtonBorder
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatAttachmentUi
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatMessageUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_ic_bot_avatar

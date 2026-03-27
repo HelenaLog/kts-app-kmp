@@ -1,16 +1,16 @@
-package com.github.helenalog.ktsappkmp.feature.chat.data.mapper
+package com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper
 
-import com.github.helenalog.ktsappkmp.core.data.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.utils.DateFormatter
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatAttachmentUi
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatListItemUi
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatMessageUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
-import kotlinx.datetime.Clock
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 

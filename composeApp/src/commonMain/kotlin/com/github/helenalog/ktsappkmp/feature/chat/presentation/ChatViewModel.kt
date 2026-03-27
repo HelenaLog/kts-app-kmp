@@ -2,10 +2,10 @@ package com.github.helenalog.ktsappkmp.feature.chat.presentation
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.core.data.mapper.UserAvatarUiMapper
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
-import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.ChatUiMapper
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
 import kotlinx.coroutines.Dispatchers

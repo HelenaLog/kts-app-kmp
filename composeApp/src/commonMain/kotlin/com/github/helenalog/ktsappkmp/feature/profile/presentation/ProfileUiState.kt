@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.profile.presentation
 
 import androidx.compose.runtime.Immutable
-import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileUi
+import com.github.helenalog.ktsappkmp.feature.profile.presentation.model.ProfileUi
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 
 @Immutable
