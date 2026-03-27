@@ -65,9 +65,11 @@ class ChatViewModel(
 
     fun sendMessage(conversationId: Long) {
         val text = messageInputState.text.toString().trim()
+        val attachments = state.value.pendingAttachments
+            .map { mapper.mapAttachmentToDomain(it) }
         viewModelScope.launch {
             updateState { copy(isLoading = true, error = null) }
-            sendMessageUseCase(conversationId, text)
+            sendMessageUseCase(conversationId, text, attachments)
                 .onSuccess {
                     messageInputState.clearText()
                     loadMessages(conversationId)

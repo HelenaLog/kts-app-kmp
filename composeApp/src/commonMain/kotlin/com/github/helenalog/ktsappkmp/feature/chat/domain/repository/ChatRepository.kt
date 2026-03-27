@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.chat.domain.repository
 
+import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
 
 interface ChatRepository {
@@ -13,8 +14,15 @@ interface ChatRepository {
 
     suspend fun sendMessage(
         conversationId: Long,
-        text: String?
+        text: String?,
+        attachments: List<ChatAttachment>
     ): Result<Unit>
+
+    suspend fun uploadAttachment(
+        fileName: String,
+        bytes: ByteArray,
+        mimeType: String,
+    ): Result<ChatAttachment>
 
     companion object {
         const val DEFAULT_LIMIT = 20
