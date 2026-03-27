@@ -2,11 +2,14 @@ package com.github.helenalog.ktsappkmp.feature.chat.data.remote.api
 
 import com.github.helenalog.ktsappkmp.core.data.remote.response.ApiResponse
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.ConversationLiteDto
+import com.github.helenalog.ktsappkmp.feature.chat.data.remote.request.SendMessageRequestDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.response.MessagesResponseDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 
 class ChatApi(private val client: HttpClient) {
 
@@ -34,7 +37,12 @@ class ChatApi(private val client: HttpClient) {
             fromId?.let { parameter("from_id", it) }
         }.body()
 
+    suspend fun sendMessage(request: SendMessageRequestDto): ApiResponse<Unit> =
+        client.post("api/conversations/send_message") {
+            setBody(request)
+        }.body()
+
     private companion object {
-        const val DEFAULT_MESSAGES_LIMIT  = 20
+        const val DEFAULT_MESSAGES_LIMIT = 20
     }
 }
