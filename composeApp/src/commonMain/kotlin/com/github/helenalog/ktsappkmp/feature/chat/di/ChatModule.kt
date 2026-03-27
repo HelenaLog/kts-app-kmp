@@ -11,6 +11,7 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.Conversatio
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachmentUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -22,19 +23,20 @@ val chatModule = module {
     single<ChatRepository> { ChatRepositoryImpl(api = get()) }
     single<ConversationDetailRepository> { ConversationDetailRepositoryImpl(api = get()) }
 
-    single { GetConversationDetailUseCase(get()) }
-    single { GetMessagesUseCase(get()) }
-    single { SendMessageUseCase(get()) }
+    factory { GetConversationDetailUseCase(get()) }
+    factory { GetMessagesUseCase(get()) }
+    factory { SendMessageUseCase(get()) }
+    factory { UploadAttachmentUseCase(get()) }
 
-    single { UserAvatarUiMapper() }
-    single { ChatUiMapper(get()) }
-
+    factory { UserAvatarUiMapper() }
+    factory { ChatUiMapper(get()) }
 
     viewModel {
         ChatViewModel(
             getDetailUseCase = get(),
             getMessagesUseCase = get(),
             sendMessageUseCase = get(),
+            uploadAttachmentUseCase = get(),
             mapper = get(),
             avatarUiMapper = get()
         )

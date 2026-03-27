@@ -9,6 +9,7 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMap
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachmentUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,6 +18,7 @@ class ChatViewModel(
     private val getDetailUseCase: GetConversationDetailUseCase,
     private val getMessagesUseCase: GetMessagesUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
+    private val uploadAttachmentUseCase: UploadAttachmentUseCase,
     private val mapper: ChatUiMapper,
     private val avatarUiMapper: UserAvatarUiMapper,
 ) : BaseViewModel<ChatUiState, ChatUiEvent>(initialState = ChatUiState()) {
