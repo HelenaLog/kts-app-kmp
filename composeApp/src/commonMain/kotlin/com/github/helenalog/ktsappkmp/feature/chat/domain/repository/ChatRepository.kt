@@ -11,6 +11,11 @@ interface ChatRepository {
         fromId: String? = null,
     ): Result<List<ChatMessage>>
 
+    suspend fun sendMessage(
+        conversationId: Long,
+        text: String?
+    ): Result<Unit>
+
     companion object {
         const val DEFAULT_LIMIT = 20
     }
