@@ -58,6 +58,7 @@ object Dimensions {
 
     // States
     val stateIconSize = 40.dp
+    val botIconSize = 16.dp
     val stateSpacing = 12.dp
 
     // Loader
@@ -70,7 +71,6 @@ object Dimensions {
 
     // Onboarding
     val onboardingImageHeight = 240.dp
-    val onboardingContentSpacing = 40.dp
     val onboardingTextSpacing = 24.dp
     val onboardingBottomSpacing = 28.dp
     val onboardingHorizontalPadding = 32.dp

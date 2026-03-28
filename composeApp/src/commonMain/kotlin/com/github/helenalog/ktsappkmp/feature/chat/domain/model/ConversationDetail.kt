@@ -8,6 +8,7 @@ data class ConversationDetail(
     val photoUrl: String?,
     val channelId: String,
     val botName: String,
+    val channelPhoto: String,
     val channelKind: ChannelKind,
     val stoppedByManager: Boolean,
 )

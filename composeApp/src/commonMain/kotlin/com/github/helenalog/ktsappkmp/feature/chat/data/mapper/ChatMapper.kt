@@ -18,6 +18,7 @@ fun ConversationLiteDto.toDomain() = ConversationDetail(
     botName = channel.name,
     channelKind = ChannelKind.UNKNOWN,
     stoppedByManager = state.stoppedByManager,
+    channelPhoto = channel.photoUrl
 )
 
 fun MessageDto.toDomain() = ChatMessage(

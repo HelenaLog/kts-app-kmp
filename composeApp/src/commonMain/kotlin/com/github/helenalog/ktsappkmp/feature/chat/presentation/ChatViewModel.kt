@@ -54,6 +54,7 @@ class ChatViewModel(
                             userName = detail.userName,
                             userPhotoUrl = detail.photoUrl,
                             botName = detail.botName,
+                            channelPhoto = detail.channelPhoto,
                             channelKind = detail.channelKind,
                             avatar = userAvatar,
                             userId = detail.userId,
