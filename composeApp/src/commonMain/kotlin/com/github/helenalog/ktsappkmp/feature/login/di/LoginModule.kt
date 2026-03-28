@@ -13,7 +13,7 @@ val loginModule = module {
 
     single { LoginApi(get(NetworkQualifier.AUTH)) }
     single<LoginRepository> { LoginRepositoryImpl(api = get(), sessionStorage = get()) }
-    single { LoginUseCase(get()) }
+    factory { LoginUseCase(get()) }
 
     viewModel { LoginViewModel(loginUseCase = get()) }
 }

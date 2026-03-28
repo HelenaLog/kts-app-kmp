@@ -25,11 +25,11 @@ val profileModule = module {
     single<CabinetRepository> { CabinetRepositoryImpl(api = get(), cabinetDao = get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(api = get(), projectDao = get()) }
 
-    single { GetProfileUseCase(get()) }
-    single { GetCabinetsUseCase(get()) }
-    single { GetProjectsUseCase(get()) }
-    single { LogoutUseCase(get()) }
-    single { ProfileUiMapper() }
+    factory { GetProfileUseCase(get()) }
+    factory { GetCabinetsUseCase(get()) }
+    factory { GetProjectsUseCase(get()) }
+    factory { LogoutUseCase(get()) }
+    factory { ProfileUiMapper() }
 
     viewModel {
         ProfileViewModel(
