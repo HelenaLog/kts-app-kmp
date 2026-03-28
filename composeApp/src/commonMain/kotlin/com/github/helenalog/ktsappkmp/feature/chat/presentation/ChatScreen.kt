@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.chat.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,11 +33,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,10 +56,12 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatD
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatInputField
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatMessageItem
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.PendingAttachmentsRow
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ScrollToBottomButton
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import kotlinx.coroutines.launch
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_ic_user_info
 import org.jetbrains.compose.resources.painterResource
@@ -184,6 +192,8 @@ private fun MessageList(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(items.size) {
         if (items.isNotEmpty()) {
@@ -191,23 +201,53 @@ private fun MessageList(
         }
     }
 
-    LazyColumn(
-        state = listState,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = Dimensions.spacingMedium),
-        contentPadding = PaddingValues(
-            top = Dimensions.spacingMedium,
-            bottom = Dimensions.spacingMedium
-        ),
-        verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall),
+    val showButton by remember {
+        derivedStateOf {
+            listState.canScrollForward
+        }
+    }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            }
     ) {
-        items(items = items, key = { it.id }) { item ->
-            when (item) {
-                is ChatListItemUi.Message -> ChatMessageItem(message = item.data)
-                is ChatListItemUi.DateHeader -> ChatDateDivider(text = item.text)
+        LazyColumn(
+            state = listState,
+            contentPadding = PaddingValues(
+                top = Dimensions.spacingMedium,
+                bottom = Dimensions.spacingMedium
+            ),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall),
+            modifier = Modifier
+                .fillMaxSize()
+                .imePadding()
+                .padding(horizontal = Dimensions.spacingMedium),
+        ) {
+            items(items = items, key = { it.id }) { item ->
+                when (item) {
+                    is ChatListItemUi.Message -> ChatMessageItem(message = item.data)
+                    is ChatListItemUi.DateHeader -> ChatDateDivider(text = item.text)
+                }
             }
         }
+
+        ScrollToBottomButton(
+            visible = showButton,
+            onClick = {
+                scope.launch {
+                    if (items.isNotEmpty()) {
+                        listState.animateScrollToItem(items.size - 1)
+                    }
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(Dimensions.spacingMedium)
+        )
     }
 }
 
@@ -319,7 +359,7 @@ private fun ChatBottomBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun ChatTopBarPreview() {
+private fun ChatTopBarPreview() {
     AppTheme {
         ChatTopBar(
             onBack = {},
@@ -335,7 +375,7 @@ fun ChatTopBarPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun ChatBottomBarEmptyPreview() {
+private fun ChatBottomBarEmptyPreview() {
     AppTheme {
         ChatBottomBar(
             messageInput = TextFieldState(),
