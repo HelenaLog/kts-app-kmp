@@ -42,7 +42,7 @@ class ChatUiMapper(
         }
     }
 
-    private fun mapMessage(
+    fun mapMessage(
         domain: ChatMessage,
         userName: String,
         userPhotoUrl: String?,

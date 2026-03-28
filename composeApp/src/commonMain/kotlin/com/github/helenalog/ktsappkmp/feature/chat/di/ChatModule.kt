@@ -53,6 +53,7 @@ val chatModule = module {
             getMessagesUseCase = get(),
             sendMessageUseCase = get(),
             uploadAttachmentUseCase = get(),
+            observeMessagesUseCase = get(),
             mapper = get(),
             avatarUiMapper = get()
         )

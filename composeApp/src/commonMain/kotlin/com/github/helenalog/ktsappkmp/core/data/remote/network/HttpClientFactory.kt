@@ -69,7 +69,7 @@ object HttpClientFactory {
         }
         installLogging()
         defaultRequest {
-            header(HEADER_ORIGIN, config.cabinetId)
+            header(HEADER_ORIGIN, config.sproUrl)
         }
     }
 }
