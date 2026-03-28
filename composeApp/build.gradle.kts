@@ -136,6 +136,11 @@ buildkonfig {
         )
         buildConfigField(
             com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "WS_URL",
+            localProperties["WS_URL"].toString()
+        )
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             "CABINET_ID",
             localProperties["CABINET_ID"].toString()
         )
