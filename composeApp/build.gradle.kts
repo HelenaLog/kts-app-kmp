@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.tracer)
 }
 
 val localProperties = Properties().apply {
@@ -26,6 +27,14 @@ detekt {
         "src/iosMain/kotlin"
     )
     ignoreFailures = true
+}
+
+tracer {
+    create("defaultConfig") {
+        pluginToken = localProperties["TRACER_PLUGIN_TOKEN"].toString()
+        appToken = localProperties["TRACER_APP_TOKEN"].toString()
+        uploadMapping = true
+    }
 }
 
 kotlin {
@@ -126,6 +135,10 @@ android {
         htmlReport = true
         htmlOutput = file("build/reports/lint/lint-report.html")
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 room {
@@ -138,6 +151,8 @@ dependencies {
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     debugImplementation(libs.compose.uiTooling)
     debugImplementation(libs.leakcanary)
+    implementation(platform(libs.tracer.platform))
+    implementation(libs.tracer.crash.report)
 }
 
 buildkonfig {

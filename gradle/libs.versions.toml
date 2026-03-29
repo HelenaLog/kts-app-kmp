@@ -26,6 +26,7 @@ kotlinx-datetime = "0.7.1"
 filekit = "0.8.8"
 detekt = "1.23.8"
 leakcanary = "2.14"
+tracer = "1.1.7"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -67,6 +68,8 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekit" }
 leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
+tracer-platform = { module = "ru.ok.tracer:tracer-platform", version.ref = "tracer" }
+tracer-crash-report = { module = "ru.ok.tracer:tracer-crash-report", version.ref = "tracer" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -79,3 +82,4 @@ buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig"
 ksp = { id = "com.google.devtools.ksp", version = "2.3.5" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+tracer = { id = "ru.ok.tracer", version.ref = "tracer" }
