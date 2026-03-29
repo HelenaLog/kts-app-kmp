@@ -793,3 +793,25 @@ style:
     active: true
     excludeImports:
       - 'java.util.*'
+
+compose:
+  ReusedModifierInstance:
+    active: true
+  UnnecessaryEventHandlerParameter:
+    active: true
+  ComposableEventParameterNaming:
+    active: true
+  ComposableParametersOrdering:
+    active: true
+  ModifierHeightWithText:
+    active: true
+  MissingModifierDefaultValue:
+    active: true
+  PublicComposablePreview:
+    active: true
+  TopLevelComposableFunctions:
+    active: false
+  ComposableFunctionName:
+    active: true
+  ConditionCouldBeLifted:
+    active: true

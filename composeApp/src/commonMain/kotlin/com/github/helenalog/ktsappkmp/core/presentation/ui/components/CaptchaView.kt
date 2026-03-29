@@ -6,6 +6,6 @@ import androidx.compose.ui.Modifier
 @Composable
 expect fun CaptchaView(
     siteKey: String,
-    onTokenReceived: (String) -> Unit,
+    onTokenReceive: (String) -> Unit,
     modifier: Modifier = Modifier
 )

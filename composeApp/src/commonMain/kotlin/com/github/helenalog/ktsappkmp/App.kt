@@ -6,9 +6,14 @@ import com.github.helenalog.ktsappkmp.core.presentation.navigation.NavigationGra
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 
 @Composable
-@Preview
 fun App() {
     AppTheme {
         NavigationGraph()
     }
+}
+
+@Preview
+@Composable
+private fun AppPreview() {
+    App()
 }

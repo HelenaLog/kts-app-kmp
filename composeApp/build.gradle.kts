@@ -158,6 +158,7 @@ dependencies {
     debugImplementation(libs.leakcanary)
     implementation(platform(libs.tracer.platform))
     implementation(libs.tracer.crash.report)
+    detektPlugins(libs.detekt.rules.compose)
 }
 
 buildkonfig {

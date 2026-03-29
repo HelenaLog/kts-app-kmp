@@ -36,7 +36,7 @@ fun ChatMessageItem(
 
 @Preview(showBackground = true)
 @Composable
-fun ChatMessageItemPreview() {
+private fun ChatMessageItemPreview() {
     AppTheme {
         ChatMessageItem(
             ChatMessageUi(

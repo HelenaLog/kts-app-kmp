@@ -25,9 +25,9 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FilterButton(
-    isActive: Boolean = false,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isActive: Boolean = false,
 ) {
     Box(
         modifier = modifier

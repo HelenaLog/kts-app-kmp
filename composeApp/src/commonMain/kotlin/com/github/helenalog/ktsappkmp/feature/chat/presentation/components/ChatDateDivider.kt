@@ -40,7 +40,7 @@ fun ChatDateDivider(
 
 @Preview(showBackground = true)
 @Composable
-fun ChatDateDividerPreview() {
+private fun ChatDateDividerPreview() {
     AppTheme {
         ChatDateDivider(
             text = "24 марта"

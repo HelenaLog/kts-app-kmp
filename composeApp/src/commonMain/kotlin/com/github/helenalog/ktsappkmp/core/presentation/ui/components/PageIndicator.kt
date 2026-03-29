@@ -18,9 +18,9 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 
 @Composable
 fun PageIndicator(
-    modifier: Modifier = Modifier,
     pageSize: Int,
     selectedPage: Int,
+    modifier: Modifier = Modifier,
     selectedColor: Color = MaterialTheme.colorScheme.primary,
     unselectedColor: Color = MaterialTheme.colorScheme.outline,
     onPageClick: (Int) -> Unit = {}

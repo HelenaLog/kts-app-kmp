@@ -27,6 +27,7 @@ filekit = "0.8.8"
 detekt = "1.23.8"
 leakcanary = "2.14"
 tracer = "1.1.7"
+detekt-compose-rules = "1.4.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -70,6 +71,7 @@ filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref =
 leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 tracer-platform = { module = "ru.ok.tracer:tracer-platform", version.ref = "tracer" }
 tracer-crash-report = { module = "ru.ok.tracer:tracer-crash-report", version.ref = "tracer" }
+detekt-rules-compose = { module = "ru.kode:detekt-rules-compose", version.ref = "detekt-compose-rules" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

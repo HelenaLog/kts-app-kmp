@@ -17,8 +17,8 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 
 @Composable
 fun CustomFileIcon(
+    modifier: Modifier = Modifier,
     text: String = "IMG",
-    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.size(Dimensions.stateIconSize),
@@ -40,7 +40,7 @@ fun CustomFileIcon(
 
 @Preview(showBackground = true)
 @Composable
-fun CustomFileIconPreview() {
+private fun CustomFileIconPreview() {
     AppTheme {
         CustomFileIcon()
     }

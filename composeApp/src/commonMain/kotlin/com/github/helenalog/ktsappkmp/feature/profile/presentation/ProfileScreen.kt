@@ -52,8 +52,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
-    viewModel: ProfileViewModel = koinViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -118,11 +118,11 @@ fun ProfileScreen(
 @Composable
 private fun ProfileContent(
     profile: ProfileUi,
-    cabinetsContent: @Composable () -> Unit,
-    projectsContent: @Composable () -> Unit,
     onLogout: () -> Unit,
     onSettingsClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cabinetsContent: @Composable () -> Unit,
+    projectsContent: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier
