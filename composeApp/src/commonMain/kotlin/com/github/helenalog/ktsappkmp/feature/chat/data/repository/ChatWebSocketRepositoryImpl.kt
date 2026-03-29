@@ -3,7 +3,7 @@ package com.github.helenalog.ktsappkmp.feature.chat.data.repository
 import com.github.helenalog.ktsappkmp.core.data.remote.network.CentrifugeSession
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkConfig
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
-import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.WsMessageMapper
+import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.WsChatMapper
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.api.ChatWebSocketApi
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.WsNewMessagePayloadDto
 import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.ChatWebSocketRepository
@@ -26,7 +26,7 @@ class ChatWebSocketRepositoryImpl(
     private val wsClient: HttpClient,
     private val restApi: ChatWebSocketApi,
     private val networkConfig: NetworkConfig,
-    private val mapper: WsMessageMapper
+    private val mapper: WsChatMapper
 ) : ChatWebSocketRepository {
 
     private val json = Json {
@@ -79,9 +79,11 @@ class ChatWebSocketRepositoryImpl(
     ) {
         while (isActive) {
             val reply = centrifuge.receiveReply() ?: break
-            val data = reply.push?.pub?.data ?: continue
-            val payload = json.decodeFromJsonElement<WsNewMessagePayloadDto>(data)
-            mapper.map(payload)?.let { emit(WebSocketEvent.NewMessage(it)) }
+            val data = reply.push?.pub?.data
+            if (data != null) {
+                val payload = json.decodeFromJsonElement<WsNewMessagePayloadDto>(data)
+                mapper.map(payload)?.let { emit(WebSocketEvent.NewMessage(it)) }
+            }
         }
     }
 

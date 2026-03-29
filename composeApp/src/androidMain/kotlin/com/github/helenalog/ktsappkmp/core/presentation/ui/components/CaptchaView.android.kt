@@ -34,7 +34,7 @@ actual fun CaptchaView(
                 settings.domStorageEnabled = true
                 webChromeClient = WebChromeClient()
                 addJavascriptInterface(
-                    object : Any() {
+                    object {
                         @JavascriptInterface
                         @Suppress("unused")
                         fun onTokenReceived(token: String) {

@@ -1,26 +1,34 @@
 package com.github.helenalog.ktsappkmp.core.utils
 
+import io.github.aakira.napier.Napier
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
+import kotlinx.datetime.number
 
 object DateFormatter {
 
+    @Suppress("TooGenericExceptionCaught")
     fun formatToShortTime(isoDateTime: String): String = try {
         isoDateTime.substring(11, 16)
-    } catch (e: Exception) {
+    } catch (e: IndexOutOfBoundsException) {
+        Napier.e("formatToShortTime failed", e)
         ""
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun formatToIsoDate(isoDateTime: String): String = try {
         isoDateTime.substring(0, 10)
-    } catch (e: Exception) {
+    } catch (e: IndexOutOfBoundsException) {
+        Napier.e("formatToIsoDate failed", e)
         ""
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun parseToLocalDate(isoDate: String): LocalDate? = try {
         LocalDate.parse(isoDate)
-    } catch (e: Exception) {
+    } catch (e: IllegalArgumentException) {
+        Napier.e("parseToLocalDate failed", e)
         null
     }
 
@@ -29,7 +37,7 @@ object DateFormatter {
         return when (date) {
             today -> "Сегодня"
             today.minus(DatePeriod(days = 1)) -> "Вчера"
-            else -> "${date.dayOfMonth} ${monthName(date.monthNumber)}"
+            else -> "${date.day} ${monthName(date.month.number)}"
         }
     }
 

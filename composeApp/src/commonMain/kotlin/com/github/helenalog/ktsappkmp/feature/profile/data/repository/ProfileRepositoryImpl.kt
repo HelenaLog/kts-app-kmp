@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.profile.data.repository
 
+import com.github.helenalog.ktsappkmp.core.data.storage.ProfileStorage
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
-import com.github.helenalog.ktsappkmp.data.storage.ProfileStorage
 import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.feature.profile.domain.model.Profile
 import com.github.helenalog.ktsappkmp.feature.profile.domain.repository.ProfileRepository

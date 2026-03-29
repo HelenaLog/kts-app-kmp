@@ -17,16 +17,17 @@ internal class CentrifugeSession(
 
     suspend fun connect(token: String) {
         sendConnect(token)
-        val reply = receiveReply() ?: throw Exception(DISCONNECTED)
-        if (reply.error != null) throw Exception("$CONNECT ${reply.error.code}")
+        val reply = receiveReply() ?: throw IllegalStateException(DISCONNECTED)
+        if (reply.error != null) error("$CONNECT ${reply.error.code}")
     }
 
     suspend fun subscribe(channel: String, token: String) {
         sendSubscribe(channel, token)
-        val reply = receiveReply() ?: throw Exception(SUBSCRIBE_FAILED)
-        if (reply.error != null) throw Exception("$SUBSCRIBE ${reply.error.code}")
+        val reply = receiveReply() ?: throw IllegalStateException(SUBSCRIBE_FAILED)
+        if (reply.error != null) error("$SUBSCRIBE ${reply.error.code}")
     }
 
+    @Suppress("ReturnCount")
     suspend fun receiveReply(): CentrifugeReplyDto? {
         for (frame in session.incoming) {
             when (frame) {
@@ -38,6 +39,7 @@ internal class CentrifugeSession(
                     }
                     return json.decodeFromString<CentrifugeReplyDto>(text)
                 }
+
                 is Frame.Close -> return null
                 else -> Unit
             }

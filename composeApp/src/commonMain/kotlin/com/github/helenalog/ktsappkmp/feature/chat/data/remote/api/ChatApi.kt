@@ -4,7 +4,7 @@ import com.github.helenalog.ktsappkmp.core.data.remote.response.ApiResponse
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.AttachmentDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.ConversationLiteDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.request.SendMessageRequestDto
-import com.github.helenalog.ktsappkmp.feature.chat.data.remote.response.MessagesResponseDto
+import com.github.helenalog.ktsappkmp.feature.chat.data.remote.response.MessageResponseDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -35,7 +35,7 @@ class ChatApi(private val client: HttpClient) {
         channelId: String,
         limit: Int = DEFAULT_MESSAGES_LIMIT,
         fromId: String? = null,
-    ): ApiResponse<MessagesResponseDto> =
+    ): ApiResponse<MessageResponseDto> =
         client.get("api/conversations/list_messages") {
             parameter("conversation_id", conversationId)
             parameter("user_id", userId)

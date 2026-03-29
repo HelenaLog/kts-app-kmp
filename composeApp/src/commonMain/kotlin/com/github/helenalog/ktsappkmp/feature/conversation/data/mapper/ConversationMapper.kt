@@ -28,9 +28,10 @@ private fun MessageKindDto.toDomain() = when (this) {
     MessageKindDto.USER -> MessageKind.USER
 }
 
+@Suppress("TooGenericExceptionCaught")
 private fun formatTime(dateUpdated: String): String = try {
     dateUpdated.substring(11, 16)
-} catch (e: Exception) {
+} catch (e: IndexOutOfBoundsException) {
     Napier.e("formatTime error: invalid date format")
     ""
 }

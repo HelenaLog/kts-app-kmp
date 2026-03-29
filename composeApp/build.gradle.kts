@@ -10,10 +10,22 @@ plugins {
     alias(libs.plugins.buildkonfig)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.detekt)
 }
 
 val localProperties = Properties().apply {
     rootProject.file("local.properties").inputStream().use { load(it) }
+}
+
+detekt {
+    config.setFrom("$rootDir/config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+    source.setFrom(
+        "src/commonMain/kotlin",
+        "src/androidMain/kotlin",
+        "src/iosMain/kotlin"
+    )
+    ignoreFailures = true
 }
 
 kotlin {
@@ -106,6 +118,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    lint {
+        warningsAsErrors = false
+        abortOnError = false
+        htmlReport = true
+        htmlOutput = file("build/reports/lint/lint-report.html")
     }
 }
 

@@ -4,14 +4,14 @@ import com.github.helenalog.ktsappkmp.feature.conversation.data.local.dao.Conver
 import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toEntity
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
-import com.github.helenalog.ktsappkmp.feature.conversation.data.api.ConversationsApi
+import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.api.ConversationApi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.ConversationRepository
 import kotlin.coroutines.cancellation.CancellationException
 
 
 class ConversationRepositoryImpl(
-    private val api: ConversationsApi,
+    private val api: ConversationApi,
     private val conversationDao: ConversationDao,
 ) : ConversationRepository {
 
@@ -19,12 +19,12 @@ class ConversationRepositoryImpl(
         query: String,
         limit: Int,
         offset: Int
-    ): Result<ConversationsPage> = suspendRunCatching {
-        try {
-            fetchRemotePage(query, limit, offset)
-        } catch (e: Exception) {
-            fetchCachedPage(query, limit, offset, e)
-        }
+    ): Result<ConversationsPage> {
+        return suspendRunCatching { fetchRemotePage(query, limit, offset) }
+            .fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { fetchCachedPage(query, limit, offset, it) }
+            )
     }
 
     private suspend fun fetchRemotePage(
@@ -49,15 +49,17 @@ class ConversationRepositoryImpl(
         query: String,
         limit: Int,
         offset: Int,
-        e: Exception
-    ): ConversationsPage {
+        e: Throwable
+    ): Result<ConversationsPage> {
         if (e is CancellationException) throw e
         val cached = conversationDao.getByQuery(query)
-        if (cached.isEmpty()) throw e
+        if (cached.isEmpty()) return Result.failure(e)
         val pagedCached = cached.drop(offset).take(limit)
-        return ConversationsPage(
-            conversations = pagedCached.map { it.toDomain() },
-            hasMore = cached.size > offset + limit
+        return Result.success(
+            ConversationsPage(
+                conversations = pagedCached.map { it.toDomain() },
+                hasMore = cached.size > offset + limit
+            )
         )
     }
 }

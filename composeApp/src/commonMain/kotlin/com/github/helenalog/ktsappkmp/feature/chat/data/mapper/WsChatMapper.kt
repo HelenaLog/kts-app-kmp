@@ -4,7 +4,7 @@ import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.WsNewMessageP
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
 import toDomain
 
-class WsMessageMapper {
+class WsChatMapper {
     fun map(payload: WsNewMessagePayloadDto): ChatMessage? =
         payload.data?.toDomain()
 }

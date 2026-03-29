@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.data.storage
+package com.github.helenalog.ktsappkmp.core.data.storage
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -21,6 +21,7 @@ class DataStoreProfileStorage(
         }
     }
 
+    @Suppress("ReturnCount")
     override suspend fun getProfile(): Profile? {
         val prefs = dataStore.data.first()
         val id = prefs[PROFILE_ID] ?: return null

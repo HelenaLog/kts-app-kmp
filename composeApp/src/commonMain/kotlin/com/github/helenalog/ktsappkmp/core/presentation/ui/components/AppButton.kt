@@ -19,8 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 
-enum class AppButtonStyle { Primary, Outline }
-
 @Composable
 fun AppButton(
     text: String,
