@@ -137,6 +137,7 @@ dependencies {
     add("kspIosArm64", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     debugImplementation(libs.compose.uiTooling)
+    debugImplementation(libs.leakcanary)
 }
 
 buildkonfig {
