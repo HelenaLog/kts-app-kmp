@@ -37,7 +37,7 @@ class ConversationRepositoryImpl(
             offset = offset,
             query = query.takeIf { it.isNotBlank() }.orEmpty()
         )
-        val conversations = response.data.conversations.map { it.toDomain() }
+        val conversations = response.data.conversations.orEmpty().map { it.toDomain() }
         if (offset == 0) { conversationDao.upsertAll(conversations.map { it.toEntity() }) }
         return ConversationsPage(
             conversations = conversations,

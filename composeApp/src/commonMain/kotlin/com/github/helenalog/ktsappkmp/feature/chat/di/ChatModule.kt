@@ -2,6 +2,8 @@ package com.github.helenalog.ktsappkmp.feature.chat.di
 
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
+import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
+import com.github.helenalog.ktsappkmp.core.utils.DateTimeParserImpl
 import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.WsMessageMapper
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.api.ChatApi
@@ -26,7 +28,7 @@ val chatModule = module {
     single { ChatApi(get(NetworkQualifier.MAIN)) }
     single { ChatWebSocketApi(get(NetworkQualifier.MAIN)) }
 
-    single<ChatRepository> { ChatRepositoryImpl(api = get()) }
+    single<ChatRepository> { ChatRepositoryImpl(api = get(), dateTimeParser = get()) }
     single<ConversationDetailRepository> { ConversationDetailRepositoryImpl(api = get()) }
     single<ChatWebSocketRepository> {
         ChatWebSocketRepositoryImpl(
@@ -36,6 +38,7 @@ val chatModule = module {
             mapper = get()
         )
     }
+    single<DateTimeParser> { DateTimeParserImpl() }
 
     factory { GetConversationDetailUseCase(get()) }
     factory { GetMessagesUseCase(get()) }
@@ -44,8 +47,8 @@ val chatModule = module {
     factory { ObserveWsMessagesUseCase(get()) }
 
     factory { UserAvatarUiMapper() }
-    factory { ChatUiMapper(get()) }
-    factory { WsMessageMapper() }
+    factory { ChatUiMapper(avatarMapper = get(), dateTimeParser = get()) }
+    factory { WsMessageMapper(get()) }
 
     viewModel {
         ChatViewModel(

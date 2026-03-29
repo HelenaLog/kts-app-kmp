@@ -30,6 +30,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.SocialButtonBor
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
+import kotlinx.datetime.Instant
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_ic_bot_avatar
 import org.jetbrains.compose.resources.painterResource
@@ -166,12 +167,14 @@ fun IncomingMessageBubblePreview() {
                 id = "1",
                 text = "Текст",
                 formattedTime = "10:10",
+                date = "2026-03-28",
                 isOutgoing = true,
                 kind = MessageKind.USER,
                 userName = "Иван",
                 userPhotoUrl = "",
                 attachments = emptyList(),
-                avatar = UserAvatarUi("?", "")
+                avatar = UserAvatarUi("?", ""),
+                createdAt = Instant.DISTANT_PAST
             )
         )
     }

@@ -116,6 +116,54 @@ class ChatViewModel(
     fun removeAttachment(id: String) =
         updateState { copy(pendingAttachments = pendingAttachments.filter { it.id != id }) }
 
+    fun loadMoreMessages(conversationId: Long) {
+        val currentState = state.value
+        if (currentState.pagination.isLoading || !currentState.pagination.hasMore) return
+
+        viewModelScope.launch {
+            updateState { copy(pagination = pagination.copy(isLoading = true)) }
+            getMessagesUseCase(
+                conversationId = conversationId,
+                userId = currentState.userId,
+                channelId = currentState.channelId,
+                fromId = currentState.pagination.cursor
+            ).onSuccess { newMessages ->
+                val existing = currentState.messages.filterIsInstance<ChatListItemUi.Message>()
+                val newMapped = withContext(Dispatchers.Default) {
+                    mapper.mapMessages(
+                        newMessages,
+                        currentState.userName,
+                        currentState.userPhotoUrl
+                    )
+                }
+                val allItems = withContext(Dispatchers.Default) {
+                    mapper.addDateHeaders(existing + newMapped)
+                }
+                updateState {
+                    copy(
+                        messages = allItems,
+                        pagination = pagination.copy(
+                            isLoading = false,
+                            hasMore = newMessages.size >= PAGE_SIZE,
+                            cursor = allItems
+                                .filterIsInstance<ChatListItemUi.Message>()
+                                .lastOrNull()?.data?.id
+                        )
+                    )
+                }
+            }.onFailure { e ->
+                updateState {
+                    copy(
+                        pagination = pagination.copy(
+                            isLoading = false,
+                            error = e.message ?: UNKNOWN_ERROR
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     private fun uploadAttachment(bytes: ByteArray, fileName: String, mimeType: String) {
         Napier.d(
             "uploadFile: fileName=$fileName, mimeType=$mimeType, size=${bytes.size}",
@@ -145,15 +193,30 @@ class ChatViewModel(
 
     private suspend fun loadMessages(conversationId: Long) {
         val state = state.value
-        Napier.d("loadMessages: userId=${state.userId}, channelId=${state.channelId}", tag = "CHAT")
         updateState { copy(isLoading = true, error = null) }
         getMessagesUseCase(conversationId, state.userId, state.channelId)
             .onSuccess { messages ->
-                Napier.d("loadMessages success: ${messages.size} messages", tag = "CHAT")
                 val items = withContext(Dispatchers.Default) {
-                    mapper.mapToList(messages, state.userName, state.userPhotoUrl)
+                    mapper.addDateHeaders(
+                        mapper.mapMessages(
+                            messages,
+                            state.userName,
+                            state.userPhotoUrl
+                        )
+                    )
                 }
-                updateState { copy(messages = items, isLoading = false) }
+                updateState {
+                    copy(
+                        messages = items,
+                        isLoading = false,
+                        pagination = pagination.copy(
+                            hasMore = messages.size >= PAGE_SIZE,
+                            cursor = items
+                                .filterIsInstance<ChatListItemUi.Message>()
+                                .lastOrNull()?.data?.id
+                        )
+                    )
+                }
             }.onFailure { e ->
                 updateState { copy(error = e.message ?: UNKNOWN_ERROR, isLoading = false) }
             }
@@ -190,7 +253,9 @@ class ChatViewModel(
                 userPhotoUrl = currentState.userPhotoUrl
             )
         )
-        updateState { copy(messages = messages + newItem) }
+        val existing = currentState.messages.filterIsInstance<ChatListItemUi.Message>()
+        val allItems = mapper.addDateHeaders(existing + newItem)
+        updateState { copy(messages = allItems) }
     }
 
     private companion object {
@@ -198,5 +263,6 @@ class ChatViewModel(
         const val EMPTY_FILE_ERROR = "Файл пуст"
         const val FILE_READ_ERROR = "Не удалось прочитать файл"
         const val WS_ERROR = "Ошибка соединения"
+        const val PAGE_SIZE = 20
     }
 }

@@ -90,7 +90,7 @@ fun ConversationScreen(
                     ) {
                         ConversationList(
                             conversations = state.conversations,
-                            isPaginating = state.pagination.isPaginating,
+                            isPaginating = state.pagination.isLoading,
                             paginationError = state.pagination.error,
                             onReachEnd = { viewModel.onReachEnd() },
                             onRetryPagination = { viewModel.onReachEnd() },

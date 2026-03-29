@@ -1,4 +1,6 @@
-import com.github.helenalog.ktsappkmp.core.utils.DateFormatter
+package com.github.helenalog.ktsappkmp.feature.chat.data.mapper
+
+import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.AttachmentDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.ConversationLiteDto
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
@@ -21,14 +23,18 @@ fun ConversationLiteDto.toDomain() = ConversationDetail(
     channelPhoto = channel.photoUrl
 )
 
-fun MessageDto.toDomain() = ChatMessage(
-    id = id,
-    kind = kind.toDomain(),
-    text = text,
-    time = dateCreated?.let { DateFormatter.formatToShortTime(it) },
-    date = dateCreated?.let { DateFormatter.formatToIsoDate(it) },
-    attachments = attachments.map { it.toDomain() },
-)
+fun MessageDto.toDomain(dateTimeParser: DateTimeParser): ChatMessage {
+    val instant = dateTimeParser.parse(dateCreated)
+    return ChatMessage(
+        id = id,
+        kind = kind.toDomain(),
+        text = text,
+        createdAt = instant,
+        time = dateTimeParser.formatTime(instant),
+        date = dateTimeParser.toLocalDate(instant).toString(),
+        attachments = attachments.map { it.toDomain() },
+    )
+}
 
 fun MessageKindDto.toDomain(): MessageKind = when (this) {
     MessageKindDto.BOT -> MessageKind.BOT

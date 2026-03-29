@@ -7,6 +7,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
+import kotlinx.datetime.Instant
 
 @Composable
 fun ChatMessageItem(
@@ -43,12 +44,14 @@ fun ChatMessageItemPreview() {
                 id = "1",
                 text = "Текст",
                 formattedTime = "10:10",
+                date = "2026-03-28",
                 isOutgoing = false,
                 kind = MessageKind.BOT,
                 userName = "Имя",
                 userPhotoUrl = "",
                 attachments = emptyList(),
                 avatar = UserAvatarUi("?", ""),
+                createdAt = Instant.DISTANT_PAST
             )
         )
     }

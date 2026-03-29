@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,13 +42,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AvatarWithChannel
@@ -116,7 +114,10 @@ fun ChatScreen(
         onRemoveAttachment = { viewModel.removeAttachment(it) },
         onRetry = { viewModel.loadScreen(conversationId, userId) },
         botName = state.botName,
-        channelPhoto = state.channelPhoto
+        channelPhoto = state.channelPhoto,
+        isLoadingMore = state.pagination.isLoading,
+        hasMore = state.pagination.hasMore,
+        onLoadMore = { viewModel.loadMoreMessages(conversationId) }
     )
 }
 
@@ -132,6 +133,9 @@ fun ChatContent(
     channelKind: ChannelKind,
     isLoading: Boolean,
     error: String?,
+    isLoadingMore: Boolean,
+    hasMore: Boolean,
+    onLoadMore: () -> Unit,
     onBack: () -> Unit,
     onUserInfo: () -> Unit,
     onToggleBot: () -> Unit,
@@ -189,7 +193,12 @@ fun ChatContent(
                 )
 
                 messages.isEmpty() -> EmptyContent()
-                else -> MessageList(items = messages)
+                else -> MessageList(
+                    items = messages,
+                    isLoadingMore = isLoadingMore,
+                    hasMore = hasMore,
+                    onLoadMore = onLoadMore
+                )
             }
         }
     }
@@ -198,34 +207,46 @@ fun ChatContent(
 @Composable
 private fun MessageList(
     items: List<ChatListItemUi>,
+    isLoadingMore: Boolean,
+    hasMore: Boolean,
+    onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
+    val reachedTop by remember {
+        derivedStateOf {
+            !listState.canScrollForward && hasMore && !isLoadingMore
+        }
+    }
+
     LaunchedEffect(items.size) {
-        if (items.isNotEmpty()) {
-            listState.animateScrollToItem(items.size - 1)
+        if (listState.firstVisibleItemIndex <= 2) {
+            listState.animateScrollToItem(0)
+        }
+    }
+
+    LaunchedEffect(reachedTop) {
+        if (reachedTop) {
+            onLoadMore()
         }
     }
 
     val showButton by remember {
-        derivedStateOf {
-            listState.canScrollForward
-        }
+        derivedStateOf { listState.firstVisibleItemIndex > 2 }
     }
 
     Box(
         modifier = modifier.fillMaxSize()
             .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-                })
+                detectTapGestures(onTap = { focusManager.clearFocus() })
             }
     ) {
         LazyColumn(
             state = listState,
+            reverseLayout = true,
             contentPadding = PaddingValues(
                 top = Dimensions.spacingMedium,
                 bottom = Dimensions.spacingMedium
@@ -236,10 +257,29 @@ private fun MessageList(
                 .imePadding()
                 .padding(horizontal = Dimensions.spacingMedium),
         ) {
-            items(items = items, key = { it.id }) { item ->
+            items(
+                items = items,
+                key = { item ->
+                    when (item) {
+                        is ChatListItemUi.Message -> "msg_${item.data.id}"
+                        is ChatListItemUi.DateHeader -> "date_${item.dateKey}"
+                    }
+                }
+            ) { item ->
                 when (item) {
                     is ChatListItemUi.Message -> ChatMessageItem(message = item.data)
                     is ChatListItemUi.DateHeader -> ChatDateDivider(text = item.text)
+                }
+            }
+
+            if (isLoadingMore) {
+                item(key = "loading_more") {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(Dimensions.spacingSmall),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
@@ -247,11 +287,7 @@ private fun MessageList(
         ScrollToBottomButton(
             visible = showButton,
             onClick = {
-                scope.launch {
-                    if (items.isNotEmpty()) {
-                        listState.animateScrollToItem(items.size - 1)
-                    }
-                }
+                scope.launch { listState.animateScrollToItem(0) }
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)

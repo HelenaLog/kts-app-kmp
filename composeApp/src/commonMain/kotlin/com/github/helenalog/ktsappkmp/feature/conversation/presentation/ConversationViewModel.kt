@@ -44,9 +44,9 @@ class ConversationViewModel(
     fun onReachEnd() {
         var shouldLoad = false
         updateState {
-            if (!isLoading && !pagination.isPaginating && !pagination.hasReachedEnd) {
+            if (!isLoading && !pagination.isLoading && pagination.hasMore) {
                 shouldLoad = true
-                copy(pagination = pagination.copy(isPaginating = true, error = null))
+                copy(pagination = pagination.copy(isLoading = true, error = null))
             } else this
         }
         if (shouldLoad) loadNextPage()
@@ -90,14 +90,13 @@ class ConversationViewModel(
     }
 
     private fun handleNextPage(page: ConversationsPage) {
-        Napier.d("handleNextPage: ${page.conversations.size} items")
         updateState {
             copy(
                 conversations = conversations + conversationMapper.mapList(page.conversations),
                 pagination = pagination.copy(
-                    isPaginating = false,
+                    isLoading = false,
                     offset = pagination.offset + page.conversations.size,
-                    hasReachedEnd = !page.hasMore
+                    hasMore = page.hasMore
                 )
             )
         }
@@ -107,7 +106,7 @@ class ConversationViewModel(
         updateState {
             copy(
                 pagination = pagination.copy(
-                    isPaginating = false,
+                    isLoading = false,
                     error = e.message ?: PAGINATION_ERROR
                 )
             )
@@ -128,7 +127,7 @@ class ConversationViewModel(
                 error = null,
                 pagination = pagination.copy(
                     offset = page.conversations.size,
-                    hasReachedEnd = !page.hasMore
+                    hasMore = page.hasMore
                 )
             )
         }
