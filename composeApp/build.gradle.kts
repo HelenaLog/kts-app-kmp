@@ -53,7 +53,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
@@ -114,6 +114,14 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProperties["KEYSTORE_PATH"].toString())
+            storePassword = localProperties["KEYSTORE_PASSWORD"].toString()
+            keyAlias = localProperties["KEY_ALIAS"].toString()
+            keyPassword = localProperties["KEY_PASSWORD"].toString()
+        }
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -123,6 +131,7 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
