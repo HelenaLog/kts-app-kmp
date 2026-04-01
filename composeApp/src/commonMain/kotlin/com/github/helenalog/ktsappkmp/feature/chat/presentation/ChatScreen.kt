@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.chat.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -117,7 +119,9 @@ fun ChatScreen(
         channelPhoto = state.channelPhoto,
         isLoadingMore = state.pagination.isLoading,
         hasMore = state.pagination.hasMore,
-        onLoadMore = { viewModel.loadMoreMessages(conversationId) }
+        onLoadMore = { viewModel.loadMoreMessages(conversationId) },
+        attachmentState = state.attachmentState,
+        onDismissAttachmentError = { viewModel.dismissAttachmentError() },
     )
 }
 
@@ -144,6 +148,8 @@ fun ChatContent(
     onSend: () -> Unit,
     onRemoveAttachment: (String) -> Unit,
     onRetry: () -> Unit,
+    attachmentState: AttachmentState,
+    onDismissAttachmentError: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -167,7 +173,9 @@ fun ChatContent(
                 onAttach = onAttach,
                 onEmoji = onEmoji,
                 onSend = onSend,
-                onRemoveAttachment = onRemoveAttachment
+                onRemoveAttachment = onRemoveAttachment,
+                attachmentState = attachmentState,
+                onDismissAttachmentError = onDismissAttachmentError
             )
         }
     ) { innerPadding ->
@@ -389,16 +397,33 @@ private fun ChatTopBar(
 private fun ChatBottomBar(
     messageInput: TextFieldState,
     pendingAttachments: List<ChatAttachmentUi>,
+    attachmentState: AttachmentState,
     onAttach: () -> Unit,
     onEmoji: () -> Unit,
     onSend: () -> Unit,
     onRemoveAttachment: (String) -> Unit,
+    onDismissAttachmentError: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier.navigationBarsPadding()
-    ) {
+    Column(modifier = Modifier.navigationBarsPadding()) {
         HorizontalDivider()
         Column {
+            when (attachmentState) {
+                is AttachmentState.Loading -> {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+                is AttachmentState.Error -> {
+                    Text(
+                        text = attachmentState.message,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = Dimensions.spacingMedium)
+                            .clickable { onDismissAttachmentError() }
+                    )
+                }
+                is AttachmentState.Idle -> Unit
+            }
             if (pendingAttachments.isNotEmpty()) {
                 PendingAttachmentsRow(
                     items = pendingAttachments,
@@ -443,7 +468,9 @@ private fun ChatBottomBarEmptyPreview() {
             onAttach = {},
             onEmoji = {},
             onSend = {},
-            onRemoveAttachment = {}
+            onRemoveAttachment = {},
+            attachmentState = AttachmentState.Idle,
+            onDismissAttachmentError = {}
         )
     }
 }

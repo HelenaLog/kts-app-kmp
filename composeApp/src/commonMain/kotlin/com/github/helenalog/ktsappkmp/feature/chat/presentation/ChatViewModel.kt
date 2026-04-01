@@ -92,7 +92,7 @@ class ChatViewModel(
 
     fun onFileSelected(file: PlatformFile) {
         viewModelScope.launch {
-            updateState { copy(isLoading = true, error = null) }
+            updateState { copy(attachmentState = AttachmentState.Loading) }
             val result = withContext(Dispatchers.IO) {
                 suspendRunCatching {
                     val bytes = file.readBytes()
@@ -103,11 +103,9 @@ class ChatViewModel(
             result.onSuccess { bytes ->
                 uploadAttachment(bytes, file.name, file.extension)
             }.onFailure { e ->
+                Napier.e("onFileSelected failed: ${e.message}", tag = "UPLOAD")
                 updateState {
-                    copy(
-                        isLoading = false,
-                        error = e.message ?: FILE_READ_ERROR
-                    )
+                    copy(attachmentState = AttachmentState.Error(e.message ?: FILE_READ_ERROR))
                 }
             }
         }
@@ -115,6 +113,8 @@ class ChatViewModel(
 
     fun removeAttachment(id: String) =
         updateState { copy(pendingAttachments = pendingAttachments.filter { it.id != id }) }
+
+    fun dismissAttachmentError() = updateState { copy(attachmentState = AttachmentState.Idle) }
 
     fun loadMoreMessages(conversationId: Long) {
         val currentState = state.value
@@ -165,12 +165,9 @@ class ChatViewModel(
     }
 
     private fun uploadAttachment(bytes: ByteArray, fileName: String, mimeType: String) {
-        Napier.d(
-            "uploadFile: fileName=$fileName, mimeType=$mimeType, size=${bytes.size}",
-            tag = "UPLOAD"
-        )
+        Napier.d("uploadFile: fileName=$fileName, mimeType=$mimeType, size=${bytes.size}", tag = "UPLOAD")
         viewModelScope.launch {
-            updateState { copy(isLoading = true, error = null) }
+            updateState { copy(attachmentState = AttachmentState.Loading) }
             uploadAttachmentUseCase(fileName, bytes, mimeType)
                 .onSuccess { attachment ->
                     val uiModel = withContext(Dispatchers.Default) {
@@ -179,14 +176,16 @@ class ChatViewModel(
                     Napier.d("uploadFile success: id=${attachment.id}", tag = "UPLOAD")
                     updateState {
                         copy(
-                            isLoading = false,
+                            attachmentState = AttachmentState.Idle,
                             pendingAttachments = pendingAttachments + uiModel
                         )
                     }
                 }
                 .onFailure { e ->
                     Napier.e("uploadFile failed: ${e.message}", tag = "UPLOAD")
-                    updateState { copy(isLoading = false, error = e.message ?: UNKNOWN_ERROR) }
+                    updateState {
+                        copy(attachmentState = AttachmentState.Error(e.message ?: UNKNOWN_ERROR))
+                    }
                 }
         }
     }

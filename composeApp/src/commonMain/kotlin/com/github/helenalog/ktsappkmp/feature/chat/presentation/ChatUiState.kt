@@ -21,5 +21,12 @@ data class ChatUiState(
     val channelId: String = "",
     val isLoading: Boolean = true,
     val error: String? = null,
-    val pagination: PaginationState = PaginationState()
+    val pagination: PaginationState = PaginationState(),
+    val attachmentState: AttachmentState = AttachmentState.Idle
 )
+
+sealed interface AttachmentState {
+    data object Idle : AttachmentState
+    data object Loading : AttachmentState
+    data class Error(val message: String) : AttachmentState
+}
