@@ -1,3 +1,5 @@
+package com.github.helenalog.ktsappkmp.feature.chat.data.mapper
+
 import com.github.helenalog.ktsappkmp.core.utils.DateFormatter
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.AttachmentDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.ConversationLiteDto

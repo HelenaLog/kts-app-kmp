@@ -8,8 +8,8 @@ import org.koin.dsl.module
 
 val onboardingModule = module {
 
-    single { CompleteOnboardingUseCase(get()) }
-    single { IsOnboardingDoneUseCase(get()) }
+    factory { CompleteOnboardingUseCase(get()) }
+    factory { IsOnboardingDoneUseCase(get()) }
 
     viewModel { OnboardingViewModel(completeOnboardingUseCase = get()) }
 }

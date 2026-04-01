@@ -12,11 +12,11 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val conversationModule = module {
-    single { ConversationsApi(get(NetworkQualifier.MAIN)) }
-    single<ConversationRepository> { ConversationRepositoryImpl(get(), get()) }
-    single { GetConversationsUseCase(get()) }
-    single { UserAvatarUiMapper() }
-    single { ConversationUiMapper(get()) }
+    factory { ConversationsApi(get(NetworkQualifier.MAIN)) }
+    factory<ConversationRepository> { ConversationRepositoryImpl(get(), get()) }
+    factory { GetConversationsUseCase(get()) }
+    factory { UserAvatarUiMapper() }
+    factory { ConversationUiMapper(get()) }
 
     viewModel { ConversationViewModel(get(), get()) }
 }

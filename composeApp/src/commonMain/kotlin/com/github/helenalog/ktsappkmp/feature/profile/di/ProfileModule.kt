@@ -20,18 +20,18 @@ import org.koin.dsl.module
 
 val profileModule = module {
 
-    single { ProfileApi(get(NetworkQualifier.MAIN)) }
+    factory { ProfileApi(get(NetworkQualifier.MAIN)) }
 
-    single<ProfileRepository> { ProfileRepositoryImpl(api = get(), profileStorage = get()) }
-    single<CabinetRepository> { CabinetRepositoryImpl(api = get(), cabinetDao = get()) }
-    single<ProjectRepository> { ProjectRepositoryImpl(api = get(), projectDao = get()) }
+    factory<ProfileRepository> { ProfileRepositoryImpl(api = get(), profileStorage = get()) }
+    factory<CabinetRepository> { CabinetRepositoryImpl(api = get(), cabinetDao = get()) }
+    factory<ProjectRepository> { ProjectRepositoryImpl(api = get(), projectDao = get()) }
 
-    single { GetProfileUseCase(get()) }
-    single { GetCabinetsUseCase(get()) }
-    single { GetProjectsUseCase(get()) }
-    single { LogoutUseCase(get()) }
-    single { UserAvatarUiMapper() }
-    single { ProfileUiMapper(get()) }
+    factory { GetProfileUseCase(get()) }
+    factory { GetCabinetsUseCase(get()) }
+    factory { GetProjectsUseCase(get()) }
+    factory { LogoutUseCase(get()) }
+    factory { UserAvatarUiMapper() }
+    factory { ProfileUiMapper(get()) }
 
     viewModel {
         ProfileViewModel(

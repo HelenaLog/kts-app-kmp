@@ -1,26 +1,30 @@
 package com.github.helenalog.ktsappkmp.core.utils
 
+import io.github.aakira.napier.Napier
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 
 object DateFormatter {
 
-    fun formatToShortTime(isoDateTime: String): String = try {
+    fun formatToShortTime(isoDateTime: String): String? = try {
         isoDateTime.substring(11, 16)
     } catch (e: Exception) {
-        ""
+        Napier.e(tag = "DateFormatter", message = "formatToShortTime failed: $isoDateTime", throwable = e)
+        null
     }
 
-    fun formatToIsoDate(isoDateTime: String): String = try {
+    fun formatToIsoDate(isoDateTime: String): String? = try {
         isoDateTime.substring(0, 10)
     } catch (e: Exception) {
-        ""
+        Napier.e(tag = "DateFormatter", message = "formatToIsoDate failed: $isoDateTime", throwable = e)
+        null
     }
 
     fun parseToLocalDate(isoDate: String): LocalDate? = try {
         LocalDate.parse(isoDate)
     } catch (e: Exception) {
+        Napier.e(tag = "DateFormatter", message = "parseToLocalDate failed: $isoDate", throwable = e)
         null
     }
 
@@ -41,4 +45,3 @@ object DateFormatter {
         else -> ""
     }
 }
-

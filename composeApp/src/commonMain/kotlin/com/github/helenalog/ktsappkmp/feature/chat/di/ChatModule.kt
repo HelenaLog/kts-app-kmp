@@ -16,16 +16,16 @@ import org.koin.dsl.module
 
 val chatModule = module {
 
-    single { ChatApi(get(NetworkQualifier.MAIN)) }
+    factory { ChatApi(get(NetworkQualifier.MAIN)) }
 
-    single<ChatRepository> { ChatRepositoryImpl(api = get()) }
-    single<ConversationDetailRepository> { ConversationDetailRepositoryImpl(api = get()) }
+    factory<ChatRepository> { ChatRepositoryImpl(api = get()) }
+    factory<ConversationDetailRepository> { ConversationDetailRepositoryImpl(api = get()) }
 
-    single { GetConversationDetailUseCase(get()) }
-    single { GetMessagesUseCase(get()) }
+    factory { GetConversationDetailUseCase(get()) }
+    factory { GetMessagesUseCase(get()) }
 
-    single { UserAvatarUiMapper() }
-    single { ChatUiMapper(get()) }
+    factory { UserAvatarUiMapper() }
+    factory { ChatUiMapper(get()) }
 
 
     viewModel {
