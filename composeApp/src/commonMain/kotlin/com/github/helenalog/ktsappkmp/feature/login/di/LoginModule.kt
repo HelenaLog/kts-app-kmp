@@ -11,9 +11,9 @@ import org.koin.dsl.module
 
 val loginModule = module {
 
-    single { LoginApi(get(NetworkQualifier.AUTH)) }
-    single<LoginRepository> { LoginRepositoryImpl(api = get(), sessionStorage = get()) }
-    single { LoginUseCase(get()) }
+    factory { LoginApi(get(NetworkQualifier.AUTH)) }
+    factory<LoginRepository> { LoginRepositoryImpl(api = get(), sessionStorage = get()) }
+    factory { LoginUseCase(get()) }
 
     viewModel { LoginViewModel(loginUseCase = get()) }
 }

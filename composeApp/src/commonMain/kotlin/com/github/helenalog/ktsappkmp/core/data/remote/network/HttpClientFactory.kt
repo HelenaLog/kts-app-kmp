@@ -24,10 +24,12 @@ object HttpClientFactory {
         isLenient = true
     }
 
-    fun createAuthClient(config: NetworkConfig): HttpClient = HttpClient {
+    fun createAuthClient(
+        config: NetworkConfig,
+        json: Json
+    ): HttpClient = HttpClient {
         installJson(json)
         installLogging()
-
         defaultRequest {
             url(config.authUrl)
             contentType(ContentType.Application.Json)
@@ -36,6 +38,7 @@ object HttpClientFactory {
 
     fun createMainClient(
         config: NetworkConfig,
+        json: Json,
         sessionStorage: SessionStorage,
         onUnauthorizedCallback: OnUnauthorizedCallback,
     ): HttpClient = HttpClient {

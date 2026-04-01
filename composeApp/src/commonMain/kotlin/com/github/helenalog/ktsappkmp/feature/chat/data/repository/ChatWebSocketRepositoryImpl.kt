@@ -26,13 +26,9 @@ class ChatWebSocketRepositoryImpl(
     private val wsClient: HttpClient,
     private val restApi: ChatWebSocketApi,
     private val networkConfig: NetworkConfig,
-    private val mapper: WsChatMapper
+    private val mapper: WsChatMapper,
+    private val json: Json
 ) : ChatWebSocketRepository {
-
-    private val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }
 
     override fun observeMessages(
         conversationId: Long,

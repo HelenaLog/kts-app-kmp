@@ -20,20 +20,22 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachme
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.factory
 
 val chatModule = module {
 
-    single { ChatApi(get(NetworkQualifier.MAIN)) }
-    single { ChatWebSocketApi(get(NetworkQualifier.MAIN)) }
+    factory { ChatApi(get(NetworkQualifier.MAIN)) }
+    factory { ChatWebSocketApi(get(NetworkQualifier.MAIN)) }
 
-    single<ChatRepository> { ChatRepositoryImpl(api = get()) }
-    single<ConversationDetailRepository> { ConversationDetailRepositoryImpl(api = get()) }
-    single<ChatWebSocketRepository> {
+    factory<ChatRepository> { ChatRepositoryImpl(api = get()) }
+    factory<ConversationDetailRepository> { ConversationDetailRepositoryImpl(api = get()) }
+    factory<ChatWebSocketRepository> {
         ChatWebSocketRepositoryImpl(
             wsClient = get(NetworkQualifier.WS),
             restApi = get(),
             networkConfig = get(),
-            mapper = get()
+            mapper = get(),
+            json = get()
         )
     }
 
