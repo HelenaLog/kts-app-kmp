@@ -30,3 +30,4 @@ sealed interface AttachmentState {
     data object Loading : AttachmentState
     data class Error(val message: String) : AttachmentState
 }
+

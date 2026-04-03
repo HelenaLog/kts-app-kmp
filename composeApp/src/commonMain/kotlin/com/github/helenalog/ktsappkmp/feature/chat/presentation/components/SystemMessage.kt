@@ -32,7 +32,7 @@ fun SystemMessage(
 
 @Preview(showBackground = true)
 @Composable
-fun SystemMessagePreview() {
+private fun SystemMessagePreview() {
     AppTheme {
         SystemMessage(
             text = "Бот остановлен и не будет реагировать на сообщения пользователя"

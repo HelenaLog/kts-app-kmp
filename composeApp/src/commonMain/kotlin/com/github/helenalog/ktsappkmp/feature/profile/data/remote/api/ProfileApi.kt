@@ -17,5 +17,5 @@ class ProfileApi(private val client: HttpClient) {
         client.get("api/cabinets/list").body()
 
     suspend fun getProjects(): ApiResponse<ProjectResponse> =
-        client.get("api/projects/get").body()
+        client.get("api/projects/list").body()
 }

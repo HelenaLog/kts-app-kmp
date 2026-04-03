@@ -179,7 +179,7 @@ private fun RemoveButton(
 
 @Preview(showBackground = true)
 @Composable
-fun PendingAttachmentsRowPreview() {
+private fun PendingAttachmentsRowPreview() {
     AppTheme {
         PendingAttachmentsRow(
             items = listOf(
@@ -208,7 +208,7 @@ fun PendingAttachmentsRowPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun ImagePreviewPreview() {
+private fun ImagePreviewPreview() {
     AppTheme {
         AttachmentItem(
             item = ChatAttachmentUi.Image(id = "1", url = ""),
@@ -219,7 +219,7 @@ fun ImagePreviewPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun FilePreviewPreview() {
+private fun FilePreviewPreview() {
     AppTheme {
         AttachmentItem(
             item = ChatAttachmentUi.File(

@@ -19,15 +19,13 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object HttpClientFactory {
-    private val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }
 
-    fun createAuthClient(config: NetworkConfig): HttpClient = HttpClient {
+    fun createAuthClient(
+        config: NetworkConfig,
+        json: Json
+    ): HttpClient = HttpClient {
         installJson(json)
         installLogging()
-
         defaultRequest {
             url(config.authUrl)
             contentType(ContentType.Application.Json)
@@ -36,6 +34,7 @@ object HttpClientFactory {
 
     fun createMainClient(
         config: NetworkConfig,
+        json: Json,
         sessionStorage: SessionStorage,
         onUnauthorizedCallback: OnUnauthorizedCallback,
     ): HttpClient = HttpClient {

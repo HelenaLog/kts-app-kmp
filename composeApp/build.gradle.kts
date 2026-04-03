@@ -10,10 +10,31 @@ plugins {
     alias(libs.plugins.buildkonfig)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.tracer)
 }
 
 val localProperties = Properties().apply {
     rootProject.file("local.properties").inputStream().use { load(it) }
+}
+
+detekt {
+    config.setFrom("$rootDir/config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+    source.setFrom(
+        "src/commonMain/kotlin",
+        "src/androidMain/kotlin",
+        "src/iosMain/kotlin"
+    )
+    ignoreFailures = true
+}
+
+tracer {
+    create("defaultConfig") {
+        pluginToken = localProperties["TRACER_PLUGIN_TOKEN"].toString()
+        appToken = localProperties["TRACER_APP_TOKEN"].toString()
+        uploadMapping = true
+    }
 }
 
 kotlin {
@@ -32,7 +53,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
@@ -93,6 +114,14 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProperties["KEYSTORE_PATH"].toString())
+            storePassword = localProperties["KEYSTORE_PASSWORD"].toString()
+            keyAlias = localProperties["KEY_ALIAS"].toString()
+            keyPassword = localProperties["KEY_PASSWORD"].toString()
+        }
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -100,12 +129,29 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    lint {
+        warningsAsErrors = false
+        abortOnError = false
+        htmlReport = true
+        htmlOutput = file("build/reports/lint/lint-report.html")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 
@@ -118,6 +164,10 @@ dependencies {
     add("kspIosArm64", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     debugImplementation(libs.compose.uiTooling)
+    debugImplementation(libs.leakcanary)
+    implementation(platform(libs.tracer.platform))
+    implementation(libs.tracer.crash.report)
+    detektPlugins(libs.detekt.rules.compose)
 }
 
 buildkonfig {

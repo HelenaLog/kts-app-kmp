@@ -307,10 +307,10 @@ private fun MessageList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChatTopBar(
-    userName: String = "",
     avatar: UserAvatarUi,
     channelPhoto: String,
     botName: String,
+    userName: String = "",
     channelKind: ChannelKind = ChannelKind.TG,
     onBack: () -> Unit,
     onToggleBot: () -> Unit,

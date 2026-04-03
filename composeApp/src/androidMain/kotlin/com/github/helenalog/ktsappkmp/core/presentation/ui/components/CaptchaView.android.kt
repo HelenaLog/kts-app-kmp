@@ -14,7 +14,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 actual fun CaptchaView(
     siteKey: String,
-    onTokenReceived: (String) -> Unit,
+    onTokenReceive: (String) -> Unit,
     modifier: Modifier
 ) {
     val context = LocalContext.current
@@ -34,11 +34,11 @@ actual fun CaptchaView(
                 settings.domStorageEnabled = true
                 webChromeClient = WebChromeClient()
                 addJavascriptInterface(
-                    object : Any() {
+                    object {
                         @JavascriptInterface
                         @Suppress("unused")
                         fun onTokenReceived(token: String) {
-                            onTokenReceived(token)
+                            onTokenReceive(token)
                         }
                     },
                     "CaptchaBridge"

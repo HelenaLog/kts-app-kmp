@@ -46,8 +46,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun LoginScreen(
     onNavigateToMain: () -> Unit,
-    viewModel: LoginViewModel = koinViewModel(),
     modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -128,7 +128,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(Dimensions.loginSpacingLarge))
             CaptchaView(
                 siteKey = BuildKonfig.CAPTCHA_SITE_KEY,
-                onTokenReceived = viewModel::onCaptchaTokenReceived,
+                onTokenReceive = viewModel::onCaptchaTokenReceived,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(Dimensions.captchaHeight)

@@ -160,7 +160,7 @@ fun AttachmentsList(
 
 @Preview(showBackground = true)
 @Composable
-fun IncomingMessageBubblePreview() {
+private fun IncomingMessageBubblePreview() {
     AppTheme {
         IncomingMessageBubble(
             ChatMessageUi(

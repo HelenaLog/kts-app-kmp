@@ -35,7 +35,8 @@ val chatModule = module {
             wsClient = get(NetworkQualifier.WS),
             restApi = get(),
             networkConfig = get(),
-            mapper = get()
+            mapper = get(),
+            json = get()
         )
     }
     factory<DateTimeParser> { DateTimeParserImpl() }

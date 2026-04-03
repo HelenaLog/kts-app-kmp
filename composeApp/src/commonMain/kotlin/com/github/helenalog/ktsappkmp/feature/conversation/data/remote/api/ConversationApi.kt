@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.feature.conversation.data.api
+package com.github.helenalog.ktsappkmp.feature.conversation.data.remote.api
 
 import com.github.helenalog.ktsappkmp.core.data.remote.response.ApiResponse
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.response.ConversationsResponse
@@ -7,7 +7,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
-class ConversationsApi(private val client: HttpClient) {
+class ConversationApi(private val client: HttpClient) {
 
     suspend fun getConversations(
         limit: Int = 20,

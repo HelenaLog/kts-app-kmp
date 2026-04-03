@@ -60,7 +60,8 @@ private fun FriendAvatarPhotoPreview() {
             UserAvatar(
                 avatar = UserAvatarUi(
                     initials = "И",
-                    photoUrl = "https://static.vecteezy.com/system/resources/previews/036/463/807/non_2x/ai-generated-young-caucasian-man-in-business-attire-portrait-png.png"
+                    photoUrl = "https://static.vecteezy.com/system/resources/previews/" +
+                            "036/463/807/non_2x/ai-generated-young-caucasian-man-in-business-attire-portrait-png.png"
                 )
             )
             UserAvatar(

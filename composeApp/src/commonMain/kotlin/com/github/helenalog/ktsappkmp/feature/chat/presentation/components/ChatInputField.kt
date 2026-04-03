@@ -151,8 +151,8 @@ fun InputIconButton(
 @Composable
 fun SendButton(
     onClick: () -> Unit,
-    enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     IconButton(
         onClick = onClick,
@@ -176,7 +176,7 @@ fun SendButton(
 
 @Preview(showBackground = true)
 @Composable
-fun ChatInputFieldEmptyPreview() {
+private fun ChatInputFieldEmptyPreview() {
     AppTheme {
         ChatInputField(
             state = TextFieldState(),
@@ -189,7 +189,7 @@ fun ChatInputFieldEmptyPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun ChatInputFieldWithTextPreview() {
+private fun ChatInputFieldWithTextPreview() {
     AppTheme {
         ChatInputField(
             state = TextFieldState("Привет, как дела?"),
@@ -202,7 +202,7 @@ fun ChatInputFieldWithTextPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun SendButtonPreview() {
+private fun SendButtonPreview() {
     AppTheme {
         Column {
             SendButton(onClick = {})

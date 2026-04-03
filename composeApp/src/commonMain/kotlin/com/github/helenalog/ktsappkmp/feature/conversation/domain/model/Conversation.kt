@@ -17,22 +17,3 @@ data class Conversation(
     val userId: String
 )
 
-enum class ChannelKind {
-    TG, WZ, JV, UNKNOWN;
-
-    val displayName: String
-        get() = when (this) {
-            TG -> "Telegram"
-            WZ -> "WhatsApp"
-            JV -> "Jivo"
-            UNKNOWN -> "Unknown"
-        }
-
-    val icon: DrawableResource
-        get() = when (this) {
-        TG -> Res.drawable.ic_channel_tg
-        WZ -> Res.drawable.ic_channel_tg
-        JV -> Res.drawable.ic_channel_tg
-        UNKNOWN -> Res.drawable.ic_channel_tg
-    }
-}

@@ -26,13 +26,9 @@ class ChatWebSocketRepositoryImpl(
     private val wsClient: HttpClient,
     private val restApi: ChatWebSocketApi,
     private val networkConfig: NetworkConfig,
-    private val mapper: WsMessageMapper
+    private val mapper: WsMessageMapper,
+    private val json: Json
 ) : ChatWebSocketRepository {
-
-    private val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }
 
     override fun observeMessages(
         conversationId: Long,
@@ -79,9 +75,11 @@ class ChatWebSocketRepositoryImpl(
     ) {
         while (isActive) {
             val reply = centrifuge.receiveReply() ?: break
-            val data = reply.push?.pub?.data ?: continue
-            val payload = json.decodeFromJsonElement<WsNewMessagePayloadDto>(data)
-            mapper.map(payload)?.let { emit(WebSocketEvent.NewMessage(it)) }
+            val data = reply.push?.pub?.data
+            if (data != null) {
+                val payload = json.decodeFromJsonElement<WsNewMessagePayloadDto>(data)
+                mapper.map(payload)?.let { emit(WebSocketEvent.NewMessage(it)) }
+            }
         }
     }
 

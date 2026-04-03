@@ -7,9 +7,17 @@ import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
 import com.github.helenalog.ktsappkmp.core.data.remote.network.OnUnauthorizedCallback
 import com.github.helenalog.ktsappkmp.core.data.storage.SessionStorage
 import io.ktor.client.HttpClient
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val networkModule = module {
+
+    single<Json> {
+        Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+        }
+    }
 
     single<NetworkConfig> {
         NetworkConfig(
@@ -22,17 +30,15 @@ val networkModule = module {
     }
 
     single<HttpClient>(NetworkQualifier.AUTH) {
-        HttpClientFactory.createAuthClient(get())
+        HttpClientFactory.createAuthClient(config = get(), json = get())
     }
 
     single<HttpClient>(NetworkQualifier.MAIN) {
-        val config: NetworkConfig = get()
-        val session: SessionStorage = get()
-        val onUnauthorized: OnUnauthorizedCallback = get()
         HttpClientFactory.createMainClient(
-            config = config,
-            sessionStorage = session,
-            onUnauthorizedCallback = onUnauthorized
+            config = get(),
+            json = get(),
+            sessionStorage = get(),
+            onUnauthorizedCallback = get()
         )
     }
 

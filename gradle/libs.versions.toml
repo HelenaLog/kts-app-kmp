@@ -1,43 +1,36 @@
 [versions]
-agp = "8.11.2"
+agp = "8.13.2"
 android-compileSdk = "36"
 android-minSdk = "23"
 android-targetSdk = "35"
-androidx-activity = "1.12.4"
-androidx-appcompat = "1.7.1"
-androidx-core = "1.17.0"
-androidx-espresso = "3.7.0"
-androidx-lifecycle = "2.9.6"
-androidx-testExt = "1.3.0"
-composeMultiplatform = "1.10.1"
-junit = "4.13.2"
-kotlin = "2.3.10"
+androidx-activity = "1.13.0"
+androidx-lifecycle = "2.10.0"
+composeMultiplatform = "1.10.3"
+kotlin = "2.3.20"
 material3 = "1.10.0-alpha05"
-coil = "3.3.0"
-ktor = "3.4.0"
+coil = "3.4.0"
+ktor = "3.4.2"
 icons = "1.7.3"
 kotlinx-serialization-json = "1.10.0"
 navigation-compose = "2.9.2"
 napier = "2.7.1"
-security-crypto = "1.1.0-alpha06"
-buildkonfig = "0.15.1"
-multiplatformSettings = "1.1.1"
-datastore = "1.1.1"
-room = "2.7.0"
-sqlite = "2.5.0"
+security-crypto = "1.1.0"
+buildkonfig = "0.17.1"
+multiplatformSettings = "1.3.0"
+datastore = "1.2.1"
+room = "2.8.4"
+sqlite = "2.6.2"
 swiperefreshlayout = "1.2.0"
-koin = "4.0.0"
-kotlinx-datetime = "0.6.0"
+koin = "4.2.0"
+kotlinx-datetime = "0.7.1"
 filekit = "0.8.8"
+detekt = "1.23.8"
+leakcanary = "2.14"
+tracer = "1.1.7"
+detekt-compose-rules = "1.4.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
-junit = { module = "junit:junit", version.ref = "junit" }
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
-androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-testExt" }
-androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso" }
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
@@ -61,7 +54,6 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security-crypto" }
-multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
 androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore" }
 androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "datastore" }
@@ -76,6 +68,10 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekit" }
+leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
+tracer-platform = { module = "ru.ok.tracer:tracer-platform", version.ref = "tracer" }
+tracer-crash-report = { module = "ru.ok.tracer:tracer-crash-report", version.ref = "tracer" }
+detekt-rules-compose = { module = "ru.kode:detekt-rules-compose", version.ref = "detekt-compose-rules" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -87,3 +83,5 @@ kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 ksp = { id = "com.google.devtools.ksp", version = "2.3.5" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+tracer = { id = "ru.ok.tracer", version.ref = "tracer" }

@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.data.storage
+package com.github.helenalog.ktsappkmp.core.data.storage
 
 import com.github.helenalog.ktsappkmp.feature.profile.domain.model.Profile
 

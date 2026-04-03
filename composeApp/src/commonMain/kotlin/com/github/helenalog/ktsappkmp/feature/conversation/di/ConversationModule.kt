@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.di
 
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
-import com.github.helenalog.ktsappkmp.feature.conversation.data.api.ConversationsApi
+import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.api.ConversationApi
 import com.github.helenalog.ktsappkmp.feature.conversation.data.repository.ConversationRepositoryImpl
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.ConversationRepository
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase
@@ -12,7 +12,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val conversationModule = module {
-    factory { ConversationsApi(get(NetworkQualifier.MAIN)) }
+    factory { ConversationApi(get(NetworkQualifier.MAIN)) }
     factory<ConversationRepository> { ConversationRepositoryImpl(get(), get()) }
     factory { GetConversationsUseCase(get()) }
     factory { UserAvatarUiMapper() }
