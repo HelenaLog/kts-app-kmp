@@ -10,6 +10,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -44,10 +45,10 @@ object HttpClientFactory {
         defaultRequest {
             url(config.sproUrl)
             contentType(ContentType.Application.Json)
-            header("X-SPro-Cabinet", config.cabinetId)
-            header("X-SPro-Project", config.projectId)
+            header(HEADER_CABINET, config.cabinetId)
+            header(HEADER_PROJECT, config.projectId)
             sessionStorage.getSession()?.let {
-                header("Cookie", it)
+                header(HEADER_COOKIE, it)
             }
         }
 
@@ -57,6 +58,18 @@ object HttpClientFactory {
                     onUnauthorizedCallback.invoke()
                 }
             }
+        }
+    }
+
+    fun createWsClient(
+        config: NetworkConfig
+    ): HttpClient = HttpClient {
+        install(WebSockets) {
+            pingIntervalMillis = PING_INTERVAL_MS
+        }
+        installLogging()
+        defaultRequest {
+            header(HEADER_ORIGIN, config.sproUrl)
         }
     }
 }
@@ -73,3 +86,9 @@ private fun HttpClientConfig<*>.installLogging() {
         level = LogLevel.ALL
     }
 }
+
+private const val PING_INTERVAL_MS: Long = 25_000
+private const val HEADER_ORIGIN = "Origin"
+private const val HEADER_CABINET = "X-SPro-Cabinet"
+private const val HEADER_PROJECT = "X-SPro-Project"
+private const val HEADER_COOKIE = "Cookie"

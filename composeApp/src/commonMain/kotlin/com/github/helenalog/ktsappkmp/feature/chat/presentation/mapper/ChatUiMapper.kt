@@ -1,6 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper
 
-import com.github.helenalog.ktsappkmp.core.utils.DateFormatter
+import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
@@ -9,40 +9,48 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListIt
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 
 class ChatUiMapper(
-    private val avatarMapper: UserAvatarUiMapper
+    private val avatarMapper: UserAvatarUiMapper,
+    private val dateTimeParser: DateTimeParser,
 ) {
 
-    fun mapToList(
+    fun mapMessages(
         messages: List<ChatMessage>,
         userName: String,
         userPhotoUrl: String?,
+    ): List<ChatListItemUi.Message> = messages.map {
+        ChatListItemUi.Message(mapMessage(it, userName, userPhotoUrl))
+    }
+
+    fun addDateHeaders(
+        messages: List<ChatListItemUi.Message>
     ): List<ChatListItemUi> {
         val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+        val sorted = messages
+            .distinctBy { it.data.id }
+            .sortedByDescending { it.data.createdAt }
+
         return buildList {
-            var lastDate: LocalDate? = null
-            messages.forEach { message ->
-                val localDate = message.date?.let { DateFormatter.parseToLocalDate(it) }
-                if (localDate != null && localDate != lastDate) {
+            sorted.forEachIndexed { index, item ->
+                add(item)
+                val nextDate = sorted.getOrNull(index + 1)?.data?.date
+                if (item.data.date != nextDate) {
                     add(
                         ChatListItemUi.DateHeader(
-                            text = DateFormatter.formatDateLabel(message.date, today),
-                            dateKey = message.date,
+                            text = dateTimeParser.formatDateLabel(item.data.createdAt, today),
+                            dateKey = item.data.date.orEmpty()
                         )
                     )
-                    lastDate = localDate
                 }
-                add(ChatListItemUi.Message(mapMessage(message, userName, userPhotoUrl)))
             }
         }
     }
 
-    private fun mapMessage(
+    fun mapMessage(
         domain: ChatMessage,
         userName: String,
         userPhotoUrl: String?,
@@ -50,17 +58,19 @@ class ChatUiMapper(
         id = domain.id,
         text = normalizeServiceText(domain.text),
         formattedTime = domain.time.orEmpty(),
+        date = domain.date,
         isOutgoing = domain.kind == MessageKind.USER,
         kind = domain.kind,
         userName = userName,
         userPhotoUrl = userPhotoUrl.orEmpty(),
         attachments = domain.attachments.map { it.toUi() },
-        avatar = avatarMapper.map(userName, userPhotoUrl)
+        avatar = avatarMapper.map(userName, userPhotoUrl),
+        createdAt = domain.createdAt,
     )
 
     fun mapAttachment(domain: ChatAttachment): ChatAttachmentUi = domain.toUi()
 
-    fun mapAttachmentToDomain(ui: ChatAttachmentUi): ChatAttachment = when (ui) {
+    fun toDomain(ui: ChatAttachmentUi): ChatAttachment = when (ui) {
         is ChatAttachmentUi.Image -> ChatAttachment(
             id = ui.id,
             type = ChatAttachmentType.IMAGE,
@@ -75,7 +85,9 @@ class ChatUiMapper(
     }
 
     private fun normalizeServiceText(text: String?): String = when (text?.trim()) {
-        "stop_bot" -> "Бот остановлен и не будет реагировать на сообщения пользователя"
+        "stop_bot" -> "Бот остановлен и не будет реагировать на сообщения пользователя. " +
+                "Вы можете задать время для автоматического перевода диалога с оператора на бота в настройках"
+
         "start_bot" -> "Пользователь переведён на бота"
         else -> text.orEmpty()
     }

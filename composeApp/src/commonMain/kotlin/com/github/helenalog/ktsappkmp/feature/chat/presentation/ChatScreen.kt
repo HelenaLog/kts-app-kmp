@@ -1,6 +1,8 @@
 package com.github.helenalog.ktsappkmp.feature.chat.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -15,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
@@ -25,20 +29,28 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AvatarWithChannel
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.EmptyContent
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorContent
@@ -49,11 +61,15 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatD
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatInputField
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatMessageItem
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.PendingAttachmentsRow
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ScrollToBottomButton
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
+import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import kotlinx.coroutines.launch
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_ic_user_info
+import ktsappkmp.composeapp.generated.resources.ic_bot_preview
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -66,6 +82,9 @@ fun ChatScreen(
     viewModel: ChatViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val filePickerLauncher = rememberFilePickerLauncher { file ->
+        file?.let { viewModel.onFileSelected(it) }
+    }
 
     LaunchedEffect(conversationId) {
         viewModel.loadScreen(conversationId, userId)
@@ -91,12 +110,18 @@ fun ChatScreen(
         onBack = onNavigateBack,
         onUserInfo = onUserInfo,
         onToggleBot = {},
-        onAttach = {},
+        onAttach = { filePickerLauncher.launch() },
         onEmoji = {},
-        onSend = {},
-        onRemoveAttachment = {},
+        onSend = { viewModel.sendMessage(conversationId) },
+        onRemoveAttachment = { viewModel.removeAttachment(it) },
         onRetry = { viewModel.loadScreen(conversationId, userId) },
-        botName = state.botName
+        botName = state.botName,
+        channelPhoto = state.channelPhoto,
+        isLoadingMore = state.pagination.isLoading,
+        hasMore = state.pagination.hasMore,
+        onLoadMore = { viewModel.loadMoreMessages(conversationId) },
+        attachmentState = state.attachmentState,
+        onDismissAttachmentError = { viewModel.dismissAttachmentError() },
     )
 }
 
@@ -108,9 +133,13 @@ fun ChatContent(
     userName: String,
     avatar: UserAvatarUi,
     botName: String,
+    channelPhoto: String,
     channelKind: ChannelKind,
     isLoading: Boolean,
     error: String?,
+    isLoadingMore: Boolean,
+    hasMore: Boolean,
+    onLoadMore: () -> Unit,
     onBack: () -> Unit,
     onUserInfo: () -> Unit,
     onToggleBot: () -> Unit,
@@ -119,6 +148,8 @@ fun ChatContent(
     onSend: () -> Unit,
     onRemoveAttachment: (String) -> Unit,
     onRetry: () -> Unit,
+    attachmentState: AttachmentState,
+    onDismissAttachmentError: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -131,7 +162,8 @@ fun ChatContent(
                 onBack = onBack,
                 botName = botName,
                 onToggleBot = onToggleBot,
-                onUserInfo = onUserInfo
+                onUserInfo = onUserInfo,
+                channelPhoto = channelPhoto
             )
         },
         bottomBar = {
@@ -141,7 +173,9 @@ fun ChatContent(
                 onAttach = onAttach,
                 onEmoji = onEmoji,
                 onSend = onSend,
-                onRemoveAttachment = onRemoveAttachment
+                onRemoveAttachment = onRemoveAttachment,
+                attachmentState = attachmentState,
+                onDismissAttachmentError = onDismissAttachmentError
             )
         }
     ) { innerPadding ->
@@ -167,7 +201,12 @@ fun ChatContent(
                 )
 
                 messages.isEmpty() -> EmptyContent()
-                else -> MessageList(items = messages)
+                else -> MessageList(
+                    items = messages,
+                    isLoadingMore = isLoadingMore,
+                    hasMore = hasMore,
+                    onLoadMore = onLoadMore
+                )
             }
         }
     }
@@ -176,24 +215,92 @@ fun ChatContent(
 @Composable
 private fun MessageList(
     items: List<ChatListItemUi>,
+    isLoadingMore: Boolean,
+    hasMore: Boolean,
+    onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = Dimensions.spacingMedium),
-        contentPadding = PaddingValues(
-            top = Dimensions.spacingMedium,
-            bottom = Dimensions.spacingMedium
-        ),
-        verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall),
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+
+    val reachedTop by remember {
+        derivedStateOf {
+            !listState.canScrollForward && hasMore && !isLoadingMore
+        }
+    }
+
+    LaunchedEffect(items.size) {
+        if (listState.firstVisibleItemIndex <= 2) {
+            listState.animateScrollToItem(0)
+        }
+    }
+
+    LaunchedEffect(reachedTop) {
+        if (reachedTop) {
+            onLoadMore()
+        }
+    }
+
+    val showButton by remember {
+        derivedStateOf { listState.firstVisibleItemIndex > 2 }
+    }
+
+    Box(
+        modifier = modifier.fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = { focusManager.clearFocus() })
+            }
     ) {
-        items(items = items, key = { it.id }) { item ->
-            when (item) {
-                is ChatListItemUi.Message -> ChatMessageItem(message = item.data)
-                is ChatListItemUi.DateHeader -> ChatDateDivider(text = item.text)
+        LazyColumn(
+            state = listState,
+            reverseLayout = true,
+            contentPadding = PaddingValues(
+                top = Dimensions.spacingMedium,
+                bottom = Dimensions.spacingMedium
+            ),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall),
+            modifier = Modifier
+                .fillMaxSize()
+                .imePadding()
+                .padding(horizontal = Dimensions.spacingMedium),
+        ) {
+            items(
+                items = items,
+                key = { item ->
+                    when (item) {
+                        is ChatListItemUi.Message -> "msg_${item.data.id}"
+                        is ChatListItemUi.DateHeader -> "date_${item.dateKey}"
+                    }
+                }
+            ) { item ->
+                when (item) {
+                    is ChatListItemUi.Message -> ChatMessageItem(message = item.data)
+                    is ChatListItemUi.DateHeader -> ChatDateDivider(text = item.text)
+                }
+            }
+
+            if (isLoadingMore) {
+                item(key = "loading_more") {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(Dimensions.spacingSmall),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
         }
+
+        ScrollToBottomButton(
+            visible = showButton,
+            onClick = {
+                scope.launch { listState.animateScrollToItem(0) }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(Dimensions.spacingMedium)
+        )
     }
 }
 
@@ -202,6 +309,7 @@ private fun MessageList(
 private fun ChatTopBar(
     userName: String = "",
     avatar: UserAvatarUi,
+    channelPhoto: String,
     botName: String,
     channelKind: ChannelKind = ChannelKind.TG,
     onBack: () -> Unit,
@@ -235,13 +343,26 @@ private fun ChatTopBar(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                    Text(
-                        text = botName,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        AsyncImage(
+                            model = channelPhoto,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            error = painterResource(Res.drawable.ic_bot_preview),
+                            placeholder = painterResource(Res.drawable.ic_bot_preview),
+                            modifier = Modifier.size(Dimensions.botIconSize)
+                        )
+                        Spacer(Modifier.width(Dimensions.spacingSmall))
+                        Text(
+                            text = botName,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.secondary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
                 }
             }
         },
@@ -276,16 +397,33 @@ private fun ChatTopBar(
 private fun ChatBottomBar(
     messageInput: TextFieldState,
     pendingAttachments: List<ChatAttachmentUi>,
+    attachmentState: AttachmentState,
     onAttach: () -> Unit,
     onEmoji: () -> Unit,
     onSend: () -> Unit,
     onRemoveAttachment: (String) -> Unit,
+    onDismissAttachmentError: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier.navigationBarsPadding()
-    ) {
+    Column(modifier = Modifier.navigationBarsPadding()) {
         HorizontalDivider()
         Column {
+            when (attachmentState) {
+                is AttachmentState.Loading -> {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+                is AttachmentState.Error -> {
+                    Text(
+                        text = attachmentState.message,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = Dimensions.spacingMedium)
+                            .clickable { onDismissAttachmentError() }
+                    )
+                }
+                is AttachmentState.Idle -> Unit
+            }
             if (pendingAttachments.isNotEmpty()) {
                 PendingAttachmentsRow(
                     items = pendingAttachments,
@@ -305,7 +443,7 @@ private fun ChatBottomBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun ChatTopBarPreview() {
+private fun ChatTopBarPreview() {
     AppTheme {
         ChatTopBar(
             onBack = {},
@@ -314,14 +452,15 @@ fun ChatTopBarPreview() {
             userName = "Имя",
             avatar = UserAvatarUi("?", photoUrl = ""),
             channelKind = ChannelKind.TG,
-            botName = "имя бота"
+            botName = "имя бота",
+            channelPhoto = ""
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ChatBottomBarEmptyPreview() {
+private fun ChatBottomBarEmptyPreview() {
     AppTheme {
         ChatBottomBar(
             messageInput = TextFieldState(),
@@ -329,7 +468,9 @@ fun ChatBottomBarEmptyPreview() {
             onAttach = {},
             onEmoji = {},
             onSend = {},
-            onRemoveAttachment = {}
+            onRemoveAttachment = {},
+            attachmentState = AttachmentState.Idle,
+            onDismissAttachmentError = {}
         )
     }
 }

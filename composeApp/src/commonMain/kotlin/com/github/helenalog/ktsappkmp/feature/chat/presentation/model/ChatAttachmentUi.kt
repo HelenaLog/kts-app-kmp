@@ -11,17 +11,17 @@ sealed class ChatAttachmentUi {
     @Immutable
     data class Image(
         override val id: String,
+        override val type: ChatAttachmentType = ChatAttachmentType.IMAGE,
         val url: String,
-        override val type: ChatAttachmentType = ChatAttachmentType.IMAGE
     ) : ChatAttachmentUi()
 
     @Immutable
     data class File(
         override val id: String,
+        override val type: ChatAttachmentType = ChatAttachmentType.FILE,
         val typeLabel: String,
         val name: String,
         val sizeLabel: String,
         val extension: String,
-        override val type: ChatAttachmentType = ChatAttachmentType.FILE,
     ) : ChatAttachmentUi()
 }

@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
 import androidx.compose.runtime.Immutable
+import com.github.helenalog.ktsappkmp.core.presentation.common.PaginationState
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 
 @Immutable

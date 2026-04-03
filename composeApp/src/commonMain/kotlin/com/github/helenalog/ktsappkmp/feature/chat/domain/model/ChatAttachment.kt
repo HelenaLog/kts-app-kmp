@@ -4,6 +4,7 @@ enum class ChatAttachmentType {
     IMAGE,
     FILE
 }
+
 data class ChatAttachment(
     val id: String,
     val type: ChatAttachmentType,
@@ -11,4 +12,5 @@ data class ChatAttachment(
     val name: String? = null,
     val mimeType: String? = null,
     val size: Long? = null,
+    val extension: String? = null
 )

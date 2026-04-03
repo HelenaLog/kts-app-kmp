@@ -15,6 +15,7 @@ val networkModule = module {
         NetworkConfig(
             sproUrl = BuildKonfig.SPRO_URL,
             authUrl = BuildKonfig.BASE_URL,
+            wsUrl = BuildKonfig.WS_URL,
             cabinetId = BuildKonfig.CABINET_ID,
             projectId = BuildKonfig.PROJECT_ID,
         )
@@ -33,6 +34,10 @@ val networkModule = module {
             sessionStorage = session,
             onUnauthorizedCallback = onUnauthorized
         )
+    }
+
+    single<HttpClient>(NetworkQualifier.WS) {
+        HttpClientFactory.createWsClient(get())
     }
 
     single<OnUnauthorizedCallback> { OnUnauthorizedCallback() }

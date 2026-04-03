@@ -30,6 +30,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.SocialButtonBor
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
+import kotlinx.datetime.Instant
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_ic_bot_avatar
 import org.jetbrains.compose.resources.painterResource
@@ -80,7 +81,7 @@ fun OutgoingMessageBubble(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingMedium, Alignment.End),
+        horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall, Alignment.End),
         verticalAlignment = Alignment.Bottom
     ) {
         MessageTime(text = message.formattedTime)
@@ -91,12 +92,12 @@ fun OutgoingMessageBubble(
             bottomStartRadius = Dimensions.bubbleCornerRadius,
             bottomEndRadius = Dimensions.bubbleSmallRadius
         ) {
+            AttachmentsList(message.attachments)
             Text(
                 text = message.text,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.onBackground
             )
-            AttachmentsList(message.attachments)
         }
         Image(
             painter = painterResource(Res.drawable.chat_ic_bot_avatar),
@@ -129,12 +130,12 @@ fun IncomingMessageBubble(
             bottomStartRadius = Dimensions.bubbleSmallRadius,
             bottomEndRadius = Dimensions.bubbleCornerRadius
         ) {
+            AttachmentsList(message.attachments)
             Text(
                 text = message.text,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.background
             )
-            AttachmentsList(message.attachments)
         }
         MessageTime(text = message.formattedTime)
     }
@@ -166,12 +167,14 @@ fun IncomingMessageBubblePreview() {
                 id = "1",
                 text = "Текст",
                 formattedTime = "10:10",
+                date = "2026-03-28",
                 isOutgoing = true,
                 kind = MessageKind.USER,
                 userName = "Иван",
                 userPhotoUrl = "",
                 attachments = emptyList(),
-                avatar = UserAvatarUi("?", "")
+                avatar = UserAvatarUi("?", ""),
+                createdAt = Instant.DISTANT_PAST
             )
         )
     }
