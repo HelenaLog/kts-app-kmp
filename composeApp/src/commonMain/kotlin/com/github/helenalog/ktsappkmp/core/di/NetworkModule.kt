@@ -12,7 +12,7 @@ import org.koin.dsl.module
 
 val networkModule = module {
 
-    factory<Json> {
+    single<Json> {
         Json {
             ignoreUnknownKeys = true
             isLenient = true

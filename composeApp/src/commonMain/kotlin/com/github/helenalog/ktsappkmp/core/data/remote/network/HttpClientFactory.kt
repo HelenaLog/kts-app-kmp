@@ -19,10 +19,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object HttpClientFactory {
-    private val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }
 
     fun createAuthClient(
         config: NetworkConfig,
