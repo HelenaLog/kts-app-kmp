@@ -15,7 +15,6 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.ObserveWsMessa
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachmentUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
-import io.github.aakira.napier.Napier
 import io.github.vinceglb.filekit.core.PlatformFile
 import io.github.vinceglb.filekit.core.extension
 import kotlinx.coroutines.Dispatchers
@@ -46,9 +45,7 @@ class ChatViewModel(
             updateState { copy(isLoading = true, error = null) }
             getDetailUseCase(conversationId, userId)
                 .onSuccess { detail ->
-                    val userAvatar = withContext(Dispatchers.Default) {
-                        avatarUiMapper.map(detail.userName, detail.photoUrl)
-                    }
+                    val userAvatar = avatarUiMapper.map(detail.userName, detail.photoUrl)
                     updateState {
                         copy(
                             userName = detail.userName,
@@ -78,7 +75,6 @@ class ChatViewModel(
             .map { mapper.toDomain(it) }
 
         viewModelScope.launch {
-            Napier.d("sendMessage: text='$text', attachments=${attachments.size}", tag = "CHAT")
             sendMessageUseCase(conversationId, text, attachments)
                 .onSuccess {
                     messageInputState.clearText()
@@ -103,7 +99,6 @@ class ChatViewModel(
             result.onSuccess { bytes ->
                 uploadAttachment(bytes, file.name, file.extension)
             }.onFailure { e ->
-                Napier.e("onFileSelected failed: ${e.message}", tag = "UPLOAD")
                 updateState {
                     copy(attachmentState = AttachmentState.Error(e.message ?: FILE_READ_ERROR))
                 }
@@ -165,15 +160,11 @@ class ChatViewModel(
     }
 
     private fun uploadAttachment(bytes: ByteArray, fileName: String, mimeType: String) {
-        Napier.d("uploadFile: fileName=$fileName, mimeType=$mimeType, size=${bytes.size}", tag = "UPLOAD")
         viewModelScope.launch {
             updateState { copy(attachmentState = AttachmentState.Loading) }
             uploadAttachmentUseCase(fileName, bytes, mimeType)
                 .onSuccess { attachment ->
-                    val uiModel = withContext(Dispatchers.Default) {
-                        mapper.mapAttachment(attachment)
-                    }
-                    Napier.d("uploadFile success: id=${attachment.id}", tag = "UPLOAD")
+                    val uiModel = mapper.mapAttachment(attachment)
                     updateState {
                         copy(
                             attachmentState = AttachmentState.Idle,
@@ -182,7 +173,6 @@ class ChatViewModel(
                     }
                 }
                 .onFailure { e ->
-                    Napier.e("uploadFile failed: ${e.message}", tag = "UPLOAD")
                     updateState {
                         copy(attachmentState = AttachmentState.Error(e.message ?: UNKNOWN_ERROR))
                     }
