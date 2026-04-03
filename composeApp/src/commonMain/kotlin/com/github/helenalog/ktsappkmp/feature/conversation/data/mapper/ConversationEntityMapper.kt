@@ -1,0 +1,32 @@
+package com.github.helenalog.ktsappkmp.feature.conversation.data.mapper
+
+import com.github.helenalog.ktsappkmp.feature.conversation.data.local.entity.ConversationEntity
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
+
+fun ConversationEntity.toDomain() = Conversation(
+    id = id,
+    isRead = isRead,
+    userName = userName,
+    photoUrl = photoUrl,
+    channelKind = ChannelKind.valueOf(channelKind),
+    lastMessageText = lastMessageText,
+    lastMessageKind = lastMessageKind?.let { MessageKind.valueOf(it) },
+    formattedTime = formattedTime,
+    dateUpdated = dateUpdated,
+    userId = userId,
+)
+
+fun Conversation.toEntity() = ConversationEntity(
+    id = id,
+    isRead = isRead,
+    userName = userName,
+    photoUrl = photoUrl,
+    channelKind = channelKind.name,
+    lastMessageText = lastMessageText,
+    lastMessageKind = lastMessageKind?.name,
+    formattedTime = formattedTime,
+    dateUpdated = dateUpdated,
+    userId = userId
+)

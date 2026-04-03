@@ -1,17 +1,19 @@
 package com.github.helenalog.ktsappkmp
 
 import android.app.Application
-import com.github.helenalog.ktsappkmp.data.storage.SessionProvider
-import com.github.helenalog.ktsappkmp.data.storage.SessionStorageImpl
-import com.github.helenalog.ktsappkmp.data.storage.appContext
+import com.github.helenalog.ktsappkmp.core.di.appModules
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Napier.base(DebugAntilog())
-        appContext = this
-        SessionProvider.init(SessionStorageImpl(this))
+        startKoin {
+            androidContext(this@MainApplication)
+            modules(appModules())
+        }
     }
 }
