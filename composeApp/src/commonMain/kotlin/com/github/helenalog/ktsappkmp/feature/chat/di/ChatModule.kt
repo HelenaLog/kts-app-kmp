@@ -26,15 +26,25 @@ import org.koin.dsl.module
 val chatModule = module {
 
     factory { ChatApi(get(NetworkQualifier.MAIN)) }
+    factory { ChatWebSocketApi(get(NetworkQualifier.MAIN)) }
 
-    factory<ChatRepository> { ChatRepositoryImpl(api = get()) }
+    factory<ChatRepository> { ChatRepositoryImpl(api = get(), dateTimeParser = get()) }
     factory<ConversationDetailRepository> { ConversationDetailRepositoryImpl(api = get()) }
+    factory<ChatWebSocketRepository> {
+        ChatWebSocketRepositoryImpl(
+            wsClient = get(NetworkQualifier.WS),
+            restApi = get(),
+            networkConfig = get(),
+            mapper = get()
+        )
+    }
+    factory<DateTimeParser> { DateTimeParserImpl() }
 
     factory { GetConversationDetailUseCase(get()) }
     factory { GetMessagesUseCase(get()) }
-
-    factory { UserAvatarUiMapper() }
-    factory { ChatUiMapper(get()) }
+    factory { SendMessageUseCase(get()) }
+    factory { UploadAttachmentUseCase(get()) }
+    factory { ObserveWsMessagesUseCase(get()) }
 
     factory { UserAvatarUiMapper() }
     factory { ChatUiMapper(avatarMapper = get(), dateTimeParser = get()) }
