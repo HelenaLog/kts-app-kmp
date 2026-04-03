@@ -70,6 +70,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.filekit.compose)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -131,6 +133,11 @@ buildkonfig {
             com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             "SPRO_URL",
             localProperties["SPRO_URL"].toString()
+        )
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "WS_URL",
+            localProperties["WS_URL"].toString()
         )
         buildConfigField(
             com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,

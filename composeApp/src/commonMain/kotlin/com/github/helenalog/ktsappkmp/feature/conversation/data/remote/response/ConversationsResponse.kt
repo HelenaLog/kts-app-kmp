@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ConversationsResponse(
     @SerialName("conversations")
-    val conversations: List<ConversationDto>
+    val conversations: List<ConversationDto>? = null
 )

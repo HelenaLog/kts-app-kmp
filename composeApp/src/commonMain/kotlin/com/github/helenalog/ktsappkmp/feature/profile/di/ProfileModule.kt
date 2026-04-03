@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.profile.di
 
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.feature.profile.presentation.mapper.ProfileUiMapper
 import com.github.helenalog.ktsappkmp.feature.profile.data.remote.api.ProfileApi
 import com.github.helenalog.ktsappkmp.feature.profile.data.repository.CabinetRepositoryImpl
@@ -19,17 +20,18 @@ import org.koin.dsl.module
 
 val profileModule = module {
 
-    single { ProfileApi(get(NetworkQualifier.MAIN)) }
+    factory { ProfileApi(get(NetworkQualifier.MAIN)) }
 
-    single<ProfileRepository> { ProfileRepositoryImpl(api = get(), profileStorage = get()) }
-    single<CabinetRepository> { CabinetRepositoryImpl(api = get(), cabinetDao = get()) }
-    single<ProjectRepository> { ProjectRepositoryImpl(api = get(), projectDao = get()) }
+    factory<ProfileRepository> { ProfileRepositoryImpl(api = get(), profileStorage = get()) }
+    factory<CabinetRepository> { CabinetRepositoryImpl(api = get(), cabinetDao = get()) }
+    factory<ProjectRepository> { ProjectRepositoryImpl(api = get(), projectDao = get()) }
 
     factory { GetProfileUseCase(get()) }
     factory { GetCabinetsUseCase(get()) }
     factory { GetProjectsUseCase(get()) }
     factory { LogoutUseCase(get()) }
-    factory { ProfileUiMapper() }
+    factory { UserAvatarUiMapper() }
+    factory { ProfileUiMapper(get()) }
 
     viewModel {
         ProfileViewModel(

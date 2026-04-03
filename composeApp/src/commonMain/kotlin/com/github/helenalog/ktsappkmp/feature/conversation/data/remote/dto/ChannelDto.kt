@@ -10,5 +10,7 @@ data class ChannelDto(
     @SerialName("kind")
     val kind: String,
     @SerialName("name")
-    val name: String
+    val name: String,
+    @SerialName("photo_url")
+    val photoUrl: String
 )

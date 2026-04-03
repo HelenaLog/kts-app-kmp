@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationScreen
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileScreen
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.tabs_chats
@@ -27,6 +28,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun TabsScreen(
     onLogout: () -> Unit,
+    onNavigateToChat: (ConversationUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -67,7 +69,9 @@ fun TabsScreen(
             startDestination = Screen.Main,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable<Screen.Main> { ConversationScreen() }
+            composable<Screen.Main> {
+                ConversationScreen(onConversationClick = onNavigateToChat)
+            }
             composable<Screen.Profile> { ProfileScreen(onLogout = onLogout) }
         }
     }

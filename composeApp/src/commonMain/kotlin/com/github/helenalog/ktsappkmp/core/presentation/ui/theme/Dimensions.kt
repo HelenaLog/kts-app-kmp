@@ -39,12 +39,12 @@ object Dimensions {
 
     // Button
     val buttonHeight = 52.dp
-    val buttonCornerRadius = 12.dp
+    val buttonCornerRadius = 8.dp
     val buttonLoaderSize = 20.dp
     val buttonLoaderStrokeWidth = 2.dp
 
     // Search
-    val SearchIconSize = 24.dp
+    val searchIconSize = 24.dp
 
     // Filter Button
     val filterButtonSize = 56.dp
@@ -58,6 +58,7 @@ object Dimensions {
 
     // States
     val stateIconSize = 40.dp
+    val botIconSize = 16.dp
     val stateSpacing = 12.dp
 
     // Loader
@@ -70,7 +71,6 @@ object Dimensions {
 
     // Onboarding
     val onboardingImageHeight = 240.dp
-    val onboardingContentSpacing = 40.dp
     val onboardingTextSpacing = 24.dp
     val onboardingBottomSpacing = 28.dp
     val onboardingHorizontalPadding = 32.dp
@@ -79,4 +79,20 @@ object Dimensions {
     val onboardingIndicatorSpacing = 8.dp
     val onboardingButtonSpacing = 8.dp
     val onboardingTextHorizontalPadding = 8.dp
+
+    val timeBottomPadding = 4.dp
+    val bubbleCornerRadius = 8.dp
+    val bubbleSmallRadius = 2.dp
+
+    val attachmentMaxSize = 295.dp
+
+    val chatInputHorizontalPadding = 12.dp
+    val chatInputTextVerticalPadding = 12.dp
+    val inputIconSize = 16.dp
+    val sendButtonSize = 48.dp
+    val sendButtonIconSize = 24.dp
+
+    val imagePreviewSize = 100.dp
+    val filePreviewHeight = 58.dp
+    val filePreviewWidth = 270.dp
 }

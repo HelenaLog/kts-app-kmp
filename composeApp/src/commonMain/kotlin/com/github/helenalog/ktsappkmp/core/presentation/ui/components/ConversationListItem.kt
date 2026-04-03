@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.core.presentation.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,11 +13,14 @@ import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageK
 
 @Composable
 fun ConversationListItem(
+    onConversationClick: (ConversationUi) -> Unit,
     conversation: ConversationUi,
     modifier: Modifier = Modifier
 ) {
     ListItem(
-        modifier = modifier,
+        modifier = modifier.clickable {
+            onConversationClick(conversation)
+        },
         headlineContent = {
             NameAndTimeRow(
                 name = conversation.userName,
@@ -56,7 +60,9 @@ private fun ConversationListItemPreview() {
                 channelKind = ChannelKind.TG,
                 lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
                 lastMessageKind = MessageKind.BOT,
-            )
+                userId = "1"
+            ),
+            onConversationClick = {}
         )
     }
 }

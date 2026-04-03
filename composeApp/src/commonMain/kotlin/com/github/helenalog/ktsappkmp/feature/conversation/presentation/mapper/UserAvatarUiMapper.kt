@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.core.data.mapper
+package com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper
 
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 

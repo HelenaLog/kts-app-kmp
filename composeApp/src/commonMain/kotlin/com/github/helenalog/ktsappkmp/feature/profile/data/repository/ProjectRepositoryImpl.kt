@@ -1,6 +1,8 @@
 package com.github.helenalog.ktsappkmp.feature.profile.data.repository
 
 import com.github.helenalog.ktsappkmp.feature.profile.data.local.dao.ProjectDao
+import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toDomain
+import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toEntity
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.toEntity

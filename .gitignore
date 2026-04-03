@@ -33,6 +33,10 @@ Podfile.lock
 keystore/
 *.jks
 *.keystore
+*-release.apk
+*-release.dm
+**/release/
+baselineProfiles/
 
 # KMP / Kotlin Native
 *.klib

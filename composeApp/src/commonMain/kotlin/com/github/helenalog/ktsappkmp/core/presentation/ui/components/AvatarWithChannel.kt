@@ -7,8 +7,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
-import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 
 @Composable
 fun AvatarWithChannel(
@@ -33,7 +33,8 @@ private fun AvatarWithChannelPreview() {
     AvatarWithChannel(
         avatar = UserAvatarUi(
             initials = "Иван",
-            photoUrl = ""),
+            photoUrl = ""
+        ),
         channelKind = ChannelKind.TG,
     )
 }

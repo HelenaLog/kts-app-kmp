@@ -38,8 +38,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ConversationScreen(
+    onConversationClick: (ConversationUi) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ConversationViewModel = koinViewModel(),
+    viewModel: ConversationViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val pullToRefreshState = rememberPullToRefreshState()
@@ -89,10 +90,11 @@ fun ConversationScreen(
                     ) {
                         ConversationList(
                             conversations = state.conversations,
-                            isPaginating = state.pagination.isPaginating,
+                            isPaginating = state.pagination.isLoading,
                             paginationError = state.pagination.error,
                             onReachEnd = { viewModel.onReachEnd() },
-                            onRetryPagination = { viewModel.onReachEnd() }
+                            onRetryPagination = { viewModel.onReachEnd() },
+                            onConversationClick = onConversationClick
                         )
                     }
                 }
@@ -108,6 +110,7 @@ private fun ConversationList(
     paginationError: String?,
     onReachEnd: () -> Unit,
     onRetryPagination: () -> Unit,
+    onConversationClick: (ConversationUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -128,8 +131,11 @@ private fun ConversationList(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall),
     ) {
-        items(items = conversations, key = { it.id }) {
-            ConversationListItem(conversation = it)
+        items(items = conversations, key = { it.id }) { conversation ->
+            ConversationListItem(
+                conversation = conversation,
+                onConversationClick = onConversationClick
+            )
         }
 
         if (isPaginating) {
@@ -188,6 +194,7 @@ private fun MainTopBar(
 @Composable
 private fun MainScreenPrev() {
     ConversationScreen(
-        viewModel = koinViewModel()
+        viewModel = koinViewModel(),
+        onConversationClick = {}
     )
 }

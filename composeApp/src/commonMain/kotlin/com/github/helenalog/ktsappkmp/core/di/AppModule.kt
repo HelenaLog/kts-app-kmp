@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.core.di
 
 import com.github.helenalog.ktsappkmp.core.presentation.navigation.di.navigationModule
+import com.github.helenalog.ktsappkmp.feature.chat.di.chatModule
 import com.github.helenalog.ktsappkmp.feature.conversation.di.conversationModule
 import com.github.helenalog.ktsappkmp.feature.login.di.loginModule
 import com.github.helenalog.ktsappkmp.feature.onboarding.di.onboardingModule
@@ -16,5 +17,6 @@ fun appModules(): List<Module> = listOf(
     onboardingModule,
     loginModule,
     conversationModule,
-    profileModule
+    profileModule,
+    chatModule
 )

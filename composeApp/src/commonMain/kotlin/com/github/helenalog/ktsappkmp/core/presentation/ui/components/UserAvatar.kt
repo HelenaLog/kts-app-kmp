@@ -45,7 +45,7 @@ fun UserAvatar(
         } else {
             Text(
                 text = avatar.initials,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.tertiary
             )
         }

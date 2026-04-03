@@ -7,14 +7,16 @@ import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.Con
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationViewModel
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationUiMapper
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val conversationModule = module {
-    single { ConversationsApi(get(NetworkQualifier.MAIN)) }
-    single<ConversationRepository> { ConversationRepositoryImpl(get(), get()) }
+    factory { ConversationsApi(get(NetworkQualifier.MAIN)) }
+    factory<ConversationRepository> { ConversationRepositoryImpl(get(), get()) }
     factory { GetConversationsUseCase(get()) }
-    factory { ConversationUiMapper() }
+    factory { UserAvatarUiMapper() }
+    factory { ConversationUiMapper(get()) }
 
     viewModel { ConversationViewModel(get(), get()) }
 }

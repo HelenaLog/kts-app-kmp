@@ -53,7 +53,7 @@ fun SearchBar(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(Dimensions.SearchIconSize)
+                modifier = Modifier.size(Dimensions.searchIconSize)
             )
         },
         trailingIcon = {
@@ -65,7 +65,7 @@ fun SearchBar(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(Res.string.search_clear),
                         tint = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.size(Dimensions.SearchIconSize)
+                        modifier = Modifier.size(Dimensions.searchIconSize)
                     )
                 }
             }

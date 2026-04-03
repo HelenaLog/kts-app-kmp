@@ -13,7 +13,9 @@ fun ConversationEntity.toDomain() = Conversation(
     channelKind = ChannelKind.valueOf(channelKind),
     lastMessageText = lastMessageText,
     lastMessageKind = lastMessageKind?.let { MessageKind.valueOf(it) },
-    dateUpdated = dateUpdated
+    formattedTime = formattedTime,
+    dateUpdated = dateUpdated,
+    userId = userId,
 )
 
 fun Conversation.toEntity() = ConversationEntity(
@@ -24,5 +26,7 @@ fun Conversation.toEntity() = ConversationEntity(
     channelKind = channelKind.name,
     lastMessageText = lastMessageText,
     lastMessageKind = lastMessageKind?.name,
-    dateUpdated = dateUpdated
+    formattedTime = formattedTime,
+    dateUpdated = dateUpdated,
+    userId = userId
 )
