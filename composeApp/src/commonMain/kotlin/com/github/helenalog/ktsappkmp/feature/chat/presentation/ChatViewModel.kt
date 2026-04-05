@@ -70,7 +70,8 @@ class ChatViewModel(
                             channelKind = detail.channelKind,
                             avatar = userAvatar,
                             userId = detail.userId,
-                            channelId = detail.channelId
+                            channelId = detail.channelId,
+                            isBotActive = !detail.stoppedByManager
                         )
                     }
                     loadMessages(conversationId)

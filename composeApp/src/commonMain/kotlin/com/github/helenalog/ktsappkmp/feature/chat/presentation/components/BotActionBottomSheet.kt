@@ -1,6 +1,12 @@
 package com.github.helenalog.ktsappkmp.feature.chat.presentation.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,30 +40,39 @@ fun BotActionBottomSheet(
         containerColor = MaterialTheme.colorScheme.background,
         modifier = modifier
     ) {
-        when (state) {
-            is BotActionState.BlockPickerOpen -> BlockListContent(
-                scenario = state.scenario,
-                blocks = state.filteredBlocks,
-                query = state.query,
-                onQueryChange = handlers.onSearchQueryChanged,
-                onBack = handlers.onBackToScenarios,
-                onSelectBlock = handlers.onRunScenario
-            )
-
-            is BotActionState.ScenarioPickerOpen -> ScenarioListContent(
-                scenarios = state.filteredScenarios,
-                query = state.query,
-                onQueryChange = handlers.onSearchQueryChanged,
-                onSelectScenario = handlers.onSelectScenario
-            )
-
-            is BotActionState.Loading -> SheetLoadingContent()
-            is BotActionState.Error -> SheetErrorContent(
-                message = state.message,
-                onDismiss = handlers.onDismissBotAction
-            )
-
-            else -> Unit
+        AnimatedContent(
+            targetState = state,
+            transitionSpec = {
+                fadeIn(tween(ANIMATION_DURATION_MS)) togetherWith fadeOut(tween(ANIMATION_DURATION_MS))
+            },
+            contentKey = { it::class },
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.6f),
+            label = ANIMATION_LABEL
+        ) { animatedState ->
+            when (animatedState) {
+                is BotActionState.ScenarioPickerOpen -> ScenarioListContent(
+                    scenarios = animatedState.filteredScenarios,
+                    query = animatedState.query,
+                    onQueryChange = handlers.onSearchQueryChanged,
+                    onSelectScenario = handlers.onSelectScenario
+                )
+                is BotActionState.BlockPickerOpen -> BlockListContent(
+                    scenario = animatedState.scenario,
+                    blocks = animatedState.filteredBlocks,
+                    query = animatedState.query,
+                    onQueryChange = handlers.onSearchQueryChanged,
+                    onBack = handlers.onBackToScenarios,
+                    onSelectBlock = handlers.onRunScenario
+                )
+                is BotActionState.Loading -> SheetLoadingContent()
+                is BotActionState.Error -> SheetErrorContent(
+                    message = animatedState.message,
+                    onDismiss = handlers.onDismissBotAction
+                )
+                else -> Unit
+            }
         }
     }
 }
@@ -96,10 +111,24 @@ private fun SheetErrorContent(
     }
 }
 
+private const val ANIMATION_DURATION_MS = 300
+private const val ANIMATION_LABEL = "BotActionContent"
+
 @Preview(showBackground = true)
 @Composable
 private fun SheetLoadingPreview() {
     AppTheme {
         SheetLoadingContent()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SheetErrorPreview() {
+    AppTheme {
+        SheetErrorContent(
+            message = "Не удалось загрузить данные",
+            onDismiss = {}
+        )
     }
 }
