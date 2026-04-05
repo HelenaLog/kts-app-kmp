@@ -72,7 +72,7 @@ object Dimensions {
     // Onboarding
     val onboardingImageHeight = 240.dp
     val onboardingTextSpacing = 24.dp
-    val onboardingBottomSpacing = 28.dp
+    val bottomSpacing = 28.dp
     val onboardingHorizontalPadding = 32.dp
     val onboardingVerticalPadding = 48.dp
     val onboardingIndicatorSize = 14.dp

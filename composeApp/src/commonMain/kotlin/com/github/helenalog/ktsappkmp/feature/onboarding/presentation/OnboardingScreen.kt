@@ -81,7 +81,7 @@ fun OnboardingScreen(
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Dimensions.onboardingBottomSpacing)
+                verticalArrangement = Arrangement.spacedBy(Dimensions.bottomSpacing)
             ) {
                 PageIndicator(
                     pageSize = state.totalPages,
