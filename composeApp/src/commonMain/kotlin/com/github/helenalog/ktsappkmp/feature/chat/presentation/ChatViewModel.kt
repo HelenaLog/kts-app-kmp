@@ -13,6 +13,8 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversatio
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.ObserveWsMessagesUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.StartBotUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.StopBotUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachmentUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
 import io.github.vinceglb.filekit.core.PlatformFile
@@ -29,8 +31,10 @@ class ChatViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
     private val observeMessagesUseCase: ObserveWsMessagesUseCase,
     private val uploadAttachmentUseCase: UploadAttachmentUseCase,
+    private val startBotUseCase: StartBotUseCase,
+    private val stopBotUseCase: StopBotUseCase,
     private val mapper: ChatUiMapper,
-    private val avatarUiMapper: UserAvatarUiMapper,
+    private val avatarUiMapper: UserAvatarUiMapper
 ) : BaseViewModel<ChatUiState, ChatUiEvent>(initialState = ChatUiState()) {
     val messageInputState = TextFieldState()
     private var wsJob: Job? = null
@@ -156,6 +160,30 @@ class ChatViewModel(
                     )
                 }
             }
+        }
+    }
+
+    fun startBot(conversationId: Long) {
+        viewModelScope.launch {
+            startBotUseCase(conversationId, state.value.userId)
+                .onSuccess {
+                    updateState { copy(isBotActive = true, botActionState = BotActionState.Idle) }
+                }
+                .onFailure { e ->
+                    updateState { copy(error = e.message ?: UNKNOWN_ERROR) }
+                }
+        }
+    }
+
+    fun stopBot(conversationId: Long) {
+        viewModelScope.launch {
+            stopBotUseCase(conversationId, state.value.userId)
+                .onSuccess {
+                    updateState { copy(isBotActive = false, botActionState = BotActionState.Idle) }
+                }
+                .onFailure { e ->
+                    updateState { copy(error = e.message ?: UNKNOWN_ERROR) }
+                }
         }
     }
 
