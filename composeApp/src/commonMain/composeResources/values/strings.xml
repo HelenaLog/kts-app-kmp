@@ -44,4 +44,9 @@
     <string name="chat_block_search_placeholder">Название блока</string>
     <string name="chat_scenario_search_placeholder">Название сценария</string>
     <string name="chat_scenario_title">Сценарий</string>
+    <string name="chat_bot_stop">Остановить бота</string>
+    <string name="chat_bot_start">Запустить бота</string>
+    <string name="chat_continue_bot">Продолжить работу бота</string>
+    <string name="chat_restart_bot">Завершить сценарий и запустить бота заново</string>
+    <string name="chat_run_scenario">Запустить сценарий</string>
 </resources>

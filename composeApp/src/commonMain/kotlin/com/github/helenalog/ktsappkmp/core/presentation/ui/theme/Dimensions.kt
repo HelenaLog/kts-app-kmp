@@ -95,4 +95,5 @@ object Dimensions {
     val imagePreviewSize = 100.dp
     val filePreviewHeight = 58.dp
     val filePreviewWidth = 270.dp
+    val menuItemMinWidth = 216.dp
 }
