@@ -46,6 +46,7 @@ object HttpClientFactory {
             contentType(ContentType.Application.Json)
             header(HEADER_CABINET, config.cabinetId)
             header(HEADER_PROJECT, config.projectId)
+            header(HEADER_BUCKET, config.bucket)
             sessionStorage.getSession()?.let {
                 header(HEADER_COOKIE, it)
             }
@@ -90,4 +91,5 @@ private const val PING_INTERVAL_MS: Long = 25_000
 private const val HEADER_ORIGIN = "Origin"
 private const val HEADER_CABINET = "X-SPro-Cabinet"
 private const val HEADER_PROJECT = "X-SPro-Project"
+private const val HEADER_BUCKET = "X-SPro-Bucket"
 private const val HEADER_COOKIE = "Cookie"

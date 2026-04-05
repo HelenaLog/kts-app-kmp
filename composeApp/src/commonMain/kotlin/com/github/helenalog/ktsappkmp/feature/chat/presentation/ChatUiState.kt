@@ -8,6 +8,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.common.PaginationState
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatBottomBarState
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListState
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatTopBarState
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ScenarioUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 
 @Immutable
@@ -27,7 +28,8 @@ data class ChatUiState(
     val pagination: PaginationState = PaginationState(),
     val attachmentState: AttachmentState = AttachmentState.Idle,
     val isBotActive: Boolean = true,
-    val botActionState: BotActionState = BotActionState.Idle
+    val botActionState: BotActionState = BotActionState.Idle,
+    val scenarios: List<ScenarioUi> = emptyList()
 ) {
     val topBarState: ChatTopBarState
         get() = ChatTopBarState(

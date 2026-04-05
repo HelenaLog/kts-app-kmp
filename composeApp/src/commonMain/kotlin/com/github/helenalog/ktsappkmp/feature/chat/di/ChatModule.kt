@@ -19,12 +19,17 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.ChatWebSock
 import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.ConversationDetailRepository
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetScenarioBlocksUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetScenariosUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.ObserveWsMessagesUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.RunScenarioUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.StartBotUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.StopBotUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachmentUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatViewModel
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.BlockUiMapper
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ScenarioUiMapper
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -55,10 +60,15 @@ val chatModule = module {
     factory { StopBotUseCase(get()) }
     factory { UploadAttachmentUseCase(get()) }
     factory { ObserveWsMessagesUseCase(get()) }
+    factory { GetScenariosUseCase(get()) }
+    factory { RunScenarioUseCase(get()) }
+    factory { GetScenarioBlocksUseCase(get()) }
 
     factory { UserAvatarUiMapper() }
     factory { ChatUiMapper(avatarMapper = get(), dateTimeParser = get()) }
     factory { WsMessageMapper(get()) }
+    factory { ScenarioUiMapper() }
+    factory { BlockUiMapper() }
 
     viewModel {
         ChatViewModel(
@@ -69,8 +79,13 @@ val chatModule = module {
             observeMessagesUseCase = get(),
             startBotUseCase = get(),
             stopBotUseCase = get(),
-            mapper = get(),
-            avatarUiMapper = get()
+            getScenariosUseCase = get(),
+            runScenarioUseCase = get(),
+            getScenarioBlocksUseCase = get(),
+            chatUiMapper = get(),
+            avatarUiMapper = get(),
+            scenarioUiMapper = get(),
+            blockUiMapper = get()
         )
     }
 }

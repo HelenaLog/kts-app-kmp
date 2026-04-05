@@ -130,7 +130,7 @@ private fun CustomDropdownItem(
                         color = MaterialTheme.colorScheme.primaryContainer,
                         shape = RoundedCornerShape(Dimensions.textFieldCornerRadius)
                     )
-                    .padding(Dimensions.spacingMedium),
+                    .padding(horizontal = Dimensions.spacingMedium, vertical = Dimensions.spacingSmall),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall)
             ) {
@@ -150,7 +150,7 @@ private fun CustomDropdownItem(
             }
         },
         onClick = onClick,
-        contentPadding = PaddingValues(Dimensions.spacingSmall)
+        contentPadding = PaddingValues(horizontal = Dimensions.spacingSmall, vertical = Dimensions.spacingExtraSmall)
     )
 }
 

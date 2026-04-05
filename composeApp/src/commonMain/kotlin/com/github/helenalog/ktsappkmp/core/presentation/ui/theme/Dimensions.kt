@@ -10,6 +10,7 @@ object Dimensions {
     val spacingMedium = 16.dp
     val spacingLarge = 24.dp
     val spacingSmall = 8.dp
+    val spacingExtraSmall = 4.dp
 
     // Avatar
     val avatarSize = 52.dp

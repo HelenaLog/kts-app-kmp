@@ -122,12 +122,12 @@ fun ChatScreen(
                 botAction = BotActionHandlers(
                     onStopBot = { viewModel.stopBot(conversationId) },
                     onStartBot = { viewModel.startBot(conversationId) },
-                    onOpenBotActionSheet = {},
-                    onDismissBotAction = {},
-                    onSelectScenario = {},
-                    onRunScenario = {},
-                    onBackToScenarios = {},
-                    onSearchQueryChanged = {}
+                    onOpenBotActionSheet = { viewModel.openBotActionSheet() },
+                    onDismissBotAction = { viewModel.dismissBotAction() },
+                    onSelectScenario = { viewModel.selectScenario(it) },
+                    onRunScenario = { blockId -> viewModel.runScenario(conversationId, blockId) },
+                    onBackToScenarios = { viewModel.backToScenarioList() },
+                    onSearchQueryChanged = { viewModel.onSearchQueryChanged(it) }
                 ),
             )
         },
