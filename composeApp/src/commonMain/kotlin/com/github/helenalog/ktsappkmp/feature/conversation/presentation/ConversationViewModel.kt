@@ -8,8 +8,6 @@ import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversa
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase
 import com.github.helenalog.ktsappkmp.feature.filter.presentation.mapper.toUi
-import com.github.helenalog.ktsappkmp.feature.filter.presentation.model.ChannelUi
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,16 +80,17 @@ class ConversationViewModel(
         updateState { copy(isFilterSheetOpen = false) }
     }
 
-    fun applyFilter(filter: ConversationFilter) {
+    fun applyFilter(newFilter: ConversationFilter) {
         val allKinds = ChannelKind.entries.filter { it != ChannelKind.UNKNOWN }.toSet()
         val allChannelIds = state.value.availableChannels.map { it.id }.toSet()
 
-        val normalized = filter.normalized(allKinds, allChannelIds)
+        val normalized = newFilter.normalized(allKinds, allChannelIds)
         val shouldReload = normalized != filterFlow.value
 
         updateState {
             copy(
-                filter = filter,
+                filter = newFilter,
+                normalizedFilter = normalized,
                 isFilterSheetOpen = false,
                 hasAppliedFilter = true,
                 isLoading = if (shouldReload) true else isLoading,
@@ -197,7 +196,7 @@ class ConversationViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_MS = 300L
-        private const val PAGINATION_ERROR = "Pagination error"
-        private const val UNKNOWN_ERROR = "Unknown error"
+        private const val PAGINATION_ERROR = "Ошибка пагинации"
+        private const val UNKNOWN_ERROR = "Неизвестная ошибка"
     }
 }

@@ -7,12 +7,6 @@ import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversa
 import com.github.helenalog.ktsappkmp.feature.filter.presentation.model.ChannelUi
 import com.github.helenalog.ktsappkmp.feature.filter.presentation.model.UserListUi
 
-sealed interface FilterSheetType {
-    data object Kinds : FilterSheetType
-    data object Channels : FilterSheetType
-    data object Lists : FilterSheetType
-}
-
 @Immutable
 data class FilterUiState(
     val allChannelKinds: List<ChannelKind> = emptyList(),
@@ -24,20 +18,14 @@ data class FilterUiState(
     val kindsQuery: String = "",
     val channelsQuery: String = "",
     val userListQuery: String = "",
-    val activeSheet: FilterSheetType? = null,
+    val activeSection: FilterSection = FilterSection.MAIN,
     val isLoading: Boolean = false,
     val error: String? = null
 ) {
-    val kindsLabel: String
-        get() = if (selectedChannelKinds.isEmpty()) "Выберите элементы"
-        else "Выбрано: ${selectedChannelKinds.size}"
-
-    val channelsLabel: String
-        get() = if (selectedChannelIds.isEmpty()) "Выберите каналы"
-        else "Выбрано: ${selectedChannelIds.size}"
 
     val selectedListLabel: String
-        get() = userLists.find { it.id == selectedListId }?.name ?: "Все пользователи"
+        get() = userLists.find { it.id == selectedListId }?.name.orEmpty()
+
     val filteredKinds: List<ChannelKind>
         get() = if (kindsQuery.isBlank()) allChannelKinds
         else allChannelKinds.filter { it.displayName.contains(kindsQuery, ignoreCase = true) }
@@ -45,8 +33,7 @@ data class FilterUiState(
     val filteredChannels: List<ChannelUi>
         get() = allChannels.filter { channel ->
             val matchesKind = selectedChannelKinds.isEmpty() || channel.kind in selectedChannelKinds
-            val matchesQuery =
-                channelsQuery.isBlank() || channel.name.contains(channelsQuery, ignoreCase = true)
+            val matchesQuery = channelsQuery.isBlank() || channel.name.contains(channelsQuery, ignoreCase = true)
             matchesKind && matchesQuery
         }
 
@@ -55,18 +42,13 @@ data class FilterUiState(
         else userLists.filter { it.name.contains(userListQuery, ignoreCase = true) }
 
     val showAllUsersOption: Boolean
-        get() = userListQuery.isBlank() || "Все пользователи".contains(
-            userListQuery,
-            ignoreCase = true
-        )
-
+        get() = userListQuery.isBlank()
     val canApply: Boolean
         get() = selectedChannelKinds.isNotEmpty() || selectedChannelIds.isNotEmpty()
 
     fun toFilter() = ConversationFilter(
         selectedChannelKinds = selectedChannelKinds,
         selectedChannelIds = selectedChannelIds,
-        selectedListId = selectedListId
+        selectedListId = selectedListId,
     )
 }
-

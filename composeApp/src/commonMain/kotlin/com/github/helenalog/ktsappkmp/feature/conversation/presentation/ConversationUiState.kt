@@ -15,12 +15,14 @@ data class ConversationUiState(
     val isRefreshing: Boolean = false,
     val pagination: PaginationState = PaginationState(),
     val filter: ConversationFilter = ConversationFilter(),
+    val normalizedFilter: ConversationFilter = ConversationFilter(),
     val availableChannels: List<ChannelUi> = emptyList(),
     val isFilterSheetOpen: Boolean = false,
     val hasAppliedFilter: Boolean = false
 ) {
-    val hasActiveFilter: Boolean get() = !filter.isEmpty
-    companion object Companion {
+    val hasActiveFilter: Boolean get() = !normalizedFilter.isEmpty
+
+    companion object {
         val Initial = ConversationUiState()
     }
 }
