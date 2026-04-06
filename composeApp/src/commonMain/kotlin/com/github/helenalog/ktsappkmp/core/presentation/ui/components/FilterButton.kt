@@ -5,9 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -15,10 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.filter_button_description
-import ktsappkmp.composeapp.generated.resources.filter_icon
+import ktsappkmp.composeapp.generated.resources.ic_filter_button
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -27,7 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 fun FilterButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isActive: Boolean = false,
+    isActive: Boolean = false
 ) {
     Box(
         modifier = modifier
@@ -40,16 +38,16 @@ fun FilterButton(
                     MaterialTheme.colorScheme.primaryContainer
             )
             .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(Res.drawable.filter_icon),
+            painter = painterResource(Res.drawable.ic_filter_button),
             contentDescription = stringResource(Res.string.filter_button_description),
             tint = if (isActive)
-                MaterialTheme.colorScheme.onPrimary
+                MaterialTheme.colorScheme.background
             else
-                MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(Dimensions.filterButtonIconSize),
+                MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.size(Dimensions.filterButtonIconSize)
         )
     }
 }
@@ -57,8 +55,10 @@ fun FilterButton(
 @Preview
 @Composable
 private fun FilterButtonPreview() {
-    FilterButton(
-        isActive = false,
-        onClick = {}
-    )
+    AppTheme {
+        FilterButton(
+            isActive = false,
+            onClick = {}
+        )
+    }
 }

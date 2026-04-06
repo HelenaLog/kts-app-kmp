@@ -51,7 +51,9 @@ fun ConversationScreen(
             MainTopBar(
                 searchQuery = state.searchQuery,
                 onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
-                onClearSearch = { viewModel.clearSearch() }
+                onClearSearch = { viewModel.clearSearch() },
+                hasActiveFilter = state.hasActiveFilter,
+                onFilterClick = { viewModel.openFilterSheet() },
             )
         },
         contentWindowInsets = WindowInsets()
@@ -167,10 +169,12 @@ private fun MainTopBar(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     onClearSearch: () -> Unit,
-    onFilterClick: () -> Unit = {},
+    hasActiveFilter: Boolean,
+    onFilterClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .systemBarsPadding()
             .fillMaxWidth()
             .padding(
@@ -186,7 +190,10 @@ private fun MainTopBar(
             onClear = onClearSearch,
             modifier = Modifier.weight(1f)
         )
-        FilterButton(onClick = onFilterClick)
+        FilterButton(
+            onClick = onFilterClick,
+            isActive = hasActiveFilter
+        )
     }
 }
 
