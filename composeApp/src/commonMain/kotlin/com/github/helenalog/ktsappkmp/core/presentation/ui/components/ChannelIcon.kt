@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.displayName
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.icon
 import org.jetbrains.compose.resources.painterResource
 
 
