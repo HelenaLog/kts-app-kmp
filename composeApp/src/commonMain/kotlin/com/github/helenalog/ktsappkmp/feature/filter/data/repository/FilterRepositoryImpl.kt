@@ -10,7 +10,7 @@ class FilterRepositoryImpl(
     private val api: UserListApi
 ) : FilterRepository {
 
-    override suspend fun getUserLists(): Result<List<UserList>> = suspendRunCatching {
+    override suspend fun getUserList(): Result<List<UserList>> = suspendRunCatching {
         api.getUserLists().data.lists.map { it.toDomain() }
     }
 }
