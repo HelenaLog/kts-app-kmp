@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase
 
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationFilter
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.ConversationRepository
 
@@ -9,6 +10,7 @@ class GetConversationsUseCase(
     suspend operator fun invoke(
         query: String = "",
         limit: Int = 20,
-        offset: Int = 0
-    ): Result<ConversationsPage> = repository.getConversations(query, limit, offset)
+        offset: Int = 0,
+        filter: ConversationFilter = ConversationFilter()
+    ): Result<ConversationsPage> = repository.getConversations(query, limit, offset, filter)
 }
