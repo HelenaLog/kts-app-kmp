@@ -133,7 +133,7 @@ fun ChatContent(
     userName: String,
     avatar: UserAvatarUi,
     botName: String,
-    channelPhoto: String,
+    channelPhoto: String?,
     channelKind: ChannelKind,
     isLoading: Boolean,
     error: String?,
@@ -308,7 +308,7 @@ private fun MessageList(
 @Composable
 private fun ChatTopBar(
     avatar: UserAvatarUi,
-    channelPhoto: String,
+    channelPhoto: String?,
     botName: String,
     userName: String = "",
     channelKind: ChannelKind = ChannelKind.TG,

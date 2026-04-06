@@ -1,7 +1,9 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.data.mapper
 
+import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.ChannelDto
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.ConversationDto
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.MessageKindDto
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Channel
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
@@ -13,12 +15,19 @@ fun ConversationDto.toDomain() = Conversation(
     isRead = isRead,
     userName = "${user.firstName.orEmpty()} ${user.lastName.orEmpty()}".trim(),
     photoUrl = user.photo?.url,
-    channelKind = channel.kind.toChannelKind(),
+    channel = channel.toDomain(),
     lastMessageText = lastMessage?.text.orEmpty(),
     lastMessageKind = lastMessage?.kind?.toDomain(),
     formattedTime = formatTime(dateUpdated),
     dateUpdated = dateUpdated,
     userId = user.id
+)
+
+private fun ChannelDto.toDomain() = Channel(
+    id = id,
+    name = name,
+    kind = kind.toChannelKind(),
+    photoUrl = photoUrl
 )
 
 private fun MessageKindDto.toDomain() = when (this) {

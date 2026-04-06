@@ -19,6 +19,15 @@ data class ConversationEntity(
     @ColumnInfo(name = "photo_url")
     val photoUrl: String?,
 
+    @ColumnInfo(name = "channel_id")
+    val channelId: String,
+
+    @ColumnInfo(name = "channel_name")
+    val channelName: String,
+
+    @ColumnInfo(name = "channel_photo_url")
+    val channelPhotoUrl: String?,
+
     @ColumnInfo(name = "channel_kind")
     val channelKind: String,
 
@@ -35,5 +44,5 @@ data class ConversationEntity(
     val dateUpdated: String,
 
     @ColumnInfo(name = "user_id")
-    val userId: String,
+    val userId: String
 )
