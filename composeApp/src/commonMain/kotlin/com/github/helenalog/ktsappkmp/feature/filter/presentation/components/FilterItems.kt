@@ -3,7 +3,6 @@ package com.github.helenalog.ktsappkmp.feature.filter.presentation.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,7 +32,7 @@ fun SelectableFilterRow(
         onClick = onClick,
         modifier = modifier
     ) {
-        FilterCheckbox(checked = selected, onCheckedChange = { onClick() })
+        FilterCheckbox(checked = selected)
         Image(
             painter = painterResource(icon),
             contentDescription = label,
@@ -79,7 +78,6 @@ fun UserListRow(
 @Composable
 fun FilterCheckbox(
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -91,8 +89,7 @@ fun FilterCheckbox(
                 width = Dimensions.socialButtonBorderWidth,
                 color = MaterialTheme.colorScheme.tertiary,
                 shape = RoundedCornerShape(Dimensions.checkboxCornerRadius)
-            )
-            .clickable { onCheckedChange(!checked) },
+            ),
         contentAlignment = Alignment.Center
     ) {
         if (checked) {

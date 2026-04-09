@@ -38,19 +38,17 @@ fun FilterRowContainer(
             if (selected) MaterialTheme.colorScheme.primaryContainer
             else MaterialTheme.colorScheme.background
         )
+        .then(
+            if (onClick != null) Modifier.clickable { onClick() }
+            else Modifier
+        )
         .padding(
             horizontal = Dimensions.spacingSmall,
             vertical = Dimensions.spacingMedium
         )
 
-    val clickableModifier = if (onClick != null) {
-        baseModifier.clickable { onClick() }
-    } else {
-        baseModifier
-    }
-
     Row(
-        modifier = clickableModifier,
+        modifier = baseModifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall),
         content = content
