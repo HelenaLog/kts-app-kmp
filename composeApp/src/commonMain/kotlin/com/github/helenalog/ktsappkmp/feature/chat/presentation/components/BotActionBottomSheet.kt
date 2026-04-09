@@ -48,7 +48,7 @@ fun BotActionBottomSheet(
             contentKey = { it::class },
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.6f),
+                .fillMaxHeight(0.8f),
             label = ANIMATION_LABEL
         ) { animatedState ->
             when (animatedState) {

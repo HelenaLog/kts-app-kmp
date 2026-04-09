@@ -30,7 +30,9 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachme
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.ChatViewModel
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.BlockUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ScenarioUiMapper
-import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val chatModule = module {
@@ -39,9 +41,10 @@ val chatModule = module {
     factory { ChatWebSocketApi(get(NetworkQualifier.MAIN)) }
     factory { BotActionApi(get(NetworkQualifier.MAIN)) }
 
-    factory<ChatRepository> { ChatRepositoryImpl(api = get(), dateTimeParser = get()) }
-    factory<BotActionRepository> { BotActionRepositoryImpl(api = get()) }
-    factory<ConversationDetailRepository> { ConversationDetailRepositoryImpl(api = get()) }
+    factoryOf(::ChatRepositoryImpl) bind ChatRepository::class
+    factoryOf(::BotActionRepositoryImpl) bind BotActionRepository::class
+    factoryOf(::ConversationDetailRepositoryImpl) bind ConversationDetailRepository::class
+    factoryOf(::DateTimeParserImpl) bind DateTimeParser::class
     factory<ChatWebSocketRepository> {
         ChatWebSocketRepositoryImpl(
             wsClient = get(NetworkQualifier.WS),
@@ -51,41 +54,23 @@ val chatModule = module {
             json = get()
         )
     }
-    factory<DateTimeParser> { DateTimeParserImpl() }
 
-    factory { GetConversationDetailUseCase(get()) }
-    factory { GetMessagesUseCase(get()) }
-    factory { SendMessageUseCase(get()) }
-    factory { StartBotUseCase(get()) }
-    factory { StopBotUseCase(get()) }
-    factory { UploadAttachmentUseCase(get()) }
-    factory { ObserveWsMessagesUseCase(get()) }
-    factory { GetScenariosUseCase(get()) }
-    factory { RunScenarioUseCase(get()) }
-    factory { GetScenarioBlocksUseCase(get()) }
+    factoryOf(::GetConversationDetailUseCase)
+    factoryOf(::GetMessagesUseCase)
+    factoryOf(::SendMessageUseCase)
+    factoryOf(::StartBotUseCase)
+    factoryOf(::StopBotUseCase)
+    factoryOf(::UploadAttachmentUseCase)
+    factoryOf(::ObserveWsMessagesUseCase)
+    factoryOf(::GetScenariosUseCase)
+    factoryOf(::RunScenarioUseCase)
+    factoryOf(::GetScenarioBlocksUseCase)
 
-    factory { UserAvatarUiMapper() }
-    factory { ChatUiMapper(avatarMapper = get(), dateTimeParser = get()) }
-    factory { WsMessageMapper(get()) }
-    factory { ScenarioUiMapper() }
-    factory { BlockUiMapper() }
+    factoryOf(::UserAvatarUiMapper)
+    factoryOf(::ChatUiMapper)
+    factoryOf(::WsMessageMapper)
+    factoryOf(::ScenarioUiMapper)
+    factoryOf(::BlockUiMapper)
 
-    viewModel {
-        ChatViewModel(
-            getDetailUseCase = get(),
-            getMessagesUseCase = get(),
-            sendMessageUseCase = get(),
-            uploadAttachmentUseCase = get(),
-            observeMessagesUseCase = get(),
-            startBotUseCase = get(),
-            stopBotUseCase = get(),
-            getScenariosUseCase = get(),
-            runScenarioUseCase = get(),
-            getScenarioBlocksUseCase = get(),
-            chatUiMapper = get(),
-            avatarUiMapper = get(),
-            scenarioUiMapper = get(),
-            blockUiMapper = get()
-        )
-    }
+    viewModelOf(::ChatViewModel)
 }
