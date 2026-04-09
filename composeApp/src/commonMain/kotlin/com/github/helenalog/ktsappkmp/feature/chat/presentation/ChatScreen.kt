@@ -1,6 +1,5 @@
 package com.github.helenalog.ktsappkmp.feature.chat.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -19,11 +18,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -42,8 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -57,13 +52,17 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorConte
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.BotActionBottomSheet
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.BotActionButton
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatDateDivider
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatInputField
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ChatMessageItem
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.PendingAttachmentsRow
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.components.ScrollToBottomButton
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatAttachmentUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatBottomBarState
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListState
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatTopBarState
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
@@ -79,7 +78,7 @@ fun ChatScreen(
     userId: String,
     onNavigateBack: () -> Unit,
     onUserInfo: () -> Unit,
-    viewModel: ChatViewModel = koinViewModel(),
+    viewModel: ChatViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val filePickerLauncher = rememberFilePickerLauncher { file ->
@@ -99,85 +98,70 @@ fun ChatScreen(
     }
 
     ChatContent(
-        messages = state.messages,
-        pendingAttachments = state.pendingAttachments,
-        messageInput = viewModel.messageInputState,
-        userName = state.userName,
-        avatar = state.avatar,
-        channelKind = state.channelKind,
-        isLoading = state.isLoading,
-        error = state.error,
-        onBack = onNavigateBack,
-        onUserInfo = onUserInfo,
-        onToggleBot = {},
-        onAttach = { filePickerLauncher.launch() },
-        onEmoji = {},
-        onSend = { viewModel.sendMessage(conversationId) },
-        onRemoveAttachment = { viewModel.removeAttachment(it) },
-        onRetry = { viewModel.loadScreen(conversationId, userId) },
-        botName = state.botName,
-        channelPhoto = state.channelPhoto,
-        isLoadingMore = state.pagination.isLoading,
-        hasMore = state.pagination.hasMore,
-        onLoadMore = { viewModel.loadMoreMessages(conversationId) },
-        attachmentState = state.attachmentState,
-        onDismissAttachmentError = { viewModel.dismissAttachmentError() },
+        topBarState = state.topBarState,
+        listState = state.listState,
+        bottomBarState = state.bottomBarState,
+        botActionState = state.botActionState,
+        handlers = remember(conversationId, userId) {
+            ChatHandlers(
+                navigation = NavigationHandlers(
+                    onBack = onNavigateBack,
+                    onUserInfo = onUserInfo,
+                    onRetry = { viewModel.loadScreen(conversationId, userId) }
+                ),
+                message = MessageHandlers(
+                    onSend = { viewModel.sendMessage(conversationId) },
+                    onAttach = { filePickerLauncher.launch() },
+                    onEmoji = {},
+                    onLoadMore = { viewModel.loadMoreMessages(conversationId) }
+                ),
+                attachment = AttachmentHandlers(
+                    onRemoveAttachment = { viewModel.removeAttachment(it) },
+                    onDismissAttachmentError = { viewModel.dismissAttachmentError() }
+                ),
+                botAction = BotActionHandlers(
+                    onStopBot = { viewModel.stopBot(conversationId) },
+                    onStartBot = { viewModel.startBot(conversationId) },
+                    onOpenBotActionSheet = { viewModel.openBotActionSheet() },
+                    onDismissBotAction = { viewModel.dismissBotAction() },
+                    onSelectScenario = { viewModel.selectScenario(it) },
+                    onRunScenario = { blockId -> viewModel.runScenario(conversationId, blockId) },
+                    onBackToScenarios = { viewModel.backToScenarioList() },
+                    onSearchQueryChanged = { viewModel.onSearchQueryChanged(it) }
+                ),
+            )
+        },
+        messageInput = viewModel.messageInputState
     )
 }
 
 @Composable
 fun ChatContent(
-    messages: List<ChatListItemUi>,
-    pendingAttachments: List<ChatAttachmentUi>,
+    topBarState: ChatTopBarState,
+    listState: ChatListState,
+    bottomBarState: ChatBottomBarState,
+    botActionState: BotActionState,
+    handlers: ChatHandlers,
     messageInput: TextFieldState,
-    userName: String,
-    avatar: UserAvatarUi,
-    botName: String,
-    channelPhoto: String,
-    channelKind: ChannelKind,
-    isLoading: Boolean,
-    error: String?,
-    isLoadingMore: Boolean,
-    hasMore: Boolean,
-    onLoadMore: () -> Unit,
-    onBack: () -> Unit,
-    onUserInfo: () -> Unit,
-    onToggleBot: () -> Unit,
-    onAttach: () -> Unit,
-    onEmoji: () -> Unit,
-    onSend: () -> Unit,
-    onRemoveAttachment: (String) -> Unit,
-    onRetry: () -> Unit,
-    attachmentState: AttachmentState,
-    onDismissAttachmentError: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize().imePadding(),
         topBar = {
             ChatTopBar(
-                channelKind = channelKind,
-                avatar = avatar,
-                userName = userName,
-                onBack = onBack,
-                botName = botName,
-                onToggleBot = onToggleBot,
-                onUserInfo = onUserInfo,
-                channelPhoto = channelPhoto
+                state = topBarState,
+                navigationHandlers = handlers.navigation,
+                botActionHandlers = handlers.botAction
             )
         },
         bottomBar = {
             ChatBottomBar(
+                state = bottomBarState,
                 messageInput = messageInput,
-                pendingAttachments = pendingAttachments,
-                onAttach = onAttach,
-                onEmoji = onEmoji,
-                onSend = onSend,
-                onRemoveAttachment = onRemoveAttachment,
-                attachmentState = attachmentState,
-                onDismissAttachmentError = onDismissAttachmentError
+                messageHandlers = handlers.message,
+                attachmentHandlers = handlers.attachment
             )
-        }
+        },
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -186,29 +170,31 @@ fun ChatContent(
             contentAlignment = Alignment.Center
         ) {
             when {
-                isLoading -> {
-                    Box(
-                        modifier = modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-                error != null -> ErrorContent(
-                    message = error,
-                    onRetry = onRetry
+                listState.isLoading -> CircularProgressIndicator()
+                listState.error != null -> ErrorContent(
+                    message = listState.error,
+                    onRetry = handlers.navigation.onRetry
                 )
-
-                messages.isEmpty() -> EmptyContent()
+                listState.messages.isEmpty() -> EmptyContent()
                 else -> MessageList(
-                    items = messages,
-                    isLoadingMore = isLoadingMore,
-                    hasMore = hasMore,
-                    onLoadMore = onLoadMore
+                    items = listState.messages,
+                    isLoadingMore = listState.isLoadingMore,
+                    hasMore = listState.hasMore,
+                    onLoadMore = handlers.message.onLoadMore
                 )
             }
         }
+    }
+
+    when (botActionState) {
+        is BotActionState.Loading,
+        is BotActionState.ScenarioPickerOpen,
+        is BotActionState.BlockPickerOpen,
+        is BotActionState.Error -> BotActionBottomSheet(
+            state = botActionState,
+            handlers = handlers.botAction
+        )
+        else -> Unit
     }
 }
 
@@ -218,7 +204,7 @@ private fun MessageList(
     isLoadingMore: Boolean,
     hasMore: Boolean,
     onLoadMore: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -307,136 +293,110 @@ private fun MessageList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChatTopBar(
-    avatar: UserAvatarUi,
-    channelPhoto: String,
-    botName: String,
-    userName: String = "",
-    channelKind: ChannelKind = ChannelKind.TG,
-    onBack: () -> Unit,
-    onToggleBot: () -> Unit,
-    onUserInfo: () -> Unit,
+    state: ChatTopBarState,
+    navigationHandlers: NavigationHandlers,
+    botActionHandlers: BotActionHandlers,
+    modifier: Modifier = Modifier
 ) {
-    TopAppBar(
-        navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        },
-        title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AvatarWithChannel(
-                    channelKind = channelKind,
-                    avatar = avatar
-                )
-                Spacer(Modifier.width(Dimensions.spacingSmall))
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall)
-                ) {
-                    Text(
-                        text = userName,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+    Column(modifier = modifier) {
+        TopAppBar(
+            navigationIcon = {
+                IconButton(onClick = navigationHandlers.onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
                     )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        AsyncImage(
-                            model = channelPhoto,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            error = painterResource(Res.drawable.ic_bot_preview),
-                            placeholder = painterResource(Res.drawable.ic_bot_preview),
-                            modifier = Modifier.size(Dimensions.botIconSize)
-                        )
-                        Spacer(Modifier.width(Dimensions.spacingSmall))
+                }
+            },
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    AvatarWithChannel(channelKind = state.channelKind, avatar = state.avatar)
+                    Spacer(Modifier.width(Dimensions.spacingSmall))
+                    Column(verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall)) {
                         Text(
-                            text = botName,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.secondary,
+                            text = state.userName,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onBackground,
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
+                            overflow = TextOverflow.Ellipsis
                         )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            AsyncImage(
+                                model = state.channelPhoto,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                error = painterResource(Res.drawable.ic_bot_preview),
+                                placeholder = painterResource(Res.drawable.ic_bot_preview),
+                                modifier = Modifier.size(Dimensions.botIconSize)
+                            )
+                            Spacer(Modifier.width(Dimensions.spacingSmall))
+                            Text(
+                                text = state.botName,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.secondary,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
                 }
-            }
-        },
-        actions = {
-            IconButton(
-                onClick = onToggleBot,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(Dimensions.socialButtonIconSize)
-                    .background(MaterialTheme.colorScheme.primary),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(Dimensions.filterButtonIconSize),
+            },
+            actions = {
+                BotActionButton(
+                    isBotActive = state.isBotActive,
+                    onStopBot = botActionHandlers.onStopBot,
+                    onStartBot = botActionHandlers.onStartBot,
+                    onOpenBotActionSheet = botActionHandlers.onOpenBotActionSheet
                 )
-
-            }
-            IconButton(onClick = onUserInfo) {
-                Icon(
-                    painter = painterResource(Res.drawable.chat_ic_user_info),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.tertiary
-                )
-            }
-        }
-    )
+                IconButton(onClick = navigationHandlers.onUserInfo) {
+                    Icon(
+                        painter = painterResource(Res.drawable.chat_ic_user_info),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+            },
+        )
+        HorizontalDivider()
+    }
 }
 
 @Composable
 private fun ChatBottomBar(
+    state: ChatBottomBarState,
     messageInput: TextFieldState,
-    pendingAttachments: List<ChatAttachmentUi>,
-    attachmentState: AttachmentState,
-    onAttach: () -> Unit,
-    onEmoji: () -> Unit,
-    onSend: () -> Unit,
-    onRemoveAttachment: (String) -> Unit,
-    onDismissAttachmentError: () -> Unit,
+    messageHandlers: MessageHandlers,
+    attachmentHandlers: AttachmentHandlers,
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.navigationBarsPadding()) {
+    Column(modifier = modifier.navigationBarsPadding()) {
         HorizontalDivider()
-        Column {
-            when (attachmentState) {
-                is AttachmentState.Loading -> {
-                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                }
-                is AttachmentState.Error -> {
-                    Text(
-                        text = attachmentState.message,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = Dimensions.spacingMedium)
-                            .clickable { onDismissAttachmentError() }
-                    )
-                }
-                is AttachmentState.Idle -> Unit
-            }
-            if (pendingAttachments.isNotEmpty()) {
-                PendingAttachmentsRow(
-                    items = pendingAttachments,
-                    onRemove = onRemoveAttachment
-                )
-            }
-            ChatInputField(
-                state = messageInput,
-                onAttach = onAttach,
-                onEmoji = onEmoji,
-                onSend = onSend,
+        when (state.attachmentState) {
+            is AttachmentState.Loading -> LinearProgressIndicator(Modifier.fillMaxWidth())
+            is AttachmentState.Error -> Text(
+                text = state.attachmentState.message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Dimensions.spacingMedium)
+                    .clickable { attachmentHandlers.onDismissAttachmentError() }
+            )
+            is AttachmentState.Idle -> Unit
+        }
+        if (state.pendingAttachments.isNotEmpty()) {
+            PendingAttachmentsRow(
+                items = state.pendingAttachments,
+                onRemove = attachmentHandlers.onRemoveAttachment
             )
         }
+        ChatInputField(
+            state = messageInput,
+            onAttach = messageHandlers.onAttach,
+            onEmoji = messageHandlers.onEmoji,
+            onSend = messageHandlers.onSend
+        )
     }
 }
 
@@ -446,14 +406,29 @@ private fun ChatBottomBar(
 private fun ChatTopBarPreview() {
     AppTheme {
         ChatTopBar(
-            onBack = {},
-            onToggleBot = {},
-            onUserInfo = {},
-            userName = "Имя",
-            avatar = UserAvatarUi("?", photoUrl = ""),
-            channelKind = ChannelKind.TG,
-            botName = "имя бота",
-            channelPhoto = ""
+            state = ChatTopBarState(
+                userName = "Имя",
+                avatar = UserAvatarUi("?", photoUrl = ""),
+                channelKind = ChannelKind.TG,
+                botName = "имя бота",
+                channelPhoto = "",
+                isBotActive = true
+            ),
+            navigationHandlers = NavigationHandlers(
+                onBack = {},
+                onUserInfo = {},
+                onRetry = {}
+            ),
+            botActionHandlers = BotActionHandlers(
+                onStopBot = {},
+                onStartBot = {},
+                onOpenBotActionSheet = {},
+                onDismissBotAction = {},
+                onSelectScenario = {},
+                onRunScenario = {},
+                onBackToScenarios = {},
+                onSearchQueryChanged = {}
+            )
         )
     }
 }
@@ -463,14 +438,21 @@ private fun ChatTopBarPreview() {
 private fun ChatBottomBarEmptyPreview() {
     AppTheme {
         ChatBottomBar(
+            state = ChatBottomBarState(
+                pendingAttachments = emptyList(),
+                attachmentState = AttachmentState.Idle
+            ),
             messageInput = TextFieldState(),
-            pendingAttachments = emptyList(),
-            onAttach = {},
-            onEmoji = {},
-            onSend = {},
-            onRemoveAttachment = {},
-            attachmentState = AttachmentState.Idle,
-            onDismissAttachmentError = {}
+            messageHandlers = MessageHandlers(
+                onSend = {},
+                onAttach = {},
+                onEmoji = {},
+                onLoadMore = {}
+            ),
+            attachmentHandlers = AttachmentHandlers(
+                onRemoveAttachment = {},
+                onDismissAttachmentError = {}
+            )
         )
     }
 }

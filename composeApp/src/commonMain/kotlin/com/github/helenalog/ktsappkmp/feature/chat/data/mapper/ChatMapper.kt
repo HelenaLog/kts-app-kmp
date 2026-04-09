@@ -2,26 +2,12 @@ package com.github.helenalog.ktsappkmp.feature.chat.data.mapper
 
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.AttachmentDto
-import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.ConversationLiteDto
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
-import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ConversationDetail
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.MessageDto
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.MessageKindDto
-import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
-
-fun ConversationLiteDto.toDomain() = ConversationDetail(
-    userId = user.id,
-    userName = listOfNotNull(user.firstName, user.lastName).joinToString(" "),
-    photoUrl = user.photo?.url,
-    channelId = channel.id,
-    botName = channel.name,
-    channelKind = ChannelKind.UNKNOWN,
-    stoppedByManager = state.stoppedByManager,
-    channelPhoto = channel.photoUrl
-)
 
 fun MessageDto.toDomain(dateTimeParser: DateTimeParser): ChatMessage {
     val instant = dateTimeParser.parse(dateCreated)

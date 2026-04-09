@@ -10,6 +10,7 @@ object Dimensions {
     val spacingMedium = 16.dp
     val spacingLarge = 24.dp
     val spacingSmall = 8.dp
+    val spacingExtraSmall = 4.dp
 
     // Avatar
     val avatarSize = 52.dp
@@ -72,7 +73,7 @@ object Dimensions {
     // Onboarding
     val onboardingImageHeight = 240.dp
     val onboardingTextSpacing = 24.dp
-    val onboardingBottomSpacing = 28.dp
+    val bottomSpacing = 28.dp
     val onboardingHorizontalPadding = 32.dp
     val onboardingVerticalPadding = 48.dp
     val onboardingIndicatorSize = 14.dp
@@ -95,4 +96,5 @@ object Dimensions {
     val imagePreviewSize = 100.dp
     val filePreviewHeight = 58.dp
     val filePreviewWidth = 270.dp
+    val menuItemMinWidth = 216.dp
 }

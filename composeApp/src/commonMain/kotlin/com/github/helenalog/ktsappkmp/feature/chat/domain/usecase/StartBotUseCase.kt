@@ -1,0 +1,8 @@
+package com.github.helenalog.ktsappkmp.feature.chat.domain.usecase
+
+import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.BotActionRepository
+
+class StartBotUseCase(private val repository: BotActionRepository) {
+    suspend operator fun invoke(conversationId: Long, userId: String): Result<Unit> =
+        repository.startBot(conversationId, userId)
+}

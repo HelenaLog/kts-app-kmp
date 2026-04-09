@@ -11,10 +11,18 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.WebSocketEv
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetScenarioBlocksUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetScenariosUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.ObserveWsMessagesUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.RunScenarioUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.SendMessageUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.StartBotUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.StopBotUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachmentUseCase
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.BlockUiMapper
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ScenarioUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ScenarioUi
 import io.github.vinceglb.filekit.core.PlatformFile
 import io.github.vinceglb.filekit.core.extension
 import kotlinx.coroutines.Dispatchers
@@ -29,8 +37,15 @@ class ChatViewModel(
     private val sendMessageUseCase: SendMessageUseCase,
     private val observeMessagesUseCase: ObserveWsMessagesUseCase,
     private val uploadAttachmentUseCase: UploadAttachmentUseCase,
-    private val mapper: ChatUiMapper,
+    private val startBotUseCase: StartBotUseCase,
+    private val stopBotUseCase: StopBotUseCase,
+    private val getScenariosUseCase: GetScenariosUseCase,
+    private val getScenarioBlocksUseCase: GetScenarioBlocksUseCase,
+    private val runScenarioUseCase: RunScenarioUseCase,
+    private val chatUiMapper: ChatUiMapper,
     private val avatarUiMapper: UserAvatarUiMapper,
+    private val scenarioUiMapper: ScenarioUiMapper,
+    private val blockUiMapper: BlockUiMapper,
 ) : BaseViewModel<ChatUiState, ChatUiEvent>(initialState = ChatUiState()) {
     val messageInputState = TextFieldState()
     private var wsJob: Job? = null
@@ -55,7 +70,8 @@ class ChatViewModel(
                             channelKind = detail.channelKind,
                             avatar = userAvatar,
                             userId = detail.userId,
-                            channelId = detail.channelId
+                            channelId = detail.channelId,
+                            isBotActive = !detail.stoppedByManager
                         )
                     }
                     loadMessages(conversationId)
@@ -72,7 +88,7 @@ class ChatViewModel(
     fun sendMessage(conversationId: Long) {
         val text = messageInputState.text.toString()
         val attachments = state.value.pendingAttachments
-            .map { mapper.toDomain(it) }
+            .map { chatUiMapper.toDomain(it) }
 
         viewModelScope.launch {
             sendMessageUseCase(conversationId, text, attachments)
@@ -125,14 +141,14 @@ class ChatViewModel(
             ).onSuccess { newMessages ->
                 val existing = currentState.messages.filterIsInstance<ChatListItemUi.Message>()
                 val newMapped = withContext(Dispatchers.Default) {
-                    mapper.mapMessages(
+                    chatUiMapper.mapMessages(
                         newMessages,
                         currentState.userName,
                         currentState.userPhotoUrl
                     )
                 }
                 val allItems = withContext(Dispatchers.Default) {
-                    mapper.addDateHeaders(existing + newMapped)
+                    chatUiMapper.addDateHeaders(existing + newMapped)
                 }
                 updateState {
                     copy(
@@ -159,12 +175,103 @@ class ChatViewModel(
         }
     }
 
+    fun startBot(conversationId: Long) {
+        viewModelScope.launch {
+            startBotUseCase(conversationId, state.value.userId)
+                .onSuccess {
+                    updateState { copy(isBotActive = true, botActionState = BotActionState.Idle) }
+                }
+                .onFailure { e ->
+                    updateState { copy(error = e.message ?: UNKNOWN_ERROR) }
+                }
+        }
+    }
+
+    fun stopBot(conversationId: Long) {
+        viewModelScope.launch {
+            stopBotUseCase(conversationId, state.value.userId)
+                .onSuccess {
+                    updateState { copy(isBotActive = false, botActionState = BotActionState.Idle) }
+                }
+                .onFailure { e ->
+                    updateState { copy(error = e.message ?: UNKNOWN_ERROR) }
+                }
+        }
+    }
+
+    fun openBotActionSheet() = launchBotAction(
+        action = { getScenariosUseCase() },
+        onSuccess = { scenarios ->
+            val mapped = scenarioUiMapper.mapList(scenarios)
+            updateState {
+                copy(
+                    scenarios = mapped,
+                    botActionState = BotActionState.ScenarioPickerOpen(scenarios = mapped)
+                )
+            }
+        }
+    )
+
+    fun selectScenario(scenario: ScenarioUi) = launchBotAction(
+        action = { getScenarioBlocksUseCase(scenario.id) },
+        onSuccess = { blocks ->
+            updateState {
+                copy(
+                    botActionState = BotActionState.BlockPickerOpen(
+                        scenario = scenario,
+                        blocks = blockUiMapper.mapList(blocks)
+                    )
+                )
+            }
+        }
+    )
+
+    fun runScenario(conversationId: Long, blockId: String) = launchBotAction(
+        action = { runScenarioUseCase(conversationId, blockId) },
+        onSuccess = {
+            updateState { copy(isBotActive = true, botActionState = BotActionState.Idle) }
+        }
+    )
+
+    fun dismissBotAction() {
+        updateState { copy(botActionState = BotActionState.Idle) }
+    }
+
+    fun backToScenarioList() {
+        updateState {
+            copy(botActionState = BotActionState.ScenarioPickerOpen(scenarios))
+        }
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        val currentState = state.value.botActionState
+        when (currentState) {
+            is BotActionState.ScenarioPickerOpen -> updateState {
+                copy(
+                    botActionState = currentState.copy(
+                        query = query,
+                        filteredScenarios = currentState.scenarios.filterByQuery(query) { it.name }
+                    )
+                )
+            }
+            is BotActionState.BlockPickerOpen -> updateState {
+                copy(
+                    botActionState = currentState.copy(
+                        query = query,
+                        filteredBlocks = currentState.blocks.filterByQuery(query) { it.name }
+                    )
+                )
+            }
+            else -> Unit
+        }
+    }
+
     private fun uploadAttachment(bytes: ByteArray, fileName: String, mimeType: String) {
         viewModelScope.launch {
             updateState { copy(attachmentState = AttachmentState.Loading) }
             uploadAttachmentUseCase(fileName, bytes, mimeType)
                 .onSuccess { attachment ->
-                    val uiModel = mapper.mapAttachment(attachment)
+                    val uiModel = chatUiMapper.mapAttachment(attachment)
                     updateState {
                         copy(
                             attachmentState = AttachmentState.Idle,
@@ -186,8 +293,8 @@ class ChatViewModel(
         getMessagesUseCase(conversationId, state.userId, state.channelId)
             .onSuccess { messages ->
                 val items = withContext(Dispatchers.Default) {
-                    mapper.addDateHeaders(
-                        mapper.mapMessages(
+                    chatUiMapper.addDateHeaders(
+                        chatUiMapper.mapMessages(
                             messages,
                             state.userName,
                             state.userPhotoUrl
@@ -236,15 +343,35 @@ class ChatViewModel(
             }
         ) return
         val newItem = ChatListItemUi.Message(
-            data = mapper.mapMessage(
+            data = chatUiMapper.mapMessage(
                 domain = message,
                 userName = currentState.userName,
                 userPhotoUrl = currentState.userPhotoUrl
             )
         )
         val existing = currentState.messages.filterIsInstance<ChatListItemUi.Message>()
-        val allItems = mapper.addDateHeaders(existing + newItem)
+        val allItems = chatUiMapper.addDateHeaders(existing + newItem)
         updateState { copy(messages = allItems) }
+    }
+
+    private fun <T> List<T>.filterByQuery(query: String, selector: (T) -> String): List<T> =
+        if (query.isBlank()) this
+        else filter { selector(it).contains(query, ignoreCase = true) }
+
+    private fun <T> launchBotAction(
+        action: suspend () -> Result<T>,
+        onSuccess: (T) -> Unit,
+    ) {
+        viewModelScope.launch {
+            updateState { copy(botActionState = BotActionState.Loading) }
+            action()
+                .onSuccess(onSuccess)
+                .onFailure { e ->
+                    updateState {
+                        copy(botActionState = BotActionState.Error(e.message ?: UNKNOWN_ERROR))
+                    }
+                }
+        }
     }
 
     private companion object {

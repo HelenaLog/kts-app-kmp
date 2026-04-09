@@ -24,12 +24,9 @@ private val DarkSurface = Color(0xFF151C33)
 private val DarkOnBackground = Color(0xFFFFFFFF)
 private val DarkOutline = Color(0xFF2B3350)
 
-// Channel colors
-val TelegramColor = Color(0xFF2AABEE)
-val WhatsAppColor = Color(0xFF25D366)
-val JivoColor = Color(0xFFFF6B35)
-
 val SocialButtonBorder = Color(0xFFDBDEF9)
+val InfoColor = Color(0xFF2CABE7)
+val InfoBackground = Color(0xFF2CABE7).copy(alpha = 0.08f)
 
 val LightColorScheme = lightColorScheme(
     primary = Primary,

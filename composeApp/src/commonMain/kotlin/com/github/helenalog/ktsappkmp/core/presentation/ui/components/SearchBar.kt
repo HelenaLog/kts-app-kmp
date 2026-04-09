@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,8 +20,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
+import ktsappkmp.composeapp.generated.resources.ic_search
 import ktsappkmp.composeapp.generated.resources.search_clear
 import ktsappkmp.composeapp.generated.resources.search_placeholder
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -30,6 +31,7 @@ fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onClear: () -> Unit,
+    placeholder: String = stringResource(Res.string.search_placeholder),
     modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
@@ -43,14 +45,14 @@ fun SearchBar(
         ),
         placeholder = {
             Text(
-                text = stringResource(Res.string.search_placeholder),
+                text = placeholder,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.secondary
             )
         },
         leadingIcon = {
             Icon(
-                imageVector = Icons.Default.Search,
+                painter = painterResource(Res.drawable.ic_search),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.size(Dimensions.searchIconSize)

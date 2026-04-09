@@ -35,4 +35,18 @@
     <string name="profile_settings">Настройки профиля</string>
     <string name="profile_seсtions_no_data">Нет данных</string>
     <string name="chat_text_input_placeholder">Напишите сообщение...</string>
+    <string name="chat_sheet_title">Выбор сценария и блока для запуска</string>
+    <string name="chat_info_banner">Обратите внимание, что для пользователя будет запущена опубликованная версия сценария</string>
+    <string name="chat_button_select">Выбрать</string>
+    <string name="chat_button_back_to_scenarios">Вернуться к выбору сценария</string>
+    <string name="chat_empty_scenarios">Список сценариев пуст</string>
+    <string name="chat_empty_blocks">Список блоков пуст</string>
+    <string name="chat_block_search_placeholder">Название блока</string>
+    <string name="chat_scenario_search_placeholder">Название сценария</string>
+    <string name="chat_scenario_title">Сценарий</string>
+    <string name="chat_bot_stop">Остановить бота</string>
+    <string name="chat_bot_start">Запустить бота</string>
+    <string name="chat_continue_bot">Продолжить работу бота</string>
+    <string name="chat_restart_bot">Завершить сценарий и запустить бота заново</string>
+    <string name="chat_run_scenario">Запустить сценарий</string>
 </resources>

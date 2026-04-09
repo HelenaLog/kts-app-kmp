@@ -2,9 +2,9 @@ package com.github.helenalog.ktsappkmp.feature.chat.data.remote.api
 
 import com.github.helenalog.ktsappkmp.core.data.remote.response.ApiResponse
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.AttachmentDto
-import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.ConversationLiteDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.request.SendMessageRequestDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.response.MessageResponseDto
+import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.ConversationDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -20,11 +20,11 @@ import io.ktor.utils.io.core.writeFully
 
 class ChatApi(private val client: HttpClient) {
 
-    suspend fun getConversationLite(
+    suspend fun getConversation(
         conversationId: Long,
         userId: String,
-    ): ApiResponse<ConversationLiteDto> =
-        client.get("api/conversations/get_conversation_lite") {
+    ): ApiResponse<ConversationDto> =
+        client.get("api/conversations/get_conversation") {
             parameter("id", conversationId)
             parameter("user_id", userId)
         }.body()
