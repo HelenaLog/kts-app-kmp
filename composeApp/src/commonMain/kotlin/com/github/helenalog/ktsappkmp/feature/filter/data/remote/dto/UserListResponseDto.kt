@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserListResponseDto(
     @SerialName("lists")
-    val lists: List<UserListDto>
+    val lists: List<ShortUserDto>
 )
