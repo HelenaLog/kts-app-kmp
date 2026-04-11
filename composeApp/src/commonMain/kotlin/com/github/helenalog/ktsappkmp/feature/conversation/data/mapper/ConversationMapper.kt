@@ -3,6 +3,7 @@ package com.github.helenalog.ktsappkmp.feature.conversation.data.mapper
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ConversationDetail
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.ConversationDto
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.MessageKindDto
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Channel
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
@@ -14,7 +15,12 @@ fun ConversationDto.toDomain() = Conversation(
     isRead = isRead,
     userName = "${user.firstName.orEmpty()} ${user.lastName.orEmpty()}".trim(),
     photoUrl = user.photo?.url,
-    channelKind = channel.kind.toChannelKind(),
+    channel = Channel(
+        id = channel.id,
+        name = channel.name,
+        kind = channel.kind.toChannelKind(),
+        photoUrl = channel.photoUrl
+    ),
     lastMessageText = lastMessage?.text.orEmpty(),
     lastMessageKind = lastMessage?.kind?.toDomain(),
     formattedTime = formatTime(dateUpdated),

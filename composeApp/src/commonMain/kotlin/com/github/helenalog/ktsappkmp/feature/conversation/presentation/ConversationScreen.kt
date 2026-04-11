@@ -4,24 +4,29 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ConversationListItem
@@ -32,10 +37,12 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.components.Pagination
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SearchBar
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
+import com.github.helenalog.ktsappkmp.feature.filter.presentation.FilterScreen
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationScreen(
     onConversationClick: (ConversationUi) -> Unit,
@@ -51,7 +58,9 @@ fun ConversationScreen(
             MainTopBar(
                 searchQuery = state.searchQuery,
                 onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
-                onClearSearch = { viewModel.clearSearch() }
+                onClearSearch = { viewModel.clearSearch() },
+                hasActiveFilter = state.hasActiveFilter,
+                onFilterClick = { viewModel.openFilterSheet() }
             )
         },
         contentWindowInsets = WindowInsets()
@@ -99,6 +108,23 @@ fun ConversationScreen(
                     }
                 }
             }
+        }
+    }
+    if (state.isFilterSheetOpen) {
+        ModalBottomSheet(
+            onDismissRequest = { viewModel.closeFilterSheet() },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            dragHandle = null,
+            containerColor = MaterialTheme.colorScheme.background,
+        ) {
+            FilterScreen(
+                availableChannels = state.availableChannels,
+                currentFilter = state.filter,
+                isFirstOpen = !state.hasAppliedFilter,
+                onApply = { filter -> viewModel.applyFilter(filter) },
+                onDismiss = { viewModel.closeFilterSheet() },
+                modifier = Modifier.fillMaxHeight(0.8f)
+            )
         }
     }
 }
@@ -167,11 +193,14 @@ private fun MainTopBar(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     onClearSearch: () -> Unit,
-    onFilterClick: () -> Unit = {},
+    hasActiveFilter: Boolean,
+    onFilterClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
+
     Row(
-        modifier = Modifier
-            .systemBarsPadding()
+        modifier = modifier
             .fillMaxWidth()
             .padding(
                 horizontal = Dimensions.topBarHorizontalPadding,
@@ -183,10 +212,16 @@ private fun MainTopBar(
         SearchBar(
             query = searchQuery,
             onQueryChange = onSearchQueryChange,
-            onClear = onClearSearch,
+            onClear = {
+                onClearSearch()
+                focusManager.clearFocus()
+            },
             modifier = Modifier.weight(1f)
         )
-        FilterButton(onClick = onFilterClick)
+        FilterButton(
+            onClick = onFilterClick,
+            isActive = hasActiveFilter
+        )
     }
 }
 

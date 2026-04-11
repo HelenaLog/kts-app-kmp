@@ -1,6 +1,5 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper
 
-import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 
@@ -19,7 +18,7 @@ class ConversationUiMapper(
             isRead = conversation.isRead,
             lastMessageKind = conversation.lastMessageKind,
             lastMessageText = conversation.lastMessageText,
-            channelKind = conversation.channelKind,
+            channelKind = conversation.channel.kind,
             userId = conversation.userId,
         )
     }

@@ -19,7 +19,7 @@ data class ChatUiState(
     val userPhotoUrl: String? = null,
     val avatar: UserAvatarUi = UserAvatarUi("?", photoUrl = ""),
     val botName: String = "",
-    val channelPhoto: String = "",
+    val channelPhoto: String? = null,
     val channelKind: ChannelKind = ChannelKind.UNKNOWN,
     val userId: String = "",
     val channelId: String = "",

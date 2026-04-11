@@ -11,6 +11,7 @@ object Dimensions {
     val spacingLarge = 24.dp
     val spacingSmall = 8.dp
     val spacingExtraSmall = 4.dp
+    val spacing12 = 12.dp
 
     // Avatar
     val avatarSize = 52.dp
@@ -97,4 +98,7 @@ object Dimensions {
     val filePreviewHeight = 58.dp
     val filePreviewWidth = 270.dp
     val menuItemMinWidth = 216.dp
+
+    val checkboxCornerRadius = 4.dp
+    val checkIconSize = 14.dp
 }

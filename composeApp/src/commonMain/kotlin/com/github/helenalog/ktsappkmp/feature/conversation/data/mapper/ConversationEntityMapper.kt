@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.data.mapper
 
 import com.github.helenalog.ktsappkmp.feature.conversation.data.local.entity.ConversationEntity
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Channel
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
@@ -10,7 +11,12 @@ fun ConversationEntity.toDomain() = Conversation(
     isRead = isRead,
     userName = userName,
     photoUrl = photoUrl,
-    channelKind = ChannelKind.valueOf(channelKind),
+    channel = Channel(
+        id = channelId,
+        name = channelName,
+        kind = ChannelKind.valueOf(channelKind),
+        photoUrl = channelPhotoUrl
+    ),
     lastMessageText = lastMessageText,
     lastMessageKind = lastMessageKind?.let { MessageKind.valueOf(it) },
     formattedTime = formattedTime,
@@ -23,7 +29,10 @@ fun Conversation.toEntity() = ConversationEntity(
     isRead = isRead,
     userName = userName,
     photoUrl = photoUrl,
-    channelKind = channelKind.name,
+    channelKind = channel.kind.name,
+    channelId = channel.id,
+    channelName = channel.name,
+    channelPhotoUrl = channel.photoUrl,
     lastMessageText = lastMessageText,
     lastMessageKind = lastMessageKind?.name,
     formattedTime = formattedTime,

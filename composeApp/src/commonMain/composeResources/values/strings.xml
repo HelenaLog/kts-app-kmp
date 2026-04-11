@@ -49,4 +49,30 @@
     <string name="chat_continue_bot">Продолжить работу бота</string>
     <string name="chat_restart_bot">Завершить сценарий и запустить бота заново</string>
     <string name="chat_run_scenario">Запустить сценарий</string>
+    <string name="filter_title">Фильтры</string>
+    <string name="filter_reset_button">Сбросить</string>
+    <string name="filter_deselect_all">Отменить выбор</string>
+    <string name="filter_select_all">Выбрать все</string>
+    <string name="filter_apply_button">Применить</string>
+    <string name="filter_channel_kind_title">Тип канала</string>
+    <string name="filter_channel_title">Канал</string>
+    <string name="filter_user_list_title">Список пользователей</string>
+    <string name="filter_empty_result">Ничего не найдено</string>
+    <string name="filter_all_users">Все пользователи</string>
+    <string name="filter_select_items_hint">Выберите элементы</string>
+    <string name="filter_select_channels_hint">Выберите каналы</string>
+    <string name="filter_load_error">Ошибка загрузки</string>
+    <string name="filter_retry">Повторить</string>
+    <plurals name="selected_channels_count">
+        <item quantity="one">Выбран %1$d канал</item>
+        <item quantity="few">Выбрано %1$d канала</item>
+        <item quantity="many">Выбрано %1$d каналов</item>
+        <item quantity="other">Выбрано %1$d каналов</item>
+    </plurals>
+    <plurals name="selected_items_count">
+        <item quantity="one">Выбран %1$d элемент</item>
+        <item quantity="few">Выбрано %1$d элемента</item>
+        <item quantity="many">Выбрано %1$d элементов</item>
+        <item quantity="other">Выбрано %1$d элементов</item>
+    </plurals>
 </resources>

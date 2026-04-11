@@ -12,5 +12,5 @@ data class ChannelDto(
     @SerialName("name")
     val name: String,
     @SerialName("photo_url")
-    val photoUrl: String
+    val photoUrl: String? = null
 )
