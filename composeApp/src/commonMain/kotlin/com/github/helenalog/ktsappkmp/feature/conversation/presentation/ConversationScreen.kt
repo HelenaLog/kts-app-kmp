@@ -2,6 +2,7 @@ package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -35,6 +36,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorConte
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.FilterButton
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PaginationErrorFooter
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SearchBar
+import com.github.helenalog.ktsappkmp.core.presentation.workspace.WorkspaceTopBar
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 import com.github.helenalog.ktsappkmp.feature.filter.presentation.FilterScreen
@@ -55,13 +57,21 @@ fun ConversationScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            MainTopBar(
-                searchQuery = state.searchQuery,
-                onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
-                onClearSearch = { viewModel.clearSearch() },
-                hasActiveFilter = state.hasActiveFilter,
-                onFilterClick = { viewModel.openFilterSheet() }
-            )
+            Column {
+                WorkspaceTopBar(
+                    modifier = Modifier.padding(
+                        horizontal = Dimensions.topBarHorizontalPadding,
+                        vertical = Dimensions.topBarVerticalPadding
+                    )
+                )
+                MainTopBar(
+                    searchQuery = state.searchQuery,
+                    onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
+                    onClearSearch = { viewModel.clearSearch() },
+                    hasActiveFilter = state.hasActiveFilter,
+                    onFilterClick = { viewModel.openFilterSheet() }
+                )
+            }
         },
         contentWindowInsets = WindowInsets()
     ) { innerPadding ->

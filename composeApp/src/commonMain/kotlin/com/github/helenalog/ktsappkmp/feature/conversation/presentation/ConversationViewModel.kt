@@ -1,6 +1,8 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.github.helenalog.ktsappkmp.core.domain.workspace.model.WorkspaceId
+import com.github.helenalog.ktsappkmp.core.domain.workspace.usecase.ObserveActiveWorkspaceUseCase
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
@@ -14,16 +16,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class ConversationViewModel(
     private val getConversations: GetConversationsUseCase,
-    private val conversationMapper: ConversationUiMapper
+    private val conversationMapper: ConversationUiMapper,
+    private val observeActiveWorkspace: ObserveActiveWorkspaceUseCase
 ) : BaseViewModel<ConversationUiState, Nothing>(ConversationUiState.Initial) {
     private val searchQueryFlow = MutableStateFlow("")
     private val filterFlow = MutableStateFlow(ConversationFilter())
@@ -103,15 +108,23 @@ class ConversationViewModel(
     }
 
     private fun observeSearchAndFilter() {
-        searchQueryFlow
-            .debounce(SEARCH_DEBOUNCE_MS)
-            .combine(filterFlow) { query, filter -> query to filter }
+        combine(
+            searchQueryFlow.debounce(SEARCH_DEBOUNCE_MS),
+            filterFlow,
+            observeActiveWorkspace()
+                .filterNotNull()
+                .map { WorkspaceId(it.cabinet.id, it.project.id) }
+                .distinctUntilChanged()
+                .onEach { updateState { copy(isLoading = true, error = null) } },
+        ) { query, filter, workspace -> Triple(query, filter, workspace) }
             .distinctUntilChanged()
-            .flatMapLatest { (query, filter) ->
+            .flatMapLatest { (query, filter, _) ->
                 flow { emit(getConversations(query = query, filter = filter)) }
             }
             .onEach { result ->
-                result.onSuccess(::handlePage).onFailure(::handleError)
+                result
+                    .onSuccess(::handlePage)
+                    .onFailure(::handleError)
             }
             .launchIn(viewModelScope)
     }
@@ -130,6 +143,11 @@ class ConversationViewModel(
     }
 
     private fun handleNextPage(page: ConversationsPage) {
+        val newChannels = page.conversations
+            .map { it.channel }
+            .distinctBy { it.id }
+            .map { it.toUi() }
+
         updateState {
             copy(
                 conversations = conversations + conversationMapper.mapList(page.conversations),
@@ -137,7 +155,8 @@ class ConversationViewModel(
                     isLoading = false,
                     offset = pagination.offset + page.conversations.size,
                     hasMore = page.hasMore
-                )
+                ),
+                availableChannels = (availableChannels + newChannels).distinctBy { it.id }
             )
         }
     }
@@ -174,7 +193,7 @@ class ConversationViewModel(
                     offset = page.conversations.size,
                     hasMore = page.hasMore
                 ),
-                availableChannels = (availableChannels + channels).distinctBy { it.id }
+                availableChannels = channels
             )
         }
     }

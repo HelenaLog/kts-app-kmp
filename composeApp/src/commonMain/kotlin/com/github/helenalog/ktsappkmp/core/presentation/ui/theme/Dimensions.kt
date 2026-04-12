@@ -101,4 +101,8 @@ object Dimensions {
 
     val checkboxCornerRadius = 4.dp
     val checkIconSize = 14.dp
+
+    val dropdownMinWidth = 100.dp
+    val dropdownMenuWidth = 200.dp
+    val dropdownMenuCornerRadius = 12.dp
 }

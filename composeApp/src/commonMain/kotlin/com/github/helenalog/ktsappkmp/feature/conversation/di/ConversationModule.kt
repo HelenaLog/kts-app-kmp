@@ -21,7 +21,8 @@ val conversationModule = module {
     viewModel {
         ConversationViewModel(
             getConversations = get(),
-            conversationMapper = get()
+            conversationMapper = get(),
+            observeActiveWorkspace = get()
         )
     }
 }
