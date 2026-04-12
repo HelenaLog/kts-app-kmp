@@ -2,6 +2,7 @@ package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,6 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.github.helenalog.ktsappkmp.core.presentation.banner.BannersUiEvent
+import com.github.helenalog.ktsappkmp.core.presentation.banner.BannersViewModel
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.BannerList
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ConversationListItem
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.EmptyContent
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorContent
@@ -46,22 +50,40 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ConversationScreen(
     onConversationClick: (ConversationUi) -> Unit,
+    onOpenUrl: (url: String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ConversationViewModel = koinViewModel()
+    conversationViewModel: ConversationViewModel = koinViewModel(),
+    bannersViewModel: BannersViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val conversationState by conversationViewModel.state.collectAsStateWithLifecycle()
+    val bannerState by bannersViewModel.state.collectAsStateWithLifecycle()
     val pullToRefreshState = rememberPullToRefreshState()
+
+    LaunchedEffect(Unit) {
+        bannersViewModel.event.collect { event ->
+            when (event) {
+                is BannersUiEvent.OpenUrl -> onOpenUrl(event.url)
+            }
+        }
+    }
 
     Scaffold(
         modifier = modifier,
         topBar = {
-            MainTopBar(
-                searchQuery = state.searchQuery,
-                onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
-                onClearSearch = { viewModel.clearSearch() },
-                hasActiveFilter = state.hasActiveFilter,
-                onFilterClick = { viewModel.openFilterSheet() }
-            )
+            Column {
+                MainTopBar(
+                    searchQuery = conversationState.searchQuery,
+                    onSearchQueryChange = { conversationViewModel.onSearchQueryChange(it) },
+                    onClearSearch = { conversationViewModel.clearSearch() },
+                    hasActiveFilter = conversationState.hasActiveFilter,
+                    onFilterClick = { conversationViewModel.openFilterSheet() }
+                )
+                BannerList(
+                    state = bannerState,
+                    onAction = { bannersViewModel.onAction(it) },
+                    onDismiss = { bannersViewModel.onDismiss(it) }
+                )
+            }
         },
         contentWindowInsets = WindowInsets()
     ) { innerPadding ->
@@ -71,21 +93,21 @@ fun ConversationScreen(
                 .padding(innerPadding)
         ) {
             when {
-                state.isLoading -> {
+                conversationState.isLoading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
-                state.error != null && state.conversations.isEmpty() -> {
+                conversationState.error != null && conversationState.conversations.isEmpty() -> {
                     ErrorContent(
-                        message = state.error,
-                        onRetry = { viewModel.retry() },
+                        message = conversationState.error,
+                        onRetry = { conversationViewModel.retry() },
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
-                state.conversations.isEmpty() -> {
+                conversationState.conversations.isEmpty() -> {
                     EmptyContent(
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -93,16 +115,16 @@ fun ConversationScreen(
 
                 else -> {
                     PullToRefreshBox(
-                        isRefreshing = state.isRefreshing,
-                        onRefresh = { viewModel.refresh() },
+                        isRefreshing = conversationState.isRefreshing,
+                        onRefresh = { conversationViewModel.refresh() },
                         state = pullToRefreshState
                     ) {
                         ConversationList(
-                            conversations = state.conversations,
-                            isPaginating = state.pagination.isLoading,
-                            paginationError = state.pagination.error,
-                            onReachEnd = { viewModel.onReachEnd() },
-                            onRetryPagination = { viewModel.onReachEnd() },
+                            conversations = conversationState.conversations,
+                            isPaginating = conversationState.pagination.isLoading,
+                            paginationError = conversationState.pagination.error,
+                            onReachEnd = { conversationViewModel.onReachEnd() },
+                            onRetryPagination = { conversationViewModel.onReachEnd() },
                             onConversationClick = onConversationClick
                         )
                     }
@@ -110,19 +132,19 @@ fun ConversationScreen(
             }
         }
     }
-    if (state.isFilterSheetOpen) {
+    if (conversationState.isFilterSheetOpen) {
         ModalBottomSheet(
-            onDismissRequest = { viewModel.closeFilterSheet() },
+            onDismissRequest = { conversationViewModel.closeFilterSheet() },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
             dragHandle = null,
             containerColor = MaterialTheme.colorScheme.background,
         ) {
             FilterScreen(
-                availableChannels = state.availableChannels,
-                currentFilter = state.filter,
-                isFirstOpen = !state.hasAppliedFilter,
-                onApply = { filter -> viewModel.applyFilter(filter) },
-                onDismiss = { viewModel.closeFilterSheet() },
+                availableChannels = conversationState.availableChannels,
+                currentFilter = conversationState.filter,
+                isFirstOpen = !conversationState.hasAppliedFilter,
+                onApply = { filter -> conversationViewModel.applyFilter(filter) },
+                onDismiss = { conversationViewModel.closeFilterSheet() },
                 modifier = Modifier.fillMaxHeight(0.8f)
             )
         }
@@ -229,7 +251,8 @@ private fun MainTopBar(
 @Composable
 private fun MainScreenPrev() {
     ConversationScreen(
-        viewModel = koinViewModel(),
-        onConversationClick = {}
+        conversationViewModel = koinViewModel(),
+        onConversationClick = {},
+        onOpenUrl = {}
     )
 }

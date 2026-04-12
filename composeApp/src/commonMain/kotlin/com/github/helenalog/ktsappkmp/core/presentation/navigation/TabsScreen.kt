@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.UrlLauncher
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationScreen
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 import com.github.helenalog.ktsappkmp.feature.profile.presentation.ProfileScreen
@@ -24,6 +25,7 @@ import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.tabs_chats
 import ktsappkmp.composeapp.generated.resources.tabs_profile
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun TabsScreen(
@@ -31,6 +33,7 @@ fun TabsScreen(
     onNavigateToChat: (ConversationUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val urlLauncher = koinInject<UrlLauncher>()
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -70,7 +73,10 @@ fun TabsScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable<Screen.Main> {
-                ConversationScreen(onConversationClick = onNavigateToChat)
+                ConversationScreen(
+                    onConversationClick = onNavigateToChat,
+                    onOpenUrl = { urlLauncher.openUrl(it) }
+                )
             }
             composable<Screen.Profile> { ProfileScreen(onLogout = onLogout) }
         }

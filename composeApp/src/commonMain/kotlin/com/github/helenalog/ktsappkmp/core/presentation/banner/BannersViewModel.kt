@@ -21,7 +21,6 @@ class BannersViewModel(
     fun onAction(banner: AppBannerUi) {
         when (val action = banner.action) {
             is BannerAction.OpenUrl -> sendEvent(BannersUiEvent.OpenUrl(action.url))
-            is BannerAction.OpenChannel -> sendEvent(BannersUiEvent.OpenChannel(action.channelId))
             BannerAction.None -> Unit
         }
     }

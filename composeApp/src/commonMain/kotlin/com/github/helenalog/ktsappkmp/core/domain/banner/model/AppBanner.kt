@@ -11,7 +11,6 @@ data class AppBanner(
 sealed interface BannerAction {
     data object None : BannerAction
     data class OpenUrl(val url: String) : BannerAction
-    data class OpenChannel(val channelId: String) : BannerAction
 }
 
 enum class BannerType {
