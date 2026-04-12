@@ -20,5 +20,7 @@ fun appModules(): List<Module> = listOf(
     conversationModule,
     profileModule,
     chatModule,
-    filterModule
+    filterModule,
+    cabinetModule,
+    projectModule
 )

@@ -1,8 +1,8 @@
 package com.github.helenalog.ktsappkmp.core.data.storage
 
-import com.github.helenalog.ktsappkmp.feature.profile.data.local.dao.CabinetDao
+import com.github.helenalog.ktsappkmp.core.data.cabinet.local.dao.CabinetDao
 import com.github.helenalog.ktsappkmp.feature.conversation.data.local.dao.ConversationDao
-import com.github.helenalog.ktsappkmp.feature.profile.data.local.dao.ProjectDao
+import com.github.helenalog.ktsappkmp.core.data.project.local.dao.ProjectDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
