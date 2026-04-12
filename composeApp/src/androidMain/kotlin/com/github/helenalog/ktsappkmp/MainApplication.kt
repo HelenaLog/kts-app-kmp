@@ -3,6 +3,9 @@ package com.github.helenalog.ktsappkmp
 import android.app.Application
 import com.github.helenalog.ktsappkmp.core.di.appModules
 import com.github.helenalog.ktsappkmp.core.logging.TracerAntilog
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import org.koin.android.ext.koin.androidContext
@@ -34,5 +37,15 @@ class MainApplication : Application(), HasTracerConfiguration {
             androidContext(this@MainApplication)
             modules(appModules())
         }
+        setupRemoteConfig()
+    }
+
+    private fun setupRemoteConfig() {
+        val remoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = if (BuildConfig.DEBUG) 0L else 3600L
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(mapOf("app_banners" to "[]"))
     }
 }
