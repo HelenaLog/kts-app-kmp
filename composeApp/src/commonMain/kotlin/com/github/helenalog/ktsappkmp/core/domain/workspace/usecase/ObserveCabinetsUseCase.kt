@@ -1,11 +1,11 @@
 package com.github.helenalog.ktsappkmp.core.domain.workspace.usecase
 
-import com.github.helenalog.ktsappkmp.core.domain.workspace.model.WorkspaceId
+import com.github.helenalog.ktsappkmp.core.domain.cabinet.model.Cabinet
 import com.github.helenalog.ktsappkmp.core.domain.workspace.repository.WorkspaceRepository
+import kotlinx.coroutines.flow.Flow
 
-class SelectActiveWorkspaceUseCase(
+class ObserveCabinetsUseCase(
     private val repository: WorkspaceRepository
 ) {
-    suspend operator fun invoke(id: WorkspaceId): Result<Unit> =
-        repository.selectActive(id)
+    operator fun invoke(): Flow<List<Cabinet>> = repository.observeCabinets()
 }
