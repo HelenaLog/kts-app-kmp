@@ -18,5 +18,10 @@ val conversationModule = module {
     factory { UserAvatarUiMapper() }
     factory { ConversationUiMapper(get()) }
 
-    viewModel { ConversationViewModel(get(), get()) }
+    viewModel {
+        ConversationViewModel(
+            getConversations = get(),
+            conversationMapper = get()
+        )
+    }
 }

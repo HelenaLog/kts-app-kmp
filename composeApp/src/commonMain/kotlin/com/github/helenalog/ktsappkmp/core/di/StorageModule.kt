@@ -17,6 +17,7 @@ val storageModule = module {
         SessionManager(
             sessionStorage = get(),
             profileStorage = get(),
+            activeWorkspaceStore = get(),
             conversationDao = get(),
             projectDao = get(),
             cabinetDao = get()

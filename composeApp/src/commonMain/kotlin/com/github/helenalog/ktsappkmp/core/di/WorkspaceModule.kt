@@ -9,8 +9,11 @@ import com.github.helenalog.ktsappkmp.core.domain.workspace.usecase.ObserveProje
 import com.github.helenalog.ktsappkmp.core.domain.workspace.usecase.RefreshWorkspacesUseCase
 import com.github.helenalog.ktsappkmp.core.domain.workspace.usecase.SelectCabinetUseCase
 import com.github.helenalog.ktsappkmp.core.domain.workspace.usecase.SelectProjectUseCase
+import com.github.helenalog.ktsappkmp.core.presentation.workspace.WorkspaceSelectorViewModel
+import com.github.helenalog.ktsappkmp.core.presentation.workspace.mapper.WorkspaceUiMapper
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -23,4 +26,6 @@ val workspaceModule = module {
     factoryOf(::SelectCabinetUseCase)
     factoryOf(::SelectProjectUseCase)
     factoryOf(::RefreshWorkspacesUseCase)
+    factoryOf(::WorkspaceUiMapper)
+    viewModelOf(::WorkspaceSelectorViewModel)
 }

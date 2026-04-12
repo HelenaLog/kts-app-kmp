@@ -33,8 +33,7 @@ class WorkspaceRepositoryImpl(
         }
 
     override suspend fun selectCabinet(cabinetId: String): Result<Unit> {
-        val current = activeStore.observe().first()
-        activeStore.save(WorkspaceId(cabinetId, current?.projectId.orEmpty()))
+        activeStore.save(WorkspaceId(cabinetId, ""))
             .getOrElse { return Result.failure(it) }
 
         val newProjects = projectRepository.getProjects()

@@ -10,13 +10,15 @@ import kotlinx.coroutines.withContext
 class SessionManager(
     private val sessionStorage: SessionStorage,
     private val profileStorage: ProfileStorage,
+    private val activeWorkspaceStore: ActiveWorkspaceStore,
     private val conversationDao: ConversationDao,
     private val projectDao: ProjectDao,
-    private val cabinetDao: CabinetDao
+    private val cabinetDao: CabinetDao,
 ) {
     suspend fun logout() = withContext(Dispatchers.IO) {
         sessionStorage.clearSession()
         profileStorage.clear()
+        activeWorkspaceStore.clear()
         conversationDao.deleteAll()
         projectDao.deleteAll()
         cabinetDao.deleteAll()
