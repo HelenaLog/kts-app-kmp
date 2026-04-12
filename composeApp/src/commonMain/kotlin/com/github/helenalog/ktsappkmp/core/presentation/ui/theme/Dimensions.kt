@@ -12,6 +12,7 @@ object Dimensions {
     val spacingSmall = 8.dp
     val spacingExtraSmall = 4.dp
     val spacing12 = 12.dp
+    val spacing10 = 10.dp
 
     // Avatar
     val avatarSize = 52.dp
@@ -101,4 +102,7 @@ object Dimensions {
 
     val checkboxCornerRadius = 4.dp
     val checkIconSize = 14.dp
+    val bannerCloseIconSize = 18.dp
+    val bannerShimmerHeight = 100.dp
+    val bannerWidth = 300.dp
 }
