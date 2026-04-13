@@ -2,7 +2,6 @@ package com.github.helenalog.ktsappkmp.core.presentation.workspace.mapper
 
 import com.github.helenalog.ktsappkmp.core.domain.cabinet.model.Cabinet
 import com.github.helenalog.ktsappkmp.core.domain.project.model.Project
-import com.github.helenalog.ktsappkmp.core.domain.workspace.model.Workspace
 import com.github.helenalog.ktsappkmp.core.presentation.workspace.model.CabinetUi
 import com.github.helenalog.ktsappkmp.core.presentation.workspace.model.ProjectUi
 
@@ -25,7 +24,4 @@ class WorkspaceUiMapper {
                 isSelected = project.id == activeProjectId
             )
         }
-
-    fun mapActiveLabel(active: Workspace?): String =
-        active?.let { "${it.cabinet.name} · ${it.project.name}" } ?: ""
 }

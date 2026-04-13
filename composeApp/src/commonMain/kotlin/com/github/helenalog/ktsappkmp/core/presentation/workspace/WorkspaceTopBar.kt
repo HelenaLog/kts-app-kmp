@@ -1,6 +1,12 @@
 package com.github.helenalog.ktsappkmp.core.presentation.workspace
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -86,7 +92,7 @@ private fun WorkspaceSelectorRow(
         horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingMedium)
     ) {
         SelectionDropdown(
-            activeLabel = state.cabinets.firstOrNull { it.isSelected }?.name.orEmpty(),
+            activeLabel = state.activeCabinetName,
             isLoading = state.isLoading,
             items = state.cabinets,
             itemLabel = { it.name },
@@ -100,7 +106,7 @@ private fun WorkspaceSelectorRow(
             tint = SocialButtonBorder
         )
         SelectionDropdown(
-            activeLabel = state.projects.firstOrNull { it.isSelected }?.name.orEmpty(),
+            activeLabel = state.activeProjectName,
             isLoading = state.isLoading,
             items = state.projects,
             itemLabel = { it.name },
@@ -166,24 +172,36 @@ private fun DropdownTrigger(
             .clickable(enabled = !isLoading, onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(Dimensions.loaderSize)
-            )
-        } else {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.secondary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Icon(
-                imageVector = if (expanded) Icons.Default.ArrowDropUp
-                else Icons.Default.ArrowDropDown,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary
-            )
+        AnimatedContent(
+            targetState = isLoading to label,
+            transitionSpec = {
+                fadeIn(tween(CROSSFADE_MS)) togetherWith
+                        fadeOut(tween(CROSSFADE_MS)) using
+                        SizeTransform { _, _ -> tween(CROSSFADE_MS) }
+            },
+            label = "workspace_dropdown_trigger"
+        ) { (loading, text) ->
+            if (loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(Dimensions.loaderSize)
+                )
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.secondary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Icon(
+                        imageVector = if (expanded) Icons.Default.ArrowDropUp
+                        else Icons.Default.ArrowDropDown,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
         }
     }
 }
@@ -212,3 +230,5 @@ private fun DropdownItem(
         )
     )
 }
+
+private const val CROSSFADE_MS = 220

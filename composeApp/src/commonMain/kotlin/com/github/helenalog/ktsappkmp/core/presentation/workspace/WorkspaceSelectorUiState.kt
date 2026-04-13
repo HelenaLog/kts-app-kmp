@@ -4,7 +4,8 @@ import com.github.helenalog.ktsappkmp.core.presentation.workspace.model.CabinetU
 import com.github.helenalog.ktsappkmp.core.presentation.workspace.model.ProjectUi
 
 data class WorkspaceSelectorUiState(
-    val activeLabel: String = "",
+    val activeCabinetName: String = "",
+    val activeProjectName: String = "",
     val cabinets: List<CabinetUi> = emptyList(),
     val projects: List<ProjectUi> = emptyList(),
     val activeCabinetId: String? = null,

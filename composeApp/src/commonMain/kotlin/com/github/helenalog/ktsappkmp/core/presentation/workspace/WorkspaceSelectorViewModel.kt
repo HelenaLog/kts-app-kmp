@@ -36,7 +36,8 @@ class WorkspaceSelectorViewModel(
         ) { active, cabinets, projects ->
             updateState {
                 copy(
-                    activeLabel = mapper.mapActiveLabel(active),
+                    activeCabinetName = active?.cabinet?.name.orEmpty(),
+                    activeProjectName = active?.project?.name.orEmpty(),
                     activeCabinetId = active?.cabinet?.id,
                     cabinets = mapper.mapCabinets(cabinets, active?.cabinet?.id),
                     projects = mapper.mapProjects(projects, active?.project?.id)
