@@ -18,6 +18,7 @@ fun AppTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
+    trailingIcon: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -35,6 +36,7 @@ fun AppTextField(
                 color = MaterialTheme.colorScheme.secondary
             )
         },
+        trailingIcon = trailingIcon,
         shape = RoundedCornerShape(Dimensions.textFieldCornerRadius),
         visualTransformation = visualTransformation,
         colors = TextFieldDefaults.colors(

@@ -47,6 +47,8 @@ object Dimensions {
 
     // Search
     val searchIconSize = 24.dp
+    val logoIconSize = 28.dp
+    val logoTextIconSize = 19.dp
 
     // Filter Button
     val filterButtonSize = 56.dp
@@ -69,7 +71,7 @@ object Dimensions {
     val loaderStroke = 2.dp
 
     // Captcha
-    val captchaHeight = 120.dp
+    val captchaHeight = 125.dp
 
     // Onboarding
     val onboardingImageHeight = 240.dp

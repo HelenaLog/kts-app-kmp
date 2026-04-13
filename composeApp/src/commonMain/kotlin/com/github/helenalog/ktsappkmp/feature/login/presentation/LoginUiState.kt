@@ -8,7 +8,7 @@ data class LoginUiState(
     val password: String = "",
     val error: String? = null,
     val captchaToken: String = "",
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = false
 ) {
     val isLoginButtonActive: Boolean
         get() = email.isNotBlank() && password.isNotBlank() && captchaToken.isNotBlank()

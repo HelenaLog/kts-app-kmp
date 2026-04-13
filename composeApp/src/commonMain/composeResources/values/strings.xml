@@ -4,8 +4,8 @@
     <string name="onboarding_button_next">Вперед</string>
     <string name="onboarding_button_back">Назад</string>
     <string name="login_title">Добро пожаловать!</string>
-    <string name="login_password_hint">Пароль</string>
-    <string name="login_email_hint">Почта</string>
+    <string name="login_password_hint">Введите пароль</string>
+    <string name="login_email_hint">example@gmail.com</string>
     <string name="login_button_submit">Войти</string>
     <string name="login_forgot_password">Забыли пароль?</string>
     <string name="login_label_email">Email</string>
