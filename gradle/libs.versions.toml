@@ -28,6 +28,7 @@ detekt = "1.23.8"
 leakcanary = "2.14"
 tracer = "1.1.7"
 detekt-compose-rules = "1.4.0"
+splashscreen = "1.0.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -72,6 +73,7 @@ leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.re
 tracer-platform = { module = "ru.ok.tracer:tracer-platform", version.ref = "tracer" }
 tracer-crash-report = { module = "ru.ok.tracer:tracer-crash-report", version.ref = "tracer" }
 detekt-rules-compose = { module = "ru.kode:detekt-rules-compose", version.ref = "detekt-compose-rules" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
