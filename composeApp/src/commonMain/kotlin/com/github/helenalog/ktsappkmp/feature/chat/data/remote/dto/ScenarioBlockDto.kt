@@ -2,6 +2,7 @@ package com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class ScenarioBlockDto(
@@ -14,17 +15,9 @@ data class ScenarioBlockDto(
     @SerialName("kind")
     val kind: String,
     @SerialName("params")
-    val params: ScenarioBlockParamsDto? = null,
+    val params: JsonElement? = null,
     @SerialName("type")
     val type: String
-)
-
-@Serializable
-data class ScenarioBlockParamsDto(
-    @SerialName("markup")
-    val markup: String? = null,
-    @SerialName("message_conditions")
-    val messageConditions: List<MessageConditionDto>? = null
 )
 
 @Serializable
