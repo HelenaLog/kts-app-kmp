@@ -105,4 +105,5 @@ object Dimensions {
     val bannerCloseIconSize = 18.dp
     val bannerShimmerHeight = 100.dp
     val bannerWidth = 300.dp
+    val tabIndicatorHeight = 2.dp
 }

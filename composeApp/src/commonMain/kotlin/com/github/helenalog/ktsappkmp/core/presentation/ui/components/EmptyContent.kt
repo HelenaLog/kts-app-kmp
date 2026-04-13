@@ -20,7 +20,10 @@ import ktsappkmp.composeapp.generated.resources.main_empty_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun EmptyContent(modifier: Modifier = Modifier) {
+fun EmptyContent(
+    message: String,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.padding(Dimensions.screenPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -33,7 +36,7 @@ fun EmptyContent(modifier: Modifier = Modifier) {
             modifier = Modifier.size(Dimensions.stateIconSize)
         )
         Text(
-            text = stringResource(Res.string.main_empty_title),
+            text = message,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Center
@@ -44,5 +47,7 @@ fun EmptyContent(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun EmptyStatePreview() {
-    EmptyContent()
+    EmptyContent(
+        message = "Список чатов пуст"
+    )
 }

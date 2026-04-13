@@ -11,6 +11,7 @@ class GetConversationsUseCase(
         query: String = "",
         limit: Int = 20,
         offset: Int = 0,
-        filter: ConversationFilter = ConversationFilter()
-    ): Result<ConversationsPage> = repository.getConversations(query, limit, offset, filter)
+        filter: ConversationFilter = ConversationFilter(),
+        isRead: Boolean? = null
+    ): Result<ConversationsPage> = repository.getConversations(query, limit, offset, filter, isRead)
 }

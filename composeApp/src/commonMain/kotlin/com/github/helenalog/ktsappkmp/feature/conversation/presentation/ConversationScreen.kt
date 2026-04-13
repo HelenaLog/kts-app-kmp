@@ -1,5 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,9 +18,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -40,10 +45,13 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.components.FilterButt
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PaginationErrorFooter
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SearchBar
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationTab
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationTabUi
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 import com.github.helenalog.ktsappkmp.feature.filter.presentation.FilterScreen
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,46 +100,60 @@ fun ConversationScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            when {
-                conversationState.isLoading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+            Column(modifier = Modifier.fillMaxSize()) {
+                ConversationTabs(
+                    tabs = conversationState.tabs,
+                    onSelect = { conversationViewModel.selectTab(it) }
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) {
+                    when {
+                        conversationState.isLoading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
 
-                conversationState.error != null && conversationState.conversations.isEmpty() -> {
-                    ErrorContent(
-                        message = conversationState.error,
-                        onRetry = { conversationViewModel.retry() },
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+                        conversationState.error != null && conversationState.conversations.isEmpty() -> {
+                            ErrorContent(
+                                message = conversationState.error,
+                                onRetry = { conversationViewModel.retry() },
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
 
-                conversationState.conversations.isEmpty() -> {
-                    EmptyContent(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+                        conversationState.conversations.isEmpty() -> {
+                            EmptyContent(
+                                message = stringResource(conversationState.emptyMessage),
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
 
-                else -> {
-                    PullToRefreshBox(
-                        isRefreshing = conversationState.isRefreshing,
-                        onRefresh = { conversationViewModel.refresh() },
-                        state = pullToRefreshState
-                    ) {
-                        ConversationList(
-                            conversations = conversationState.conversations,
-                            isPaginating = conversationState.pagination.isLoading,
-                            paginationError = conversationState.pagination.error,
-                            onReachEnd = { conversationViewModel.onReachEnd() },
-                            onRetryPagination = { conversationViewModel.onReachEnd() },
-                            onConversationClick = onConversationClick
-                        )
+                        else -> {
+                            PullToRefreshBox(
+                                isRefreshing = conversationState.isRefreshing,
+                                onRefresh = { conversationViewModel.refresh() },
+                                state = pullToRefreshState
+                            ) {
+                                ConversationList(
+                                    conversations = conversationState.conversations,
+                                    isPaginating = conversationState.pagination.isLoading,
+                                    paginationError = conversationState.pagination.error,
+                                    onReachEnd = { conversationViewModel.onReachEnd() },
+                                    onRetryPagination = { conversationViewModel.onReachEnd() },
+                                    onConversationClick = onConversationClick
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
     if (conversationState.isFilterSheetOpen) {
         ModalBottomSheet(
             onDismissRequest = { conversationViewModel.closeFilterSheet() },
@@ -147,6 +169,63 @@ fun ConversationScreen(
                 onDismiss = { conversationViewModel.closeFilterSheet() },
                 modifier = Modifier.fillMaxHeight(0.8f)
             )
+        }
+    }
+}
+
+@Composable
+private fun ConversationTabs(
+    tabs: List<ConversationTabUi>,
+    onSelect: (ConversationTab) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (tabs.isEmpty()) return
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Dimensions.topBarHorizontalPadding),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            tabs.forEach { tab ->
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onSelect(tab.id) }
+                        .padding(vertical = Dimensions.spacing12),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = tab.label,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (tab.isSelected)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
+        }
+        Box(modifier = Modifier.fillMaxWidth()) {
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Dimensions.topBarHorizontalPadding)
+            ) {
+                tabs.forEach { tab ->
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(Dimensions.tabIndicatorHeight)
+                            .background(
+                                if (tab.isSelected) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.background
+                            )
+                    )
+                }
+            }
         }
     }
 }

@@ -3,10 +3,13 @@ package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 import androidx.lifecycle.viewModelScope
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.core.presentation.common.PaginationState
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationFilter
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationTabUiMapper
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationTab
 import com.github.helenalog.ktsappkmp.feature.filter.presentation.mapper.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,11 +26,12 @@ import kotlinx.coroutines.launch
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class ConversationViewModel(
     private val getConversations: GetConversationsUseCase,
-    private val conversationMapper: ConversationUiMapper
+    private val conversationMapper: ConversationUiMapper,
+    private val tabMapper: ConversationTabUiMapper
 ) : BaseViewModel<ConversationUiState, Nothing>(ConversationUiState.Initial) {
+
     private val searchQueryFlow = MutableStateFlow("")
     private val filterFlow = MutableStateFlow(ConversationFilter())
-
 
     init {
         observeSearchAndFilter()
@@ -62,7 +66,8 @@ class ConversationViewModel(
             try {
                 getConversations(
                     query = searchQueryFlow.value,
-                    filter = filterFlow.value
+                    filter = filterFlow.value,
+                    isRead = tabMapper.toIsRead(state.value.selectedTab)
                 )
                     .onSuccess(::handlePage)
                     .onFailure(::handleRefreshError)
@@ -70,6 +75,20 @@ class ConversationViewModel(
                 updateState { copy(isRefreshing = false) }
             }
         }
+    }
+
+    fun selectTab(tab: ConversationTab) {
+        updateState {
+            copy(
+                selectedTab = tab,
+                tabs = tabMapper.map(tab, unreadCount),
+                isLoading = true,
+                conversations = emptyList(),
+                error = null,
+                pagination = PaginationState()
+            )
+        }
+        loadFirstPage(searchQueryFlow.value)
     }
 
     fun openFilterSheet() {
@@ -108,7 +127,15 @@ class ConversationViewModel(
             .combine(filterFlow) { query, filter -> query to filter }
             .distinctUntilChanged()
             .flatMapLatest { (query, filter) ->
-                flow { emit(getConversations(query = query, filter = filter)) }
+                flow {
+                    emit(
+                        getConversations(
+                            query = query,
+                            filter = filter,
+                            isRead = tabMapper.toIsRead(state.value.selectedTab)
+                        )
+                    )
+                }
             }
             .onEach { result ->
                 result.onSuccess(::handlePage).onFailure(::handleError)
@@ -122,7 +149,8 @@ class ConversationViewModel(
             getConversations(
                 query = s.searchQuery,
                 offset = s.pagination.offset,
-                filter = filterFlow.value
+                filter = filterFlow.value,
+                isRead = tabMapper.toIsRead(s.selectedTab)
             )
                 .onSuccess(::handleNextPage)
                 .onFailure(::handlePaginationError)
@@ -154,9 +182,7 @@ class ConversationViewModel(
     }
 
     private fun handleRefreshError(e: Throwable) {
-        if (state.value.conversations.isEmpty()) {
-            handleError(e)
-        }
+        if (state.value.conversations.isEmpty()) handleError(e)
     }
 
     private fun handlePage(page: ConversationsPage) {
@@ -165,13 +191,18 @@ class ConversationViewModel(
             .distinctBy { it.id }
             .map { it.toUi() }
 
+        val mapped = conversationMapper.mapList(page.conversations)
+        val unreadCount = page.unreadCount
+
         updateState {
             copy(
                 isLoading = false,
-                conversations = conversationMapper.mapList(page.conversations),
+                conversations = mapped,
                 error = null,
+                unreadCount = unreadCount,
+                tabs = tabMapper.map(selectedTab, unreadCount),
                 pagination = pagination.copy(
-                    offset = page.conversations.size,
+                    offset = mapped.size,
                     hasMore = page.hasMore
                 ),
                 availableChannels = (availableChannels + channels).distinctBy { it.id }
@@ -187,7 +218,8 @@ class ConversationViewModel(
         viewModelScope.launch {
             getConversations(
                 query = query,
-                filter = filterFlow.value
+                filter = filterFlow.value,
+                isRead = tabMapper.toIsRead(state.value.selectedTab)
             )
                 .onSuccess(::handlePage)
                 .onFailure(::handleError)

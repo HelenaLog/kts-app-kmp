@@ -14,7 +14,8 @@ class ConversationApi(private val client: HttpClient) {
         offset: Int = 0,
         query: String = "",
         channelIds: List<String>? = null,
-        listId: String? = null
+        listId: String? = null,
+        isRead: Boolean? = null,
     ): ApiResponse<ConversationsResponse> =
         client.get("api/conversations/list") {
             parameter("limit", limit)
@@ -22,5 +23,6 @@ class ConversationApi(private val client: HttpClient) {
             if (query.isNotBlank()) parameter("q", query)
             channelIds?.forEach { parameter("channel_ids", it) }
             listId?.let { parameter("list_id", it) }
+            isRead?.let { parameter("is_read", it) }
         }.body()
 }

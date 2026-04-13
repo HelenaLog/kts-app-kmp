@@ -8,6 +8,7 @@ interface ConversationRepository {
         query: String = "",
         limit: Int = 20,
         offset: Int = 0,
-        filter: ConversationFilter = ConversationFilter()
+        filter: ConversationFilter = ConversationFilter(),
+        isRead: Boolean? = null
     ): Result<ConversationsPage>
 }

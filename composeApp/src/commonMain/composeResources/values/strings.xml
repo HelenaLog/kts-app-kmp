@@ -49,6 +49,7 @@
     <string name="chat_continue_bot">Продолжить работу бота</string>
     <string name="chat_restart_bot">Завершить сценарий и запустить бота заново</string>
     <string name="chat_run_scenario">Запустить сценарий</string>
+    <string name="chat_empty_messages">Нет сообщений</string>
     <string name="filter_title">Фильтры</string>
     <string name="filter_reset_button">Сбросить</string>
     <string name="filter_deselect_all">Отменить выбор</string>
@@ -63,6 +64,9 @@
     <string name="filter_select_channels_hint">Выберите каналы</string>
     <string name="filter_load_error">Ошибка загрузки</string>
     <string name="filter_retry">Повторить</string>
+    <string name="conversation_tab_unread_count">Ждут ответа (%1$d)</string>
+    <string name="conversation_empty_all">У вас ещё нет ни одного диалога</string>
+    <string name="conversation_empty_unread">Список чатов пуст</string>
     <plurals name="selected_channels_count">
         <item quantity="one">Выбран %1$d канал</item>
         <item quantity="few">Выбрано %1$d канала</item>
