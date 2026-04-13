@@ -28,8 +28,8 @@ class WorkspaceRepositoryImpl(
     override fun observeProjects(): Flow<List<Project>> = projects.asStateFlow()
 
     override fun observeActive(): Flow<Workspace?> =
-        combine(cabinets, projects, activeStore.observe()) { cabs, projs, id ->
-            resolveActive(cabs, projs, id)
+        combine(cabinets, projects, activeStore.observe()) { cabinets, projects, id ->
+            resolveActive(cabinets, projects, id)
         }
 
     override suspend fun selectCabinet(cabinetId: String): Result<Unit> {
@@ -41,13 +41,13 @@ class WorkspaceRepositoryImpl(
         projects.value = newProjects
 
         val firstProject = newProjects.firstOrNull()
-            ?: return Result.failure(IllegalStateException("No projects in cabinet"))
+            ?: return Result.failure(IllegalStateException(ERROR_NO_PROJECTS_IN_CABINET))
         return activeStore.save(WorkspaceId(cabinetId, firstProject.id))
     }
 
     override suspend fun selectProject(projectId: String): Result<Unit> {
         val current = activeStore.observe().first()
-            ?: return Result.failure(IllegalStateException("No active cabinet"))
+            ?: return Result.failure(IllegalStateException(ERROR_NO_ACTIVE_CABINET))
         return activeStore.save(WorkspaceId(current.cabinetId, projectId))
     }
 
@@ -71,5 +71,10 @@ class WorkspaceRepositoryImpl(
         val cabinet = cabinets.firstOrNull { it.id == id.cabinetId } ?: return null
         val project = projects.firstOrNull { it.id == id.projectId } ?: return null
         return Workspace(cabinet, project)
+    }
+
+    companion object {
+        private const val ERROR_NO_PROJECTS_IN_CABINET = "В кабинете нет проектов"
+        private const val ERROR_NO_ACTIVE_CABINET = "Нет активных кабинетов"
     }
 }

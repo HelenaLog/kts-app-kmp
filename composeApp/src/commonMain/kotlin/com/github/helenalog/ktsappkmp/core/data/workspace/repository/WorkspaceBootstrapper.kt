@@ -16,14 +16,19 @@ class WorkspaceBootstrapper(
 
         val cabinet = cabinetRepository.getCabinets()
             .getOrElse { return Result.failure(it) }
-            .firstOrNull() ?: return Result.failure(IllegalStateException("No cabinets"))
+            .firstOrNull() ?: return Result.failure(IllegalStateException(ERROR_NO_CABINETS))
 
         activeStore.save(WorkspaceId(cabinet.id, "")).getOrElse { return Result.failure(it) }
 
         val project = projectRepository.getProjects()
             .getOrElse { return Result.failure(it) }
-            .firstOrNull() ?: return Result.failure(IllegalStateException("No projects"))
+            .firstOrNull() ?: return Result.failure(IllegalStateException(ERROR_NO_PROJECTS))
 
         return activeStore.save(WorkspaceId(cabinet.id, project.id))
+    }
+
+    companion object {
+        private const val ERROR_NO_CABINETS = "Нет кабинетов"
+        private const val ERROR_NO_PROJECTS = "Нет проектов"
     }
 }
