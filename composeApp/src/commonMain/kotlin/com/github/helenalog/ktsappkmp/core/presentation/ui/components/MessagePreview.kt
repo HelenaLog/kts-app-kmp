@@ -1,59 +1,109 @@
 package com.github.helenalog.ktsappkmp.core.presentation.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SmartToy
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 import ktsappkmp.composeapp.generated.resources.Res
+import ktsappkmp.composeapp.generated.resources.chat_ic_user_info
+import ktsappkmp.composeapp.generated.resources.ic_bot_preview
 import ktsappkmp.composeapp.generated.resources.main_message_kind_bot
 import ktsappkmp.composeapp.generated.resources.main_message_kind_manager
-import ktsappkmp.composeapp.generated.resources.main_message_kind_service
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MessagePreview(
     kind: MessageKind?,
     text: String,
-    modifier: Modifier = Modifier,
+    isUnread: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         when (kind) {
             MessageKind.BOT -> MessageKindLabel(
-                icon = Icons.Default.SmartToy,
+                icon = painterResource(Res.drawable.ic_bot_preview),
                 label = stringResource(Res.string.main_message_kind_bot),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            MessageKind.SERVICE -> MessageKindLabel(
-                icon = Icons.Default.Settings,
-                label = stringResource(Res.string.main_message_kind_service),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            MessageKind.SERVICE -> ServiceMessagePreview(
+                text = text
             )
             MessageKind.MANAGER -> MessageKindLabel(
-                icon = Icons.Default.Person,
+                icon = painterResource(Res.drawable.chat_ic_user_info),
                 label = stringResource(Res.string.main_message_kind_manager),
-                tint = MaterialTheme.colorScheme.primary,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             MessageKind.USER -> Unit
             null -> Unit
         }
 
-        if (text.isNotEmpty()) {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+        if (kind != MessageKind.SERVICE && text.isNotEmpty()) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                if (isUnread) {
+                    Box(
+                        modifier = Modifier
+                            .padding(start = Dimensions.spacingSmall)
+                            .size(Dimensions.messageUnreadIndicatorSize)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun ServiceMessagePreview(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingExtraSmall)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(Dimensions.messageServiceDotSize)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 

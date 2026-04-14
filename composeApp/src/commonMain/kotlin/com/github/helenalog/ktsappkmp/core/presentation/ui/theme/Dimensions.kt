@@ -103,4 +103,7 @@ object Dimensions {
 
     val checkboxCornerRadius = 4.dp
     val checkIconSize = 14.dp
+
+    val messageUnreadIndicatorSize = 10.dp
+    val messageServiceDotSize = 8.dp
 }

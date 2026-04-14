@@ -395,7 +395,8 @@ private fun ChatBottomBar(
             state = messageInput,
             onAttach = messageHandlers.onAttach,
             onEmoji = messageHandlers.onEmoji,
-            onSend = messageHandlers.onSend
+            onSend = messageHandlers.onSend,
+            hasAttachments = state.pendingAttachments.isNotEmpty()
         )
     }
 }

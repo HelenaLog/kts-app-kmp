@@ -43,6 +43,7 @@
     <string name="chat_empty_blocks">Список блоков пуст</string>
     <string name="chat_block_search_placeholder">Название блока</string>
     <string name="chat_scenario_search_placeholder">Название сценария</string>
+    <string name="chat_empty_message_error">Сообщение не может быть пустым</string>
     <string name="chat_scenario_title">Сценарий</string>
     <string name="chat_bot_stop">Остановить бота</string>
     <string name="chat_bot_start">Запустить бота</string>

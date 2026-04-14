@@ -33,6 +33,20 @@ class DateTimeParserImpl : DateTimeParser {
         }
     }
 
+    override fun formatConversationTime(instant: Instant, today: LocalDate): String {
+        val date = toLocalDate(instant)
+        return when {
+            date == today -> formatTime(instant)
+            date == today.minus(DatePeriod(days = 1)) -> "Вчера"
+            else -> {
+                val day = date.dayOfMonth.toString().padStart(2, '0')
+                val month = date.monthNumber.toString().padStart(2, '0')
+                val year = date.year.toString().takeLast(2)
+                "$day.$month.$year"
+            }
+        }
+    }
+
     private fun monthName(month: Int): String = when (month) {
         1 -> "января"; 2 -> "февраля"; 3 -> "марта"
         4 -> "апреля"; 5 -> "мая"; 6 -> "июня"

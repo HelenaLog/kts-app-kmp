@@ -24,6 +24,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +42,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.SocialButtonBorder
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_text_input_placeholder
+import ktsappkmp.composeapp.generated.resources.chat_empty_message_error
 import ktsappkmp.composeapp.generated.resources.ic_send_button
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -47,82 +53,109 @@ fun ChatInputField(
     onAttach: () -> Unit,
     onEmoji: () -> Unit,
     onSend: () -> Unit,
-    modifier: Modifier = Modifier,
+    hasAttachments: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = Dimensions.chatInputHorizontalPadding,
-                vertical = Dimensions.spacingSmall
-            ),
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall)
-    ) {
-        BasicTextField(
-            state = state,
-            modifier = Modifier.weight(1f),
-            lineLimits = TextFieldLineLimits.MultiLine(
-                minHeightInLines = 1,
-                maxHeightInLines = 3
-            ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Send
-            ),
-            textStyle = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.onSurface
-            ),
-            decorator = { innerTextField ->
-                Surface(
-                    shape = MaterialTheme.shapes.small,
-                    color = MaterialTheme.colorScheme.background,
-                    border = BorderStroke(Dimensions.socialButtonBorderWidth, SocialButtonBorder)
-                ) {
-                    Row(verticalAlignment = Alignment.Bottom) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(
-                                    vertical = Dimensions.chatInputTextVerticalPadding,
-                                    horizontal = Dimensions.spacingSmall
+    var showEmptyError by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state.text.length) {
+        if (state.text.isNotBlank()) {
+            showEmptyError = false
+        }
+    }
+
+    Column(modifier = modifier) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = Dimensions.chatInputHorizontalPadding,
+                    vertical = Dimensions.spacingSmall
+                ),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall)
+        ) {
+            BasicTextField(
+                state = state,
+                modifier = Modifier.weight(1f),
+                lineLimits = TextFieldLineLimits.MultiLine(
+                    minHeightInLines = 1,
+                    maxHeightInLines = 3
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Send
+                ),
+                textStyle = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                decorator = { innerTextField ->
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = MaterialTheme.colorScheme.background,
+                        border = BorderStroke(Dimensions.socialButtonBorderWidth, SocialButtonBorder)
+                    ) {
+                        Row(verticalAlignment = Alignment.Bottom) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(
+                                        vertical = Dimensions.chatInputTextVerticalPadding,
+                                        horizontal = Dimensions.spacingSmall
+                                    )
+                                    .align(Alignment.Top),
+                            ) {
+                                if (state.text.isEmpty()) {
+                                    Text(
+                                        text = stringResource(Res.string.chat_text_input_placeholder),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.tertiary
+                                    )
+                                }
+                                innerTextField()
+                            }
+                            Column(
+                                modifier = Modifier.padding(bottom = Dimensions.spacingSmall),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                InputIconButton(
+                                    icon = Icons.Outlined.AttachFile,
+                                    contentDescription = null,
+                                    onClick = onAttach
                                 )
-                                .align(Alignment.Top),
-                        ) {
-                            if (state.text.isEmpty()) {
-                                Text(
-                                    text = stringResource(Res.string.chat_text_input_placeholder),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.tertiary
+                                InputIconButton(
+                                    icon = Icons.Outlined.SentimentSatisfied,
+                                    contentDescription = null,
+                                    onClick = onEmoji
                                 )
                             }
-                            innerTextField()
-                        }
-                        Column(
-                            modifier = Modifier.padding(bottom = Dimensions.spacingSmall),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            InputIconButton(
-                                icon = Icons.Outlined.AttachFile,
-                                contentDescription = null,
-                                onClick = onAttach
-                            )
-                            InputIconButton(
-                                icon = Icons.Outlined.SentimentSatisfied,
-                                contentDescription = null,
-                                onClick = onEmoji
-                            )
                         }
                     }
                 }
-            }
-        )
-        SendButton(
-            onClick = {
-                onSend()
-                state.clearText()
-            }
-        )
+            )
+            SendButton(
+                onClick = {
+                    if (state.text.isBlank() && !hasAttachments) {
+                        showEmptyError = true
+                    } else {
+                        showEmptyError = false
+                        onSend()
+                        state.clearText()
+                    }
+                }
+            )
+        }
+
+        if (showEmptyError) {
+            Text(
+                text = stringResource(Res.string.chat_empty_message_error),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(
+                    horizontal = Dimensions.chatInputHorizontalPadding
+                )
+            )
+        }
     }
 }
 
@@ -197,15 +230,5 @@ private fun ChatInputFieldWithTextPreview() {
             onEmoji = {},
             onSend = {}
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SendButtonPreview() {
-    AppTheme {
-        Column {
-            SendButton(onClick = {})
-        }
     }
 }

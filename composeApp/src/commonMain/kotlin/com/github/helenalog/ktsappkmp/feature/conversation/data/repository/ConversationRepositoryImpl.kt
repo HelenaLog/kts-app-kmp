@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.data.repository
 
+import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.feature.conversation.data.local.dao.ConversationDao
 import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toEntity
@@ -10,10 +11,10 @@ import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversa
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.ConversationRepository
 import kotlin.coroutines.cancellation.CancellationException
 
-
 class ConversationRepositoryImpl(
     private val api: ConversationApi,
     private val conversationDao: ConversationDao,
+    private val dateTimeParser: DateTimeParser
 ) : ConversationRepository {
 
     override suspend fun getConversations(
@@ -45,7 +46,7 @@ class ConversationRepositoryImpl(
             listId = filter.selectedListId
         )
         val conversations = response.data.conversations.orEmpty()
-            .map { it.toDomain() }
+            .map { it.toDomain(dateTimeParser) }
             .let { list ->
                 if (filter.selectedChannelKinds.isNotEmpty() && filter.selectedChannelIds.isEmpty()) {
                     list.filter { it.channel.kind in filter.selectedChannelKinds }
