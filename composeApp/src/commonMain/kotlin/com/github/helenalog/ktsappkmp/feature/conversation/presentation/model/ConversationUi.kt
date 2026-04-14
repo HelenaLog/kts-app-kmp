@@ -13,6 +13,7 @@ data class ConversationUi(
     val formattedTime: String,
     val isRead: Boolean,
     val lastMessageKind: MessageKind?,
+    val lastMessageAttachmentCount: Int,
     val lastMessageText: String,
     val channelKind: ChannelKind,
     val userId: String

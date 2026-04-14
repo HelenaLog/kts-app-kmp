@@ -37,6 +37,7 @@ fun ConversationListItem(
                 MessagePreview(
                     kind = conversation.lastMessageKind,
                     text = conversation.lastMessageText,
+                    attachmentCount = conversation.lastMessageAttachmentCount,
                     isUnread = !conversation.isRead
                 )
             }
@@ -67,7 +68,8 @@ private fun ConversationListItemPreview() {
                 channelKind = ChannelKind.TG,
                 lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
                 lastMessageKind = MessageKind.BOT,
-                userId = "1"
+                userId = "1",
+                lastMessageAttachmentCount = 1
             ),
             onConversationClick = {}
         )

@@ -22,6 +22,7 @@ class ConversationUiMapper(
                 kind = conversation.lastMessageKind,
                 text = conversation.lastMessageText
             ),
+            lastMessageAttachmentCount = conversation.lastMessageAttachmentCount,
             channelKind = conversation.channel.kind,
             userId = conversation.userId,
         )

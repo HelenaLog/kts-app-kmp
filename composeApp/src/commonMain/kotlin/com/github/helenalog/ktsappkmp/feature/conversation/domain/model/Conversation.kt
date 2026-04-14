@@ -8,6 +8,7 @@ data class Conversation(
     val channel: Channel,
     val lastMessageText: String,
     val lastMessageKind: MessageKind?,
+    val lastMessageAttachmentCount: Int,
     val formattedTime: String,
     val dateUpdated: String,
     val userId: String,

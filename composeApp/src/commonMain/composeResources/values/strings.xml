@@ -50,6 +50,12 @@
     <string name="chat_continue_bot">Продолжить работу бота</string>
     <string name="chat_restart_bot">Завершить сценарий и запустить бота заново</string>
     <string name="chat_run_scenario">Запустить сценарий</string>
+    <plurals name="message_preview_attachments">
+        <item quantity="one">%1$d вложение</item>
+        <item quantity="few">%1$d вложения</item>
+        <item quantity="many">%1$d вложений</item>
+        <item quantity="other">%1$d вложений</item>
+    </plurals>
     <string name="filter_title">Фильтры</string>
     <string name="filter_reset_button">Сбросить</string>
     <string name="filter_deselect_all">Отменить выбор</string>

@@ -31,6 +31,9 @@ data class ConversationEntity(
     @ColumnInfo(name = "last_message_kind")
     val lastMessageKind: String?,
 
+    @ColumnInfo(name = "last_message_attachment_count", defaultValue = "0")
+    val lastMessageAttachmentCount: Int = 0,
+
     @ColumnInfo(name = "channel_id")
     val channelId: String,
 

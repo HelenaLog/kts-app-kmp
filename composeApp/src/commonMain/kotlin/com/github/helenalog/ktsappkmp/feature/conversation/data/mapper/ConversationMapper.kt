@@ -30,6 +30,7 @@ fun ConversationDto.toDomain(dateTimeParser: DateTimeParser): Conversation {
         ),
         lastMessageText = lastMessage?.text.orEmpty(),
         lastMessageKind = lastMessage?.kind?.toDomain(),
+        lastMessageAttachmentCount = lastMessage?.attachments?.size ?: 0,
         formattedTime = dateTimeParser.formatConversationTime(instant, today),
         dateUpdated = dateUpdated,
         userId = user.id

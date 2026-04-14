@@ -11,7 +11,6 @@ data class NavigationHandlers(
 data class MessageHandlers(
     val onSend: () -> Unit,
     val onAttach: () -> Unit,
-    val onEmoji: () -> Unit,
     val onLoadMore: () -> Unit
 )
 

@@ -21,10 +21,13 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.chat_ic_user_info
+import ktsappkmp.composeapp.generated.resources.ic_attachment
 import ktsappkmp.composeapp.generated.resources.ic_bot_preview
 import ktsappkmp.composeapp.generated.resources.main_message_kind_bot
 import ktsappkmp.composeapp.generated.resources.main_message_kind_manager
+import ktsappkmp.composeapp.generated.resources.message_preview_attachments
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -32,6 +35,7 @@ fun MessagePreview(
     kind: MessageKind?,
     text: String,
     isUnread: Boolean = false,
+    attachmentCount: Int = 0,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -41,9 +45,7 @@ fun MessagePreview(
                 label = stringResource(Res.string.main_message_kind_bot),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            MessageKind.SERVICE -> ServiceMessagePreview(
-                text = text
-            )
+            MessageKind.SERVICE -> ServiceMessagePreview(text = text)
             MessageKind.MANAGER -> MessageKindLabel(
                 icon = painterResource(Res.drawable.chat_ic_user_info),
                 label = stringResource(Res.string.main_message_kind_manager),
@@ -51,6 +53,28 @@ fun MessagePreview(
             )
             MessageKind.USER -> Unit
             null -> Unit
+        }
+
+        if (attachmentCount > 0) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                MessageKindLabel(
+                    icon = painterResource(Res.drawable.ic_attachment),
+                    label = pluralStringResource(
+                        Res.plurals.message_preview_attachments,
+                        attachmentCount,
+                        attachmentCount
+                    ),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f)
+                )
+                if (isUnread && text.isEmpty()) {
+                    UnreadDot()
+                }
+            }
         }
 
         if (kind != MessageKind.SERVICE && text.isNotEmpty()) {
@@ -68,17 +92,24 @@ fun MessagePreview(
                     modifier = Modifier.weight(1f)
                 )
                 if (isUnread) {
-                    Box(
-                        modifier = Modifier
-                            .padding(start = Dimensions.spacingSmall)
-                            .size(Dimensions.messageUnreadIndicatorSize)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
+                    UnreadDot()
                 }
             }
         }
     }
+}
+
+@Composable
+private fun UnreadDot(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .padding(start = Dimensions.spacingSmall)
+            .size(Dimensions.messageUnreadIndicatorSize)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.primary)
+    )
 }
 
 @Composable

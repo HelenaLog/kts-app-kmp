@@ -106,4 +106,5 @@ object Dimensions {
 
     val messageUnreadIndicatorSize = 10.dp
     val messageServiceDotSize = 8.dp
+    val chatInputCornerRadius = 24.dp
 }
