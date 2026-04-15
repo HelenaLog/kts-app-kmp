@@ -9,14 +9,13 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListIt
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatMessageUi
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 
 class ChatUiMapper(
     private val avatarMapper: UserAvatarUiMapper,
-    private val dateTimeParser: DateTimeParser,
+    private val dateTimeParser: DateTimeParser
 ) {
 
     fun mapMessages(

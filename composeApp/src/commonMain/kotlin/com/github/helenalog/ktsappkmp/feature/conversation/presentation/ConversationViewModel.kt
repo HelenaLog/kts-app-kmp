@@ -3,13 +3,17 @@ package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 import androidx.lifecycle.viewModelScope
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
+import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.ConversationWsEventMapper
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationFilter
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.ConversationWsEvent
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.ObserveConversationUpdatesUseCase
 import com.github.helenalog.ktsappkmp.feature.filter.presentation.mapper.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -23,14 +27,23 @@ import kotlinx.coroutines.launch
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class ConversationViewModel(
     private val getConversations: GetConversationsUseCase,
-    private val conversationMapper: ConversationUiMapper
+    private val observeConversationUpdates: ObserveConversationUpdatesUseCase,
+    private val conversationMapper: ConversationUiMapper,
+    private val wsEventMapper: ConversationWsEventMapper
 ) : BaseViewModel<ConversationUiState, Nothing>(ConversationUiState.Initial) {
     private val searchQueryFlow = MutableStateFlow("")
     private val filterFlow = MutableStateFlow(ConversationFilter())
+    private var wsJob: Job? = null
 
 
     init {
         observeSearchAndFilter()
+        startWebSocket()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        wsJob?.cancel()
     }
 
     fun onSearchQueryChange(query: String) {
@@ -99,6 +112,24 @@ class ConversationViewModel(
 
         if (shouldReload) {
             filterFlow.value = normalized
+        }
+    }
+
+    private fun startWebSocket() {
+        wsJob?.cancel()
+        wsJob = viewModelScope.launch {
+            observeConversationUpdates().collect { event -> handleWsEvent(event) }
+        }
+    }
+
+    private fun handleWsEvent(event: ConversationWsEvent) {
+        when (event) {
+            is ConversationWsEvent.Connected -> Unit
+            is ConversationWsEvent.NewMessage -> updateState {
+                copy(conversations = wsEventMapper.applyNewMessage(conversations, event))
+            }
+            is ConversationWsEvent.Reconnecting -> Unit
+            is ConversationWsEvent.Error -> Unit
         }
     }
 

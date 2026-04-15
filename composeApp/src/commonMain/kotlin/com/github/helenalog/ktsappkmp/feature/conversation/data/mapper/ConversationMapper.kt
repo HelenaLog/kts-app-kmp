@@ -3,11 +3,9 @@ package com.github.helenalog.ktsappkmp.feature.conversation.data.mapper
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ConversationDetail
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.ConversationDto
-import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.MessageKindDto
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Channel
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.Conversation
-import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 import io.github.aakira.napier.Napier
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
@@ -47,13 +45,6 @@ fun ConversationDto.toDetail() = ConversationDetail(
     stoppedByManager = state.stoppedByManager,
     channelPhoto = channel.photoUrl
 )
-
-private fun MessageKindDto.toDomain() = when (this) {
-    MessageKindDto.BOT -> MessageKind.BOT
-    MessageKindDto.SERVICE -> MessageKind.SERVICE
-    MessageKindDto.MANAGER -> MessageKind.MANAGER
-    MessageKindDto.USER -> MessageKind.USER
-}
 
 @Suppress("TooGenericExceptionCaught")
 private fun formatTime(dateUpdated: String): String = try {

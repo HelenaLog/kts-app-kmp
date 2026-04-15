@@ -69,7 +69,8 @@ private fun ConversationListItemPreview() {
                 lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
                 lastMessageKind = MessageKind.BOT,
                 userId = "1",
-                lastMessageAttachmentCount = 1
+                lastMessageAttachmentCount = 1,
+                dateUpdated = ""
             ),
             onConversationClick = {}
         )
