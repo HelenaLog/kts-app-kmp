@@ -19,6 +19,7 @@ fun ConversationEntity.toDomain() = Conversation(
     ),
     lastMessageText = lastMessageText,
     lastMessageKind = lastMessageKind?.let { MessageKind.valueOf(it) },
+    lastMessageAttachmentCount = lastMessageAttachmentCount,
     formattedTime = formattedTime,
     dateUpdated = dateUpdated,
     userId = userId,
@@ -35,6 +36,7 @@ fun Conversation.toEntity() = ConversationEntity(
     channelPhotoUrl = channel.photoUrl,
     lastMessageText = lastMessageText,
     lastMessageKind = lastMessageKind?.name,
+    lastMessageAttachmentCount = lastMessageAttachmentCount,
     formattedTime = formattedTime,
     dateUpdated = dateUpdated,
     userId = userId

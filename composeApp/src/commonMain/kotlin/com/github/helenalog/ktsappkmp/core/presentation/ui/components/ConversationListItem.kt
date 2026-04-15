@@ -1,6 +1,9 @@
 package com.github.helenalog.ktsappkmp.core.presentation.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.MessageKind
 
@@ -24,20 +28,24 @@ fun ConversationListItem(
         headlineContent = {
             NameAndTimeRow(
                 name = conversation.userName,
-                time = conversation.formattedTime,
-                isUnread = !conversation.isRead
+                time = conversation.formattedTime
             )
         },
         supportingContent = {
-            MessagePreview(
-                kind = conversation.lastMessageKind,
-                text = conversation.lastMessageText,
-            )
+            Column {
+                Spacer(modifier = Modifier.height(Dimensions.spacingSmall))
+                MessagePreview(
+                    kind = conversation.lastMessageKind,
+                    text = conversation.lastMessageText,
+                    attachmentCount = conversation.lastMessageAttachmentCount,
+                    isUnread = !conversation.isRead
+                )
+            }
         },
         leadingContent = {
             AvatarWithChannel(
                 avatar = conversation.avatar,
-                channelKind = conversation.channelKind,
+                channelKind = conversation.channelKind
             )
         }
     )
@@ -60,7 +68,9 @@ private fun ConversationListItemPreview() {
                 channelKind = ChannelKind.TG,
                 lastMessageText = "Напиши, пожалуйста, имя и фамилию...",
                 lastMessageKind = MessageKind.BOT,
-                userId = "1"
+                userId = "1",
+                lastMessageAttachmentCount = 1,
+                dateUpdated = ""
             ),
             onConversationClick = {}
         )

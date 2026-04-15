@@ -16,5 +16,8 @@ data class MessageDto(
     val dateCreated: String? = null,
     @SerialName("conversation_id")
     val conversationId: Long? = null,
-    val attachments: List<AttachmentDto> = emptyList()
+    @SerialName("attachments")
+    val attachments: List<AttachmentDto> = emptyList(),
+    @SerialName("manager_email")
+    val managerEmail: String? = null,
 )

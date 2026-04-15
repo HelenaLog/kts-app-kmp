@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTypography
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 
 @Composable
 fun NameAndTimeRow(
     name: String,
     time: String,
-    isUnread: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -28,8 +28,10 @@ fun NameAndTimeRow(
     ) {
         Text(
             text = name,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (isUnread) FontWeight.Bold else FontWeight.Normal,
+            style = AppTypography.labelMedium.copy(
+                fontWeight = FontWeight.SemiBold
+            ),
+            color = MaterialTheme.colorScheme.secondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
@@ -39,7 +41,7 @@ fun NameAndTimeRow(
         Text(
             text = time,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -49,7 +51,6 @@ fun NameAndTimeRow(
 private fun NameAndTimeRowPreview() {
     NameAndTimeRow(
         name = "Георгий Л",
-        time = "15:09",
-        isUnread = true,
+        time = "15:09"
     )
 }

@@ -8,4 +8,5 @@ interface DateTimeParser {
     fun toLocalDate(instant: Instant): LocalDate
     fun formatTime(instant: Instant): String
     fun formatDateLabel(instant: Instant, today: LocalDate): String
+    fun formatConversationTime(instant: Instant, today: LocalDate): String
 }

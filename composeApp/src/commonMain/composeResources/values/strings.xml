@@ -4,8 +4,8 @@
     <string name="onboarding_button_next">Вперед</string>
     <string name="onboarding_button_back">Назад</string>
     <string name="login_title">Добро пожаловать!</string>
-    <string name="login_password_hint">Пароль</string>
-    <string name="login_email_hint">Почта</string>
+    <string name="login_password_hint">Введите пароль</string>
+    <string name="login_email_hint">example@gmail.com</string>
     <string name="login_button_submit">Войти</string>
     <string name="login_forgot_password">Забыли пароль?</string>
     <string name="login_label_email">Email</string>
@@ -43,12 +43,19 @@
     <string name="chat_empty_blocks">Список блоков пуст</string>
     <string name="chat_block_search_placeholder">Название блока</string>
     <string name="chat_scenario_search_placeholder">Название сценария</string>
+    <string name="chat_empty_message_error">Сообщение не может быть пустым</string>
     <string name="chat_scenario_title">Сценарий</string>
     <string name="chat_bot_stop">Остановить бота</string>
     <string name="chat_bot_start">Запустить бота</string>
     <string name="chat_continue_bot">Продолжить работу бота</string>
     <string name="chat_restart_bot">Завершить сценарий и запустить бота заново</string>
     <string name="chat_run_scenario">Запустить сценарий</string>
+    <plurals name="message_preview_attachments">
+        <item quantity="one">%1$d вложение</item>
+        <item quantity="few">%1$d вложения</item>
+        <item quantity="many">%1$d вложений</item>
+        <item quantity="other">%1$d вложений</item>
+    </plurals>
     <string name="filter_title">Фильтры</string>
     <string name="filter_reset_button">Сбросить</string>
     <string name="filter_deselect_all">Отменить выбор</string>

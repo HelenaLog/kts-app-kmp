@@ -63,6 +63,7 @@ kotlin {
             implementation(libs.androidx.swiperefreshlayout)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+            implementation(libs.androidx.core.splashscreen)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

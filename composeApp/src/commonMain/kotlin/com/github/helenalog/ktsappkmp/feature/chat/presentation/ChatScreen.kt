@@ -112,7 +112,6 @@ fun ChatScreen(
                 message = MessageHandlers(
                     onSend = { viewModel.sendMessage(conversationId) },
                     onAttach = { filePickerLauncher.launch() },
-                    onEmoji = {},
                     onLoadMore = { viewModel.loadMoreMessages(conversationId) }
                 ),
                 attachment = AttachmentHandlers(
@@ -394,8 +393,8 @@ private fun ChatBottomBar(
         ChatInputField(
             state = messageInput,
             onAttach = messageHandlers.onAttach,
-            onEmoji = messageHandlers.onEmoji,
-            onSend = messageHandlers.onSend
+            onSend = messageHandlers.onSend,
+            hasAttachments = state.pendingAttachments.isNotEmpty()
         )
     }
 }
@@ -446,7 +445,6 @@ private fun ChatBottomBarEmptyPreview() {
             messageHandlers = MessageHandlers(
                 onSend = {},
                 onAttach = {},
-                onEmoji = {},
                 onLoadMore = {}
             ),
             attachmentHandlers = AttachmentHandlers(
