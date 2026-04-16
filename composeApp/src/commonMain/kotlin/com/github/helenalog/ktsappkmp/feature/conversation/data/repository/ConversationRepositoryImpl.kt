@@ -6,6 +6,7 @@ import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toEntity
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.api.ConversationApi
+import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationFilter
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.ConversationRepository
@@ -21,12 +22,13 @@ class ConversationRepositoryImpl(
         query: String,
         limit: Int,
         offset: Int,
-        filter: ConversationFilter
+        filter: ConversationFilter,
+        isRead: Boolean?,
     ): Result<ConversationsPage> {
-        return suspendRunCatching { fetchRemotePage(query, limit, offset, filter) }
+        return suspendRunCatching { fetchRemotePage(query, limit, offset, filter, isRead) }
             .fold(
                 onSuccess = { Result.success(it) },
-                onFailure = { fetchCachedPage(query, limit, offset, it) }
+                onFailure = { fetchCachedPage(query, limit, offset, filter, isRead, it) }
             )
     }
 
@@ -34,7 +36,8 @@ class ConversationRepositoryImpl(
         query: String,
         limit: Int,
         offset: Int,
-        filter: ConversationFilter
+        filter: ConversationFilter,
+        isRead: Boolean?,
     ): ConversationsPage {
         val channelIds = filter.selectedChannelIds.takeIf { it.isNotEmpty() }?.toList()
 
@@ -43,7 +46,8 @@ class ConversationRepositoryImpl(
             offset = offset,
             query = query.takeIf { it.isNotBlank() }.orEmpty(),
             channelIds = channelIds,
-            listId = filter.selectedListId
+            listId = filter.selectedListId,
+            isRead = isRead,
         )
         val conversations = response.data.conversations.orEmpty()
             .map { it.toDomain(dateTimeParser) }
@@ -54,6 +58,7 @@ class ConversationRepositoryImpl(
             }
 
         if (offset == 0) {
+            conversationDao.deleteAll()
             conversationDao.upsertAll(conversations.map { it.toEntity() })
         }
         return ConversationsPage(
@@ -66,10 +71,20 @@ class ConversationRepositoryImpl(
         query: String,
         limit: Int,
         offset: Int,
+        filter: ConversationFilter,
+        isRead: Boolean?,
         e: Throwable
     ): Result<ConversationsPage> {
         if (e is CancellationException) throw e
         val cached = conversationDao.getByQuery(query)
+            .let { list ->
+                if (isRead == null) list else list.filter { it.isRead == isRead }
+            }
+            .let { list ->
+                if (filter.selectedChannelKinds.isNotEmpty() && filter.selectedChannelIds.isEmpty()) {
+                    list.filter { ChannelKind.valueOf(it.channelKind) in filter.selectedChannelKinds }
+                } else list
+            }
         if (cached.isEmpty()) return Result.failure(e)
         val pagedCached = cached.drop(offset).take(limit)
         return Result.success(

@@ -20,4 +20,6 @@ data class MessageDto(
     val attachments: List<AttachmentDto> = emptyList(),
     @SerialName("manager_email")
     val managerEmail: String? = null,
+    @SerialName("is_read")
+    val isRead: Boolean = false
 )

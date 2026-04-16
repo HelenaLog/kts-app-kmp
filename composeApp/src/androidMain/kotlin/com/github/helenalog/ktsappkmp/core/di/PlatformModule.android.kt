@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.github.helenalog.ktsappkmp.core.data.local.AppDatabase
 import com.github.helenalog.ktsappkmp.core.data.storage.SessionStorage
 import com.github.helenalog.ktsappkmp.core.data.storage.SessionStorageImpl
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.UrlLauncher
 import okio.Path.Companion.toOkioPath
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -35,4 +36,5 @@ actual val platformModule = module {
             }
         )
     }
+    single { UrlLauncher(androidContext()) }
 }

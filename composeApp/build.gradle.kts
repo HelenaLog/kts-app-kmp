@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.detekt)
     alias(libs.plugins.tracer)
+    alias(libs.plugins.google.services)
 }
 
 val localProperties = Properties().apply {
@@ -64,6 +65,8 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation(libs.androidx.core.splashscreen)
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.config.ktx)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

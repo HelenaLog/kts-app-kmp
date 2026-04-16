@@ -67,9 +67,11 @@ import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelK
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
 import ktsappkmp.composeapp.generated.resources.Res
+import ktsappkmp.composeapp.generated.resources.chat_empty_messages
 import ktsappkmp.composeapp.generated.resources.chat_ic_user_info
 import ktsappkmp.composeapp.generated.resources.ic_bot_preview
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -174,7 +176,11 @@ fun ChatContent(
                     message = listState.error,
                     onRetry = handlers.navigation.onRetry
                 )
-                listState.messages.isEmpty() -> EmptyContent()
+
+                listState.messages.isEmpty() -> EmptyContent(
+                    message = stringResource(Res.string.chat_empty_messages)
+                )
+
                 else -> MessageList(
                     items = listState.messages,
                     isLoadingMore = listState.isLoadingMore,
@@ -193,6 +199,7 @@ fun ChatContent(
             state = botActionState,
             handlers = handlers.botAction
         )
+
         else -> Unit
     }
 }
@@ -382,6 +389,7 @@ private fun ChatBottomBar(
                     .padding(horizontal = Dimensions.spacingMedium)
                     .clickable { attachmentHandlers.onDismissAttachmentError() }
             )
+
             is AttachmentState.Idle -> Unit
         }
         if (state.pendingAttachments.isNotEmpty()) {

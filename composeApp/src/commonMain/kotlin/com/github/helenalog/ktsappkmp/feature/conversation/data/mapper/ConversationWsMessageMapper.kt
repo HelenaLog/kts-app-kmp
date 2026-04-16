@@ -25,7 +25,8 @@ class ConversationWsMessageMapper(
             lastMessageKind = messageDto.kind.toDomain(),
             lastMessageAttachmentCount = messageDto.attachments.size,
             formattedTime = formattedTime,
-            dateUpdated = dateCreated
+            dateUpdated = dateCreated,
+            isRead = messageDto.isRead
         )
     }
 }

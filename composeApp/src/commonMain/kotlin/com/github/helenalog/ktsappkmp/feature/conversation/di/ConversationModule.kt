@@ -13,6 +13,7 @@ import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.Con
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.ObserveConversationUpdatesUseCase
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.ConversationViewModel
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationTabUiMapper
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import org.koin.core.module.dsl.factoryOf
@@ -22,6 +23,11 @@ import org.koin.dsl.module
 
 val conversationModule = module {
     factory { ConversationApi(get(NetworkQualifier.MAIN)) }
+    factoryOf(::ConversationRepositoryImpl) bind ConversationRepository::class
+    factoryOf(::GetConversationsUseCase)
+    factoryOf(::UserAvatarUiMapper)
+    factoryOf(::ConversationUiMapper)
+    factoryOf(::ConversationTabUiMapper)
     factoryOf(::DateTimeParserImpl) bind DateTimeParser::class
     factoryOf(::ConversationRepositoryImpl) bind ConversationRepository::class
     factoryOf(::GetConversationsUseCase)

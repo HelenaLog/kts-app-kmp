@@ -8,22 +8,35 @@ class ConversationWsEventMapper {
     fun applyNewMessage(
         current: List<ConversationUi>,
         event: ConversationWsEvent.NewMessage,
+        tabFilter: (isRead: Boolean) -> Boolean
     ): List<ConversationUi> {
         val index = current.indexOfFirst { it.id == event.conversationId }
-        if (index == -1) return current
 
-        val updated = current[index].copy(
-            lastMessageText = event.lastMessageText,
-            lastMessageKind = event.lastMessageKind,
-            lastMessageAttachmentCount = event.lastMessageAttachmentCount,
-            formattedTime = event.formattedTime,
-            dateUpdated = event.dateUpdated,
-            isRead = false
-        )
-
-        return buildList {
-            add(updated)
-            addAll(current.filterIndexed { i, _ -> i != index })
+        return if (index == -1) {
+            if (tabFilter(event.isRead)) {
+                buildList {
+                    addAll(current)
+                }
+            } else {
+                current
+            }
+        } else {
+            val updated = current[index].copy(
+                lastMessageText = event.lastMessageText,
+                lastMessageKind = event.lastMessageKind,
+                lastMessageAttachmentCount = event.lastMessageAttachmentCount,
+                formattedTime = event.formattedTime,
+                dateUpdated = event.dateUpdated,
+                isRead = event.isRead,
+            )
+            if (!tabFilter(updated.isRead)) {
+                current.filterIndexed { i, _ -> i != index }
+            } else {
+                buildList {
+                    add(updated)
+                    addAll(current.filterIndexed { i, _ -> i != index })
+                }
+            }
         }
     }
 }

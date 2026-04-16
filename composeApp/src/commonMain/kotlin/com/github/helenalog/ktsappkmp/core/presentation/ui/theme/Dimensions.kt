@@ -12,6 +12,7 @@ object Dimensions {
     val spacingSmall = 8.dp
     val spacingExtraSmall = 4.dp
     val spacing12 = 12.dp
+    val spacing10 = 10.dp
 
     // Avatar
     val avatarSize = 52.dp
@@ -107,4 +108,8 @@ object Dimensions {
     val messageUnreadIndicatorSize = 10.dp
     val messageServiceDotSize = 8.dp
     val chatInputCornerRadius = 24.dp
+    val bannerCloseIconSize = 18.dp
+    val bannerShimmerHeight = 100.dp
+    val bannerWidth = 300.dp
+    val tabIndicatorHeight = 2.dp
 }

@@ -28,6 +28,14 @@ val SocialButtonBorder = Color(0xFFDBDEF9)
 val InfoColor = Color(0xFF2CABE7)
 val InfoBackground = Color(0xFF2CABE7).copy(alpha = 0.08f)
 
+val ErrorRed = Color(0xFFDC2626)
+val ErrorRedContainer = Color(0xFFFEF2F2)
+val ErrorRedBorder = Color(0xFFFECACA)
+
+val SuccessGreen = Color(0xFF16A34A)
+val SuccessContainer = Color(0xFFECFDF5)
+val SuccessOutline = Color(0xFFBBF7D0)
+
 val LightColorScheme = lightColorScheme(
     primary = Primary,
     onPrimary = OnPrimary,

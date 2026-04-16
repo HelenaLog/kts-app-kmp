@@ -20,6 +20,7 @@ sealed interface ConversationWsEvent {
         val lastMessageAttachmentCount: Int,
         val formattedTime: String,
         val dateUpdated: String,
+        val isRead: Boolean
     ) : ConversationWsEvent
 
     data class Reconnecting(val attempt: Int) : ConversationWsEvent
