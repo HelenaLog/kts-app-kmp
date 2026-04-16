@@ -1,10 +1,12 @@
 package com.github.helenalog.ktsappkmp.core.data.remote.network
 
+import com.github.helenalog.ktsappkmp.core.data.storage.ActiveWorkspaceStore
 import com.github.helenalog.ktsappkmp.core.data.storage.SessionStorage
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -16,6 +18,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 
 object HttpClientFactory {
@@ -37,15 +40,23 @@ object HttpClientFactory {
         json: Json,
         sessionStorage: SessionStorage,
         onUnauthorizedCallback: OnUnauthorizedCallback,
+        activeWorkspaceStore: ActiveWorkspaceStore
     ): HttpClient = HttpClient {
         installJson(json)
         installLogging()
 
+        install(createClientPlugin("WorkspaceHeaders") {
+            onRequest { request, _ ->
+                activeWorkspaceStore.observe().first()?.let { id ->
+                    request.headers.append(HEADER_CABINET, id.cabinetId)
+                    request.headers.append(HEADER_PROJECT, id.projectId)
+                }
+            }
+        })
+
         defaultRequest {
             url(config.sproUrl)
             contentType(ContentType.Application.Json)
-            header(HEADER_CABINET, config.cabinetId)
-            header(HEADER_PROJECT, config.projectId)
             header(HEADER_BUCKET, config.bucket)
             sessionStorage.getSession()?.let {
                 header(HEADER_COOKIE, it)

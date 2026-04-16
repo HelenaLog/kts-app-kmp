@@ -44,6 +44,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorConte
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.FilterButton
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PaginationErrorFooter
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SearchBar
+import com.github.helenalog.ktsappkmp.core.presentation.workspace.WorkspaceTopBar
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationTab
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationTabUi
@@ -79,6 +80,12 @@ fun ConversationScreen(
         modifier = modifier,
         topBar = {
             Column {
+                WorkspaceTopBar(
+                    modifier = Modifier.padding(
+                        horizontal = Dimensions.topBarHorizontalPadding,
+                        vertical = Dimensions.topBarVerticalPadding
+                    )
+                )
                 MainTopBar(
                     searchQuery = conversationState.searchQuery,
                     onSearchQueryChange = { conversationViewModel.onSearchQueryChange(it) },

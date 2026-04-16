@@ -21,6 +21,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlin.io.encoding.Base64
 
 class ConversationWebSocketRepositoryImpl(
     private val wsClient: HttpClient,
@@ -44,7 +47,7 @@ class ConversationWebSocketRepositoryImpl(
 
     private suspend fun connectAndListen(emit: suspend (ConversationWsEvent) -> Unit) {
         val (authToken, subToken) = obtainTokens()
-        val channel = buildChannel()
+        val channel = extractChannelFromJwt(subToken) ?: error(ERROR_EXTRACT_CHANNEL)
 
         wsClient.webSocket(urlString = networkConfig.wsUrl) {
             val centrifuge = CentrifugeSession(this, json)
@@ -61,7 +64,11 @@ class ConversationWebSocketRepositoryImpl(
         return authToken to subToken
     }
 
-    private fun buildChannel() = "project:${networkConfig.projectId}-conversations"
+    private fun extractChannelFromJwt(token: String): String? = runCatching {
+        val payloadB64 = token.split(".").getOrNull(1) ?: return@runCatching null
+        val decoded = Base64.UrlSafe.decode(payloadB64).decodeToString()
+        json.parseToJsonElement(decoded).jsonObject["channel"]?.jsonPrimitive?.content
+    }.getOrNull()
 
     private suspend fun DefaultWebSocketSession.listenMessages(
         centrifuge: CentrifugeSession,
@@ -92,6 +99,7 @@ class ConversationWebSocketRepositoryImpl(
     }
 
     companion object {
+        private const val ERROR_EXTRACT_CHANNEL = "Не удалось извлечь канал из subscription токена"
         private const val RECONNECT_BASE_MS = 1_000L
     }
 }

@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.profile.presentation.mapper.ProfileUiMapper
-import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetCabinetsUseCase
+import com.github.helenalog.ktsappkmp.core.domain.cabinet.usecase.GetCabinetsUseCase
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetProfileUseCase
-import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.GetProjectsUseCase
+import com.github.helenalog.ktsappkmp.core.domain.project.usecase.GetProjectsUseCase
 import com.github.helenalog.ktsappkmp.feature.profile.domain.usecase.LogoutUseCase
 import kotlinx.coroutines.launch
 

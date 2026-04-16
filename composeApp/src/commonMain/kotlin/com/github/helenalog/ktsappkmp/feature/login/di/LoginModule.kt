@@ -15,5 +15,10 @@ val loginModule = module {
     factory<LoginRepository> { LoginRepositoryImpl(api = get(), sessionStorage = get()) }
     factory { LoginUseCase(get()) }
 
-    viewModel { LoginViewModel(loginUseCase = get()) }
+    viewModel {
+        LoginViewModel(
+            loginUseCase = get(),
+            workspaceBootstrapper = get()
+        )
+    }
 }

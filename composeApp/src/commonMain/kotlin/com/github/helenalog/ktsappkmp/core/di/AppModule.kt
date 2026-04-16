@@ -11,6 +11,7 @@ import org.koin.core.module.Module
 
 fun appModules(): List<Module> = listOf(
     navigationModule,
+    workspaceModule,
     networkModule,
     databaseModule,
     storageModule,
@@ -21,5 +22,7 @@ fun appModules(): List<Module> = listOf(
     profileModule,
     chatModule,
     filterModule,
-    bannerModule
+    bannerModule,
+    cabinetModule,
+    projectModule
 )
