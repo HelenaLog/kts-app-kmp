@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -151,7 +152,10 @@ fun ConversationScreen(
                                     paginationError = conversationState.pagination.error,
                                     onReachEnd = { conversationViewModel.onReachEnd() },
                                     onRetryPagination = { conversationViewModel.onReachEnd() },
-                                    onConversationClick = onConversationClick
+                                    onConversationClick = { conversation ->
+                                        conversationViewModel.markAsRead(conversation.id)
+                                        onConversationClick(conversation)
+                                    }
                                 )
                             }
                         }
@@ -228,7 +232,7 @@ private fun ConversationTabs(
                             .height(Dimensions.tabIndicatorHeight)
                             .background(
                                 if (tab.isSelected) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.background
+                                else Color.Transparent
                             )
                     )
                 }

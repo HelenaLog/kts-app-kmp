@@ -47,7 +47,7 @@ class ConversationViewModel(
 
     init {
         observeSearchAndFilter()
-        startWebSocket()
+        observeWebSocket()
     }
 
     override fun onCleared() {
@@ -61,6 +61,24 @@ class ConversationViewModel(
     }
 
     fun clearSearch() = onSearchQueryChange("")
+
+    fun markAsRead(conversationId: Long) {
+        updateState {
+            val conversation = conversations.firstOrNull { it.id == conversationId }
+                ?: return@updateState this
+            if (conversation.isRead) return@updateState this
+
+            val updatedConversations = conversations.map {
+                if (it.id == conversationId) it.copy(isRead = true) else it
+            }
+            val newUnreadCount = (totalUnreadCount - 1).coerceAtLeast(0)
+            copy(
+                conversations = updatedConversations,
+                totalUnreadCount = newUnreadCount,
+                tabs = tabMapper.map(selectedTab, newUnreadCount)
+            )
+        }
+    }
 
     fun retry() {
         updateState { copy(isLoading = true, error = null) }
@@ -139,11 +157,14 @@ class ConversationViewModel(
         }
     }
 
-    private fun startWebSocket() {
-        wsJob?.cancel()
-        wsJob = viewModelScope.launch {
-            observeConversationUpdates().collect { event -> handleWsEvent(event) }
-        }
+    private fun observeWebSocket() {
+        wsJob = observeActiveWorkspace()
+            .filterNotNull()
+            .map { WorkspaceId(it.cabinet.id, it.project.id) }
+            .distinctUntilChanged()
+            .flatMapLatest { observeConversationUpdates() }
+            .onEach { event -> handleWsEvent(event) }
+            .launchIn(viewModelScope)
     }
 
     private fun handleWsEvent(event: ConversationWsEvent) {
@@ -167,10 +188,16 @@ class ConversationViewModel(
                         val updatedConversations = wsEventMapper.applyNewMessage(
                             conversations, event, tabFilter
                         )
-                        val newUnreadCount = if (selectedTab == ConversationTab.ALL) {
-                            updatedConversations.count { !it.isRead }
-                        } else {
-                            if (!event.isRead) totalUnreadCount + 1 else totalUnreadCount
+                        val previousIsRead = conversations
+                            .firstOrNull { it.id == event.conversationId }?.isRead
+                        val newUnreadCount = when {
+                            selectedTab == ConversationTab.ALL ->
+                                updatedConversations.count { !it.isRead }
+                            previousIsRead == false && event.isRead ->
+                                (totalUnreadCount - 1).coerceAtLeast(0)
+                            previousIsRead == true && !event.isRead ->
+                                totalUnreadCount + 1
+                            else -> totalUnreadCount
                         }
                         copy(
                             conversations = updatedConversations,
@@ -287,7 +314,7 @@ class ConversationViewModel(
                     offset = mapped.size,
                     hasMore = page.hasMore
                 ),
-                availableChannels = (availableChannels + channels).distinctBy { it.id }
+                availableChannels = channels
             )
         }
     }

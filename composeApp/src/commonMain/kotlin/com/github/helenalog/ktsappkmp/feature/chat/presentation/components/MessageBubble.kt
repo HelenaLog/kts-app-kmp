@@ -3,11 +3,13 @@ package com.github.helenalog.ktsappkmp.feature.chat.presentation.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -77,36 +79,39 @@ fun MessageTime(
 @Composable
 fun OutgoingMessageBubble(
     message: ChatMessageUi,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall, Alignment.End),
-        verticalAlignment = Alignment.Bottom
-    ) {
-        MessageTime(text = message.formattedTime)
-        ChatBubbleContainer(
-            modifier = Modifier.weight(1f, fill = false),
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            borderColor = SocialButtonBorder,
-            bottomStartRadius = Dimensions.bubbleCornerRadius,
-            bottomEndRadius = Dimensions.bubbleSmallRadius
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val bubbleMaxWidth = maxWidth * 0.65f
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall, Alignment.End),
+            verticalAlignment = Alignment.Bottom
         ) {
-            AttachmentsList(message.attachments)
-            Text(
-                text = message.text,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
+            MessageTime(text = message.formattedTime)
+            ChatBubbleContainer(
+                modifier = Modifier.widthIn(max = bubbleMaxWidth),
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                borderColor = SocialButtonBorder,
+                bottomStartRadius = Dimensions.bubbleCornerRadius,
+                bottomEndRadius = Dimensions.bubbleSmallRadius
+            ) {
+                AttachmentsList(message.attachments)
+                Text(
+                    text = message.text,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            Image(
+                painter = painterResource(Res.drawable.chat_ic_bot_avatar),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(Dimensions.avatarSize)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
             )
         }
-        Image(
-            painter = painterResource(Res.drawable.chat_ic_bot_avatar),
-            contentDescription = null,
-            modifier = Modifier
-                .size(Dimensions.avatarSize)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
     }
 }
 
@@ -115,29 +120,32 @@ fun IncomingMessageBubble(
     message: ChatMessageUi,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall, Alignment.Start),
-        verticalAlignment = Alignment.Bottom
-    ) {
-        UserAvatar(
-            avatar = message.avatar,
-        )
-        ChatBubbleContainer(
-            modifier = Modifier.weight(1f, fill = false),
-            containerColor = MaterialTheme.colorScheme.primary,
-            borderColor = Color.Transparent,
-            bottomStartRadius = Dimensions.bubbleSmallRadius,
-            bottomEndRadius = Dimensions.bubbleCornerRadius
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val bubbleMaxWidth = maxWidth * 0.65f
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall, Alignment.Start),
+            verticalAlignment = Alignment.Bottom
         ) {
-            AttachmentsList(message.attachments)
-            Text(
-                text = message.text,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.background
-            )
+            UserAvatar(avatar = message.avatar)
+            ChatBubbleContainer(
+                modifier = Modifier.widthIn(max = bubbleMaxWidth),
+                containerColor = MaterialTheme.colorScheme.primary,
+                borderColor = Color.Transparent,
+                bottomStartRadius = Dimensions.bubbleSmallRadius,
+                bottomEndRadius = Dimensions.bubbleCornerRadius
+            ) {
+                AttachmentsList(message.attachments)
+                Text(
+                    text = message.text,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+
+            MessageTime(text = message.formattedTime)
         }
-        MessageTime(text = message.formattedTime)
     }
 }
 

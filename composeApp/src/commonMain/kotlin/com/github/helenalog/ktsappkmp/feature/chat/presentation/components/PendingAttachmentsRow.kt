@@ -52,6 +52,7 @@ fun PendingAttachmentsRow(
             vertical = Dimensions.spacingMedium
         ),
         horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingMedium),
+        verticalAlignment = Alignment.Bottom
     ) {
         items(
             items = items,

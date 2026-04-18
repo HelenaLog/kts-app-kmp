@@ -5,11 +5,14 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -251,11 +254,11 @@ private fun MessageList(
                 top = Dimensions.spacingMedium,
                 bottom = Dimensions.spacingMedium
             ),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.spacingMedium),
             modifier = Modifier
                 .fillMaxSize()
                 .imePadding()
-                .padding(horizontal = Dimensions.spacingMedium),
+                .padding(horizontal = Dimensions.spacingMedium)
         ) {
             items(
                 items = items,
@@ -316,10 +319,16 @@ private fun ChatTopBar(
                 }
             },
             title = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.height(IntrinsicSize.Min)
+                ) {
                     AvatarWithChannel(channelKind = state.channelKind, avatar = state.avatar)
                     Spacer(Modifier.width(Dimensions.spacingSmall))
-                    Column(verticalArrangement = Arrangement.spacedBy(Dimensions.spacingSmall)) {
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
                             text = state.userName,
                             style = MaterialTheme.typography.titleSmall,

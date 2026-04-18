@@ -15,7 +15,7 @@ object Dimensions {
     val spacing10 = 10.dp
 
     // Avatar
-    val avatarSize = 52.dp
+    val avatarSize = 32.dp
 
     // Name and Time Row
     val nameEndPadding = 8.dp
@@ -24,8 +24,9 @@ object Dimensions {
     val messageKindIconSize = 12.dp
     val messageKindSpacing = 4.dp
 
-    val channelIconSize = 16.dp
-
+    val channelIconSize = 11.dp
+    val channelIconBackgroundSize = 13.dp
+    val channelIconOffset = 3.dp
     // TextField
     val textFieldCornerRadius = 8.dp
     val textFieldPadding = 10.dp
