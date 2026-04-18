@@ -39,10 +39,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.helenalog.ktsappkmp.core.presentation.banner.BannersUiEvent
 import com.github.helenalog.ktsappkmp.core.presentation.banner.BannersViewModel
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.BannerList
-import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ConversationListItem
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.components.ConversationListItem
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.EmptyContent
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorContent
-import com.github.helenalog.ktsappkmp.core.presentation.ui.components.FilterButton
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.components.FilterButton
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PaginationErrorFooter
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SearchBar
 import com.github.helenalog.ktsappkmp.core.presentation.workspace.WorkspaceTopBar

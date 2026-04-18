@@ -15,9 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
-import ktsappkmp.composeapp.generated.resources.Res
-import ktsappkmp.composeapp.generated.resources.main_empty_title
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun EmptyContent(

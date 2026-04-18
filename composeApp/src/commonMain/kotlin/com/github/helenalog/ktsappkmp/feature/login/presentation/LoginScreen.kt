@@ -33,7 +33,7 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AppButton
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AppTextField
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.CaptchaView
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PasswordTextField
-import com.github.helenalog.ktsappkmp.core.presentation.ui.components.SocialLoginRow
+import com.github.helenalog.ktsappkmp.feature.login.presentation.components.SocialLoginRow
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.ic_smartbot_logo

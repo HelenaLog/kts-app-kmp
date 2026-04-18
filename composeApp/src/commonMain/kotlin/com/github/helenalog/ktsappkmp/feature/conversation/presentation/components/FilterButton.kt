@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.core.presentation.ui.components
+package com.github.helenalog.ktsappkmp.feature.conversation.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

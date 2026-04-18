@@ -9,7 +9,6 @@ import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.d
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.icon
 import org.jetbrains.compose.resources.painterResource
 
-
 @Composable
 fun ChannelIcon(
     kind: ChannelKind,

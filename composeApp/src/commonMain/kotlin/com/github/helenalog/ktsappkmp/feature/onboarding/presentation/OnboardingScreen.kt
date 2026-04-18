@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AppButton
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AppButtonStyle
-import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PageContent
-import com.github.helenalog.ktsappkmp.core.presentation.ui.components.PageIndicator
+import com.github.helenalog.ktsappkmp.feature.onboarding.presentation.components.PageContent
+import com.github.helenalog.ktsappkmp.feature.onboarding.presentation.components.PageIndicator
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import ktsappkmp.composeapp.generated.resources.onboarding_button_back
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions

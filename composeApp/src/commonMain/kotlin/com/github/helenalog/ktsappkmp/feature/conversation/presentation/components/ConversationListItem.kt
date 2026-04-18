@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.core.presentation.ui.components
+package com.github.helenalog.ktsappkmp.feature.conversation.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,8 @@ import androidx.compose.material3.ListItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.AvatarWithChannel
+import com.github.helenalog.ktsappkmp.core.presentation.ui.components.MessagePreview
 import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.AppTheme
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationUi
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi

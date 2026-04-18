@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.core.presentation.ui.components
+package com.github.helenalog.ktsappkmp.feature.onboarding.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

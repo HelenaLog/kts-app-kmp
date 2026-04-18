@@ -19,7 +19,6 @@ import ktsappkmp.composeapp.generated.resources.Res
 import ktsappkmp.composeapp.generated.resources.main_error_retry
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun ErrorContent(
     message: String?,

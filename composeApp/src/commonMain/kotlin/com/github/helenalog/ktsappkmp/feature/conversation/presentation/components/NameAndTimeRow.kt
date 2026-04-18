@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.core.presentation.ui.components
+package com.github.helenalog.ktsappkmp.feature.conversation.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
