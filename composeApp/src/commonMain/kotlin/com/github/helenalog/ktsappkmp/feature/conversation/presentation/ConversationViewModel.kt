@@ -1,12 +1,12 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.github.helenalog.ktsappkmp.core.domain.activechat.usecase.ObserveActiveChatUseCase
 import com.github.helenalog.ktsappkmp.core.domain.workspace.model.WorkspaceId
 import com.github.helenalog.ktsappkmp.core.domain.workspace.usecase.ObserveActiveWorkspaceUseCase
-import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
-import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.ConversationWsEventMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.PaginationState
+import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.ConversationWsEventMapper
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ChannelKind
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationFilter
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.model.ConversationsPage
@@ -14,6 +14,7 @@ import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.Con
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.GetConversationsUseCase
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.usecase.ObserveConversationUpdatesUseCase
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationTabUiMapper
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.ConversationUiMapper
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.model.ConversationTab
 import com.github.helenalog.ktsappkmp.feature.filter.presentation.mapper.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,6 +40,7 @@ class ConversationViewModel(
     private val wsEventMapper: ConversationWsEventMapper,
     private val tabMapper: ConversationTabUiMapper,
     private val conversationMapper: ConversationUiMapper,
+    private val observeActiveChatUseCase: ObserveActiveChatUseCase
 ) : BaseViewModel<ConversationUiState, Nothing>(ConversationUiState.Initial) {
 
     private val searchQueryFlow = MutableStateFlow("")
@@ -127,13 +129,9 @@ class ConversationViewModel(
         loadFirstPage(searchQueryFlow.value)
     }
 
-    fun openFilterSheet() {
-        updateState { copy(isFilterSheetOpen = true) }
-    }
+    fun openFilterSheet() = updateState { copy(isFilterSheetOpen = true) }
 
-    fun closeFilterSheet() {
-        updateState { copy(isFilterSheetOpen = false) }
-    }
+    fun closeFilterSheet() = updateState { copy(isFilterSheetOpen = false) }
 
     fun applyFilter(newFilter: ConversationFilter) {
         val allKinds = ChannelKind.entries.filter { it != ChannelKind.UNKNOWN }.toSet()
@@ -152,9 +150,7 @@ class ConversationViewModel(
             )
         }
 
-        if (shouldReload) {
-            filterFlow.value = normalized
-        }
+        if (shouldReload) filterFlow.value = normalized
     }
 
     private fun observeWebSocket() {
@@ -171,44 +167,58 @@ class ConversationViewModel(
         when (event) {
             is ConversationWsEvent.Connected -> Unit
             is ConversationWsEvent.NewMessage -> {
-                val tabFilter = tabMapper.toFilter(state.value.selectedTab)
+                val isCurrentlyOpen = observeActiveChatUseCase().value == event.conversationId
+                val effectiveIsRead = event.isRead || isCurrentlyOpen
                 val existsInList = state.value.conversations.any { it.id == event.conversationId }
 
                 if (!existsInList) {
-                    updateState {
-                        val newUnreadCount = if (!event.isRead) totalUnreadCount + 1 else totalUnreadCount
-                        copy(
-                            totalUnreadCount = newUnreadCount,
-                            tabs = tabMapper.map(selectedTab, newUnreadCount)
-                        )
-                    }
-                    loadFirstPage(searchQueryFlow.value)
+                    handleNewConversationMessage(effectiveIsRead)
                 } else {
-                    updateState {
-                        val updatedConversations = wsEventMapper.applyNewMessage(
-                            conversations, event, tabFilter
-                        )
-                        val previousIsRead = conversations
-                            .firstOrNull { it.id == event.conversationId }?.isRead
-                        val newUnreadCount = when {
-                            selectedTab == ConversationTab.ALL ->
-                                updatedConversations.count { !it.isRead }
-                            previousIsRead == false && event.isRead ->
-                                (totalUnreadCount - 1).coerceAtLeast(0)
-                            previousIsRead == true && !event.isRead ->
-                                totalUnreadCount + 1
-                            else -> totalUnreadCount
-                        }
-                        copy(
-                            conversations = updatedConversations,
-                            totalUnreadCount = newUnreadCount,
-                            tabs = tabMapper.map(selectedTab, newUnreadCount)
-                        )
-                    }
+                    handleExistingConversationMessage(event, effectiveIsRead)
                 }
             }
             is ConversationWsEvent.Reconnecting -> Unit
             is ConversationWsEvent.Error -> Unit
+        }
+    }
+
+    private fun handleNewConversationMessage(effectiveIsRead: Boolean) {
+        updateState {
+            val newUnreadCount = if (!effectiveIsRead) totalUnreadCount + 1
+            else totalUnreadCount
+            copy(
+                totalUnreadCount = newUnreadCount,
+                tabs = tabMapper.map(selectedTab, newUnreadCount)
+            )
+        }
+        loadFirstPage(searchQueryFlow.value)
+    }
+
+    private fun handleExistingConversationMessage(
+        event: ConversationWsEvent.NewMessage,
+        effectiveIsRead: Boolean,
+    ) {
+        val tabFilter = tabMapper.toFilter(state.value.selectedTab)
+        updateState {
+            val updatedConversations = wsEventMapper.applyNewMessage(
+                conversations, event.copy(isRead = effectiveIsRead), tabFilter
+            )
+            val previousIsRead = conversations
+                .firstOrNull { it.id == event.conversationId }?.isRead
+            val newUnreadCount = when {
+                selectedTab == ConversationTab.ALL ->
+                    updatedConversations.count { !it.isRead }
+                previousIsRead == false && effectiveIsRead ->
+                    (totalUnreadCount - 1).coerceAtLeast(0)
+                previousIsRead == true && !effectiveIsRead ->
+                    totalUnreadCount + 1
+                else -> totalUnreadCount
+            }
+            copy(
+                conversations = updatedConversations,
+                totalUnreadCount = newUnreadCount,
+                tabs = tabMapper.map(selectedTab, newUnreadCount)
+            )
         }
     }
 
@@ -276,12 +286,7 @@ class ConversationViewModel(
 
     private fun handlePaginationError(e: Throwable) {
         updateState {
-            copy(
-                pagination = pagination.copy(
-                    isLoading = false,
-                    error = e.message ?: PAGINATION_ERROR
-                )
-            )
+            copy(pagination = pagination.copy(isLoading = false, error = e.message ?: PAGINATION_ERROR))
         }
     }
 
@@ -303,17 +308,13 @@ class ConversationViewModel(
             } else {
                 totalUnreadCount
             }
-
             copy(
                 isLoading = false,
                 conversations = mapped,
                 error = null,
                 totalUnreadCount = newUnreadCount,
                 tabs = tabMapper.map(selectedTab, newUnreadCount),
-                pagination = pagination.copy(
-                    offset = mapped.size,
-                    hasMore = page.hasMore
-                ),
+                pagination = pagination.copy(offset = mapped.size, hasMore = page.hasMore),
                 availableChannels = channels
             )
         }

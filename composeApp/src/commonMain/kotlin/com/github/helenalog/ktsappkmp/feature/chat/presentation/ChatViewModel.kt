@@ -3,11 +3,10 @@ package com.github.helenalog.ktsappkmp.feature.chat.presentation
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.viewModelScope
-import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
+import com.github.helenalog.ktsappkmp.core.domain.activechat.usecase.TrackActiveChatUseCase
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
 import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.WebSocketEvent
-import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetConversationDetailUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetMessagesUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.GetScenarioBlocksUseCase
@@ -19,9 +18,11 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.StartBotUseCas
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.StopBotUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.domain.usecase.UploadAttachmentUseCase
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.BlockUiMapper
+import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ScenarioUiMapper
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ScenarioUi
+import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import io.github.vinceglb.filekit.core.PlatformFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -44,6 +45,7 @@ class ChatViewModel(
     private val avatarUiMapper: UserAvatarUiMapper,
     private val scenarioUiMapper: ScenarioUiMapper,
     private val blockUiMapper: BlockUiMapper,
+    private val trackActiveChatUseCase: TrackActiveChatUseCase,
 ) : BaseViewModel<ChatUiState, ChatUiEvent>(initialState = ChatUiState()) {
     val messageInputState = TextFieldState()
     private var wsJob: Job? = null
@@ -51,9 +53,11 @@ class ChatViewModel(
     override fun onCleared() {
         super.onCleared()
         wsJob?.cancel()
+        trackActiveChatUseCase.onClosed()
     }
 
     fun loadScreen(conversationId: Long, userId: String) {
+        trackActiveChatUseCase.onOpened(conversationId)
         viewModelScope.launch {
             updateState { copy(isLoading = true, error = null) }
             getDetailUseCase(conversationId, userId)
@@ -76,17 +80,14 @@ class ChatViewModel(
                     startWebSocket(conversationId)
                 }
                 .onFailure { e ->
-                    updateState {
-                        copy(error = e.message ?: UNKNOWN_ERROR)
-                    }
+                    updateState { copy(error = e.message ?: UNKNOWN_ERROR) }
                 }
         }
     }
 
     fun sendMessage(conversationId: Long) {
         val text = messageInputState.text.toString()
-        val attachments = state.value.pendingAttachments
-            .map { chatUiMapper.toDomain(it) }
+        val attachments = state.value.pendingAttachments.map { chatUiMapper.toDomain(it) }
 
         viewModelScope.launch {
             sendMessageUseCase(conversationId, text, attachments)
@@ -177,24 +178,16 @@ class ChatViewModel(
     fun startBot(conversationId: Long) {
         viewModelScope.launch {
             startBotUseCase(conversationId, state.value.userId)
-                .onSuccess {
-                    updateState { copy(isBotActive = true, botActionState = BotActionState.Idle) }
-                }
-                .onFailure { e ->
-                    updateState { copy(error = e.message ?: UNKNOWN_ERROR) }
-                }
+                .onSuccess { updateState { copy(isBotActive = true, botActionState = BotActionState.Idle) } }
+                .onFailure { e -> updateState { copy(error = e.message ?: UNKNOWN_ERROR) } }
         }
     }
 
     fun stopBot(conversationId: Long) {
         viewModelScope.launch {
             stopBotUseCase(conversationId, state.value.userId)
-                .onSuccess {
-                    updateState { copy(isBotActive = false, botActionState = BotActionState.Idle) }
-                }
-                .onFailure { e ->
-                    updateState { copy(error = e.message ?: UNKNOWN_ERROR) }
-                }
+                .onSuccess { updateState { copy(isBotActive = false, botActionState = BotActionState.Idle) } }
+                .onFailure { e -> updateState { copy(error = e.message ?: UNKNOWN_ERROR) } }
         }
     }
 
@@ -227,20 +220,12 @@ class ChatViewModel(
 
     fun runScenario(conversationId: Long, blockId: String) = launchBotAction(
         action = { runScenarioUseCase(conversationId, blockId) },
-        onSuccess = {
-            updateState { copy(isBotActive = true, botActionState = BotActionState.Idle) }
-        }
+        onSuccess = { updateState { copy(isBotActive = true, botActionState = BotActionState.Idle) } }
     )
 
-    fun dismissBotAction() {
-        updateState { copy(botActionState = BotActionState.Idle) }
-    }
+    fun dismissBotAction() = updateState { copy(botActionState = BotActionState.Idle) }
 
-    fun backToScenarioList() {
-        updateState {
-            copy(botActionState = BotActionState.ScenarioPickerOpen(scenarios))
-        }
-    }
+    fun backToScenarioList() = updateState { copy(botActionState = BotActionState.ScenarioPickerOpen(scenarios)) }
 
     fun onSearchQueryChanged(query: String) {
         val currentState = state.value.botActionState
@@ -285,9 +270,7 @@ class ChatViewModel(
                         isLoading = false,
                         pagination = pagination.copy(
                             hasMore = messages.size >= PAGE_SIZE,
-                            cursor = items
-                                .filterIsInstance<ChatListItemUi.Message>()
-                                .lastOrNull()?.data?.id
+                            cursor = items.filterIsInstance<ChatListItemUi.Message>().lastOrNull()?.data?.id
                         )
                     )
                 }
@@ -299,9 +282,7 @@ class ChatViewModel(
     private fun startWebSocket(conversationId: Long) {
         wsJob?.cancel()
         wsJob = viewModelScope.launch {
-            observeMessagesUseCase(conversationId).collect { event ->
-                handleWsEvent(event)
-            }
+            observeMessagesUseCase(conversationId).collect { event -> handleWsEvent(event) }
         }
     }
 
@@ -316,10 +297,7 @@ class ChatViewModel(
 
     private fun appendMessage(message: ChatMessage) {
         val currentState = state.value
-        if (currentState.messages.any { messageItem ->
-                messageItem is ChatListItemUi.Message && messageItem.data.id == message.id
-            }
-        ) return
+        if (currentState.messages.any { it is ChatListItemUi.Message && it.data.id == message.id }) return
         val newItem = ChatListItemUi.Message(
             data = chatUiMapper.mapMessage(
                 domain = message,
@@ -333,21 +311,15 @@ class ChatViewModel(
     }
 
     private fun <T> List<T>.filterByQuery(query: String, selector: (T) -> String): List<T> =
-        if (query.isBlank()) this
-        else filter { selector(it).contains(query, ignoreCase = true) }
+        if (query.isBlank()) this else filter { selector(it).contains(query, ignoreCase = true) }
 
-    private fun <T> launchBotAction(
-        action: suspend () -> Result<T>,
-        onSuccess: (T) -> Unit,
-    ) {
+    private fun <T> launchBotAction(action: suspend () -> Result<T>, onSuccess: (T) -> Unit) {
         viewModelScope.launch {
             updateState { copy(botActionState = BotActionState.Loading) }
             action()
                 .onSuccess(onSuccess)
                 .onFailure { e ->
-                    updateState {
-                        copy(botActionState = BotActionState.Error(e.message ?: UNKNOWN_ERROR))
-                    }
+                    updateState { copy(botActionState = BotActionState.Error(e.message ?: UNKNOWN_ERROR)) }
                 }
         }
     }

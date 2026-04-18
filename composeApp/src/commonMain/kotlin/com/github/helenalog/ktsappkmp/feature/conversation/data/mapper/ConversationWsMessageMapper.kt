@@ -2,6 +2,7 @@ package com.github.helenalog.ktsappkmp.feature.conversation.data.mapper
 
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.WsNewMessagePayloadDto
+import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.MessageKindDto
 import com.github.helenalog.ktsappkmp.feature.conversation.domain.repository.ConversationWsEvent
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
@@ -18,6 +19,7 @@ class ConversationWsMessageMapper(
             val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
             dateTimeParser.formatConversationTime(dateTimeParser.parse(dateCreated), today)
         }.getOrDefault("")
+        val isRead = messageDto.isRead || messageDto.kind == MessageKindDto.BOT
 
         return ConversationWsEvent.NewMessage(
             conversationId = conversationId,
@@ -26,7 +28,7 @@ class ConversationWsMessageMapper(
             lastMessageAttachmentCount = messageDto.attachments.size,
             formattedTime = formattedTime,
             dateUpdated = dateCreated,
-            isRead = messageDto.isRead
+            isRead = isRead
         )
     }
 }

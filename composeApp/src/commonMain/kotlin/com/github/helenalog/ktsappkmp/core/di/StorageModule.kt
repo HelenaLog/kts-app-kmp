@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.core.di
 
+import com.github.helenalog.ktsappkmp.core.data.activechat.repository.ActiveChatRepositoryImpl
 import com.github.helenalog.ktsappkmp.core.data.storage.BannerStorage
 import com.github.helenalog.ktsappkmp.core.data.storage.DataStoreBannerStorage
 import com.github.helenalog.ktsappkmp.core.data.storage.ActiveWorkspaceStore
@@ -9,6 +10,7 @@ import com.github.helenalog.ktsappkmp.core.data.storage.DataStoreSettingsStorage
 import com.github.helenalog.ktsappkmp.core.data.storage.ProfileStorage
 import com.github.helenalog.ktsappkmp.core.data.storage.SessionManager
 import com.github.helenalog.ktsappkmp.core.data.storage.SettingsStorage
+import com.github.helenalog.ktsappkmp.core.domain.activechat.repository.ActiveChatRepository
 import org.koin.dsl.module
 
 val storageModule = module {
@@ -16,6 +18,7 @@ val storageModule = module {
     single<ProfileStorage> { DataStoreProfileStorage(get()) }
     single<BannerStorage> { DataStoreBannerStorage(get(), get()) }
     single<ActiveWorkspaceStore> { DataStoreActiveWorkspaceStore(dataStore = get()) }
+    single<ActiveChatRepository> { ActiveChatRepositoryImpl() }
     single {
         SessionManager(
             sessionStorage = get(),

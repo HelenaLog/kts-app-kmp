@@ -1,6 +1,7 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.di
 
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
+import com.github.helenalog.ktsappkmp.core.domain.activechat.usecase.ObserveActiveChatUseCase
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParserImpl
 import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.ConversationWsEventMapper
@@ -32,6 +33,7 @@ val conversationModule = module {
     factoryOf(::ConversationRepositoryImpl) bind ConversationRepository::class
     factoryOf(::GetConversationsUseCase)
     factoryOf(::ObserveConversationUpdatesUseCase)
+    factoryOf(::ObserveActiveChatUseCase)
     factoryOf(::UserAvatarUiMapper)
     factoryOf(::ConversationUiMapper)
     factoryOf(::ConversationWsEventMapper)

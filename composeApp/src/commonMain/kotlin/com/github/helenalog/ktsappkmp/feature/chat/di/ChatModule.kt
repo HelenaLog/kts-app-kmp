@@ -2,6 +2,7 @@ package com.github.helenalog.ktsappkmp.feature.chat.di
 
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.data.remote.network.NetworkQualifier
+import com.github.helenalog.ktsappkmp.core.domain.activechat.usecase.TrackActiveChatUseCase
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParserImpl
 import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.WsMessageMapper
@@ -65,6 +66,7 @@ val chatModule = module {
     factoryOf(::GetScenariosUseCase)
     factoryOf(::RunScenarioUseCase)
     factoryOf(::GetScenarioBlocksUseCase)
+    factoryOf(::TrackActiveChatUseCase)
 
     factoryOf(::UserAvatarUiMapper)
     factoryOf(::ChatUiMapper)
