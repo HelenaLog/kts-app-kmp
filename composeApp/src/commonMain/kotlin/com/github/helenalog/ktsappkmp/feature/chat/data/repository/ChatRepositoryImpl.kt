@@ -11,7 +11,7 @@ import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachmentType
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
 import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.ChatRepository
-
+import io.github.vinceglb.filekit.core.PlatformFile
 
 class ChatRepositoryImpl(
     private val api: ChatApi,
@@ -45,11 +45,9 @@ class ChatRepositoryImpl(
     }.mapToApiError()
 
     override suspend fun uploadAttachment(
-        fileName: String,
-        bytes: ByteArray,
-        mimeType: String
+        file: PlatformFile
     ): Result<ChatAttachment> = suspendRunCatching {
-        api.uploadAttachment(fileName, bytes).data.toDomain()
+        api.uploadAttachment(file).data.toDomain()
     }.mapToApiError()
 
     private fun ChatAttachment.toDto() = SendMessageAttachmentDto(

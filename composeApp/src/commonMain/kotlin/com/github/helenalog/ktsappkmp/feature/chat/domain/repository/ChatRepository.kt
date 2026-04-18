@@ -2,6 +2,7 @@ package com.github.helenalog.ktsappkmp.feature.chat.domain.repository
 
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatAttachment
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
+import io.github.vinceglb.filekit.core.PlatformFile
 
 interface ChatRepository {
     suspend fun getMessages(
@@ -19,9 +20,7 @@ interface ChatRepository {
     ): Result<Unit>
 
     suspend fun uploadAttachment(
-        fileName: String,
-        bytes: ByteArray,
-        mimeType: String,
+        file: PlatformFile
     ): Result<ChatAttachment>
 
     companion object {

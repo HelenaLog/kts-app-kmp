@@ -1,10 +1,12 @@
 package com.github.helenalog.ktsappkmp.feature.chat.data.remote.api
 
 import com.github.helenalog.ktsappkmp.core.data.remote.response.ApiResponse
+import com.github.helenalog.ktsappkmp.core.utils.toSource
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.dto.AttachmentDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.request.SendMessageRequestDto
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.response.MessageResponseDto
 import com.github.helenalog.ktsappkmp.feature.conversation.data.remote.dto.ConversationDto
+import io.github.vinceglb.filekit.core.PlatformFile
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -15,8 +17,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
-import io.ktor.utils.io.core.buildPacket
-import io.ktor.utils.io.core.writeFully
 
 class ChatApi(private val client: HttpClient) {
 
@@ -50,10 +50,9 @@ class ChatApi(private val client: HttpClient) {
         }.body()
 
     suspend fun uploadAttachment(
-        fileName: String,
-        bytes: ByteArray,
-    ): ApiResponse<AttachmentDto> {
-        val response = client.post("api/attachments/upload") {
+        file: PlatformFile,
+    ): ApiResponse<AttachmentDto> =
+        client.post("api/attachments/upload") {
             setBody(
                 MultiPartFormDataContent(formData {
                     appendInput(
@@ -61,16 +60,13 @@ class ChatApi(private val client: HttpClient) {
                         headers = Headers.build {
                             append(
                                 name = HttpHeaders.ContentDisposition,
-                                value = "filename=\"$fileName\""
+                                value = "filename=\"${file.name}\""
                             )
                         },
-                        size = bytes.size.toLong(),
-                    ) { buildPacket { writeFully(bytes) } }
+                    ) { file.toSource() }
                 })
             )
-        }
-        return response.body()
-    }
+        }.body()
 
     private companion object {
         const val DEFAULT_MESSAGES_LIMIT = 20

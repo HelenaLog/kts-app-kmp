@@ -5,7 +5,6 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.viewModelScope
 import com.github.helenalog.ktsappkmp.feature.conversation.presentation.mapper.UserAvatarUiMapper
 import com.github.helenalog.ktsappkmp.core.presentation.common.BaseViewModel
-import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ChatMessage
 import com.github.helenalog.ktsappkmp.feature.chat.domain.repository.WebSocketEvent
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ChatUiMapper
@@ -24,7 +23,6 @@ import com.github.helenalog.ktsappkmp.feature.chat.presentation.mapper.ScenarioU
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ChatListItemUi
 import com.github.helenalog.ktsappkmp.feature.chat.presentation.model.ScenarioUi
 import io.github.vinceglb.filekit.core.PlatformFile
-import io.github.vinceglb.filekit.core.extension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -105,18 +103,19 @@ class ChatViewModel(
     fun onFileSelected(file: PlatformFile) {
         viewModelScope.launch {
             updateState { copy(attachmentState = AttachmentState.Loading) }
-            val result = withContext(Dispatchers.IO) {
-                suspendRunCatching {
-                    val bytes = file.readBytes()
-                    if (bytes.isEmpty()) throw IllegalStateException(EMPTY_FILE_ERROR)
-                    bytes
+            withContext(Dispatchers.IO) {
+                uploadAttachmentUseCase(file)
+            }.onSuccess { attachment ->
+                val uiModel = chatUiMapper.mapAttachment(attachment)
+                updateState {
+                    copy(
+                        attachmentState = AttachmentState.Idle,
+                        pendingAttachments = pendingAttachments + uiModel
+                    )
                 }
-            }
-            result.onSuccess { bytes ->
-                uploadAttachment(bytes, file.name, file.extension)
             }.onFailure { e ->
                 updateState {
-                    copy(attachmentState = AttachmentState.Error(e.message ?: FILE_READ_ERROR))
+                    copy(attachmentState = AttachmentState.Error(e.message ?: UNKNOWN_ERROR))
                 }
             }
         }
@@ -266,27 +265,6 @@ class ChatViewModel(
         }
     }
 
-    private fun uploadAttachment(bytes: ByteArray, fileName: String, mimeType: String) {
-        viewModelScope.launch {
-            updateState { copy(attachmentState = AttachmentState.Loading) }
-            uploadAttachmentUseCase(fileName, bytes, mimeType)
-                .onSuccess { attachment ->
-                    val uiModel = chatUiMapper.mapAttachment(attachment)
-                    updateState {
-                        copy(
-                            attachmentState = AttachmentState.Idle,
-                            pendingAttachments = pendingAttachments + uiModel
-                        )
-                    }
-                }
-                .onFailure { e ->
-                    updateState {
-                        copy(attachmentState = AttachmentState.Error(e.message ?: UNKNOWN_ERROR))
-                    }
-                }
-        }
-    }
-
     private suspend fun loadMessages(conversationId: Long) {
         val state = state.value
         updateState { copy(isLoading = true, error = null) }
@@ -376,8 +354,6 @@ class ChatViewModel(
 
     private companion object {
         const val UNKNOWN_ERROR = "Неизвестная ошибка"
-        const val EMPTY_FILE_ERROR = "Файл пуст"
-        const val FILE_READ_ERROR = "Не удалось прочитать файл"
         const val WS_ERROR = "Ошибка соединения"
         const val PAGE_SIZE = 20
     }
