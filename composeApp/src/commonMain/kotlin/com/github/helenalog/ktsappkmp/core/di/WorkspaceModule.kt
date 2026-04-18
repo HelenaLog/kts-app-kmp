@@ -1,6 +1,6 @@
 package com.github.helenalog.ktsappkmp.core.di
 
-import com.github.helenalog.ktsappkmp.core.data.workspace.repository.WorkspaceBootstrapper
+import com.github.helenalog.ktsappkmp.core.domain.workspace.usecase.WorkspaceBootstrapper
 import com.github.helenalog.ktsappkmp.core.data.workspace.repository.WorkspaceRepositoryImpl
 import com.github.helenalog.ktsappkmp.core.domain.workspace.repository.WorkspaceRepository
 import com.github.helenalog.ktsappkmp.core.domain.workspace.usecase.ObserveActiveWorkspaceUseCase

@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.chat.data.repository
 
+import com.github.helenalog.ktsappkmp.core.data.remote.network.mapToApiError
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.api.BotActionApi
@@ -18,17 +19,17 @@ class BotActionRepositoryImpl(
         suspendRunCatching {
             api.startBot(BotActionRequestDto(conversationId = conversationId, userId = userId))
             Unit
-        }
+        }.mapToApiError()
 
     override suspend fun stopBot(conversationId: Long, userId: String): Result<Unit> =
         suspendRunCatching {
             api.stopBot(BotActionRequestDto(conversationId = conversationId, userId = userId))
             Unit
-        }
+        }.mapToApiError()
 
     override suspend fun getScenarios(): Result<List<Scenario>> = suspendRunCatching {
         api.getScenarios().data.scenarios.map { it.toDomain() }
-    }
+    }.mapToApiError()
 
     override suspend fun getBlocks(scenarioId: String): Result<List<ScenarioBlock>> =
         suspendRunCatching {
@@ -37,18 +38,19 @@ class BotActionRepositoryImpl(
             api.getBlocks(scenarioId).data.blocks
                 .filter { it.kind != "first_message" }
                 .map { it.toDomain(json, specialVars) }
-        }
+        }.mapToApiError()
 
     override suspend fun runScenario(
         conversationId: Long,
-        blockId: String,
-    ): Result<Unit> = suspendRunCatching {
-        api.startBot(
-            BotActionRequestDto(
-                conversationId = conversationId,
-                blockId = blockId,
+        blockId: String
+    ): Result<Unit> =
+        suspendRunCatching {
+            api.startBot(
+                BotActionRequestDto(
+                    conversationId = conversationId,
+                    blockId = blockId
+                )
             )
-        )
-        Unit
-    }
+            Unit
+        }.mapToApiError()
 }

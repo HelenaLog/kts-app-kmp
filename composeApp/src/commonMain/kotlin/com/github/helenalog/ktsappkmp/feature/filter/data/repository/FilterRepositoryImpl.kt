@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.filter.data.repository
 
+import com.github.helenalog.ktsappkmp.core.data.remote.network.mapToApiError
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.filter.data.mapper.toDomain
 import com.github.helenalog.ktsappkmp.feature.filter.data.remote.api.UserListApi
@@ -12,5 +13,5 @@ class FilterRepositoryImpl(
 
     override suspend fun getUserList(): Result<List<UserList>> = suspendRunCatching {
         api.getUserLists().data.lists.map { it.toDomain() }
-    }
+    }.mapToApiError()
 }

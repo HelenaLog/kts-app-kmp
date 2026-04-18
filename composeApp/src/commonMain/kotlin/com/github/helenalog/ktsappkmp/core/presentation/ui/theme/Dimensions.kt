@@ -73,7 +73,7 @@ object Dimensions {
     val loaderStroke = 2.dp
 
     // Captcha
-    val captchaHeight = 125.dp
+    val captchaHeight = 120.dp
 
     // Onboarding
     val onboardingImageHeight = 240.dp

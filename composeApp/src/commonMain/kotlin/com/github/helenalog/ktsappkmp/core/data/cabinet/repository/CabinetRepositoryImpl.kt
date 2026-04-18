@@ -4,6 +4,7 @@ import com.github.helenalog.ktsappkmp.core.data.cabinet.local.dao.CabinetDao
 import com.github.helenalog.ktsappkmp.core.data.cabinet.mapper.toDomain
 import com.github.helenalog.ktsappkmp.core.data.cabinet.mapper.toEntity
 import com.github.helenalog.ktsappkmp.core.data.cabinet.remote.api.CabinetApi
+import com.github.helenalog.ktsappkmp.core.data.remote.network.asApiException
 import com.github.helenalog.ktsappkmp.core.domain.cabinet.model.Cabinet
 import com.github.helenalog.ktsappkmp.core.domain.cabinet.repository.CabinetRepository
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
@@ -32,7 +33,7 @@ class CabinetRepositoryImpl(
     private suspend fun fetchCachedCabinets(e: Throwable): Result<List<Cabinet>> {
         if (e is CancellationException) throw e
         val cached = cabinetDao.getAll()
-        if (cached.isEmpty()) return Result.failure(e)
+        if (cached.isEmpty()) return Result.failure(e.asApiException())
         return Result.success(cached.map { it.toDomain() })
     }
 }

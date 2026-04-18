@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.chat.data.repository
 
+import com.github.helenalog.ktsappkmp.core.data.remote.network.mapToApiError
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.chat.data.remote.api.ChatApi
 import com.github.helenalog.ktsappkmp.feature.chat.domain.model.ConversationDetail
@@ -15,5 +16,5 @@ class ConversationDetailRepositoryImpl(
         userId: String,
     ): Result<ConversationDetail> = suspendRunCatching {
         api.getConversation(conversationId, userId).data.toDetail()
-    }
+    }.mapToApiError()
 }

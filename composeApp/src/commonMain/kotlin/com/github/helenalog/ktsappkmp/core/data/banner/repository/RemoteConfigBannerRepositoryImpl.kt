@@ -1,6 +1,6 @@
-package com.github.helenalog.ktsappkmp.core.data.repository
+package com.github.helenalog.ktsappkmp.core.data.banner.repository
 
-import com.github.helenalog.ktsappkmp.core.data.mapper.toDomain
+import com.github.helenalog.ktsappkmp.core.data.banner.mapper.toDomain
 import com.github.helenalog.ktsappkmp.core.data.remote.dto.BannerDto
 import com.github.helenalog.ktsappkmp.core.data.remote.network.RemoteConfigProvider
 import com.github.helenalog.ktsappkmp.core.data.storage.BannerStorage

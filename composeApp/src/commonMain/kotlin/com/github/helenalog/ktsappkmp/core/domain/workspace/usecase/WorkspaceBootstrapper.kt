@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.core.data.workspace.repository
+package com.github.helenalog.ktsappkmp.core.domain.workspace.usecase
 
 import com.github.helenalog.ktsappkmp.core.data.storage.ActiveWorkspaceStore
 import com.github.helenalog.ktsappkmp.core.domain.cabinet.repository.CabinetRepository

@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 
@@ -42,9 +41,7 @@ actual fun CaptchaView(
         contentAlignment = Alignment.Center
     ) {
         AndroidView(
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(if (isReady) 1f else 0f),
+            modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 WebView(ctx).apply {
                     settings.javaScriptEnabled = true

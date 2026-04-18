@@ -4,6 +4,7 @@ import com.github.helenalog.ktsappkmp.core.data.project.local.dao.ProjectDao
 import com.github.helenalog.ktsappkmp.core.data.project.mapper.toDomain
 import com.github.helenalog.ktsappkmp.core.data.project.mapper.toEntity
 import com.github.helenalog.ktsappkmp.core.data.project.remote.api.ProjectApi
+import com.github.helenalog.ktsappkmp.core.data.remote.network.asApiException
 import com.github.helenalog.ktsappkmp.core.domain.project.model.Project
 import com.github.helenalog.ktsappkmp.core.domain.project.repository.ProjectRepository
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
@@ -32,7 +33,7 @@ class ProjectRepositoryImpl(
     private suspend fun fetchCachedProject(e: Throwable): Result<List<Project>> {
         if (e is CancellationException) throw e
         val cached = projectDao.getAll()
-        if (cached.isEmpty()) return Result.failure(e)
+        if (cached.isEmpty()) return Result.failure(e.asApiException())
         return Result.success(cached.map { it.toDomain() })
     }
 }

@@ -1,4 +1,4 @@
-package com.github.helenalog.ktsappkmp.core.data.mapper
+package com.github.helenalog.ktsappkmp.core.data.banner.mapper
 
 import com.github.helenalog.ktsappkmp.core.data.remote.dto.BannerDto
 import com.github.helenalog.ktsappkmp.core.domain.banner.model.AppBanner

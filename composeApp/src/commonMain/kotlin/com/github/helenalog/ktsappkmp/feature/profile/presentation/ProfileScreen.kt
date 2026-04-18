@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +26,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.ErrorContent
 import com.github.helenalog.ktsappkmp.core.presentation.ui.components.UserAvatar
@@ -35,8 +35,10 @@ import com.github.helenalog.ktsappkmp.core.presentation.ui.theme.Dimensions
 import com.github.helenalog.ktsappkmp.core.presentation.ui.model.UserAvatarUi
 import com.github.helenalog.ktsappkmp.feature.profile.presentation.model.ProfileUi
 import ktsappkmp.composeapp.generated.resources.Res
+import ktsappkmp.composeapp.generated.resources.chat_ic_user_info
 import ktsappkmp.composeapp.generated.resources.profile_logout
 import ktsappkmp.composeapp.generated.resources.profile_settings
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -113,7 +115,7 @@ private fun ProfileContent(
         HorizontalDivider()
         Spacer(modifier = Modifier.height(Dimensions.spacingSmall))
         ProfileSettings(
-            icon = Icons.Outlined.Person,
+            icon = painterResource(Res.drawable.chat_ic_user_info),
             label = stringResource(Res.string.profile_settings),
             onClick = onSettingsClick
         )
@@ -129,23 +131,29 @@ private fun ProfileHeader(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = Dimensions.spacingSmall),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingMedium),
+        horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingMedium)
     ) {
         UserAvatar(avatar = avatar)
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.spacingExtraSmall)
+        ) {
             Text(
                 text = name,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onBackground,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             if (email != null) {
                 Text(
                     text = email,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.tertiary
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
@@ -162,7 +170,7 @@ private fun ProfileHeader(
 @Composable
 private fun ProfileSettings(
     label: String,
-    icon: ImageVector,
+    icon: Painter,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -170,12 +178,12 @@ private fun ProfileSettings(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(Dimensions.spacingMedium),
+            .padding(vertical = Dimensions.spacingMedium),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Dimensions.spacingMedium)
     ) {
         Icon(
-            imageVector = icon,
+            painter = icon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.secondary
         )

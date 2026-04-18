@@ -1,7 +1,7 @@
 package com.github.helenalog.ktsappkmp.core.di
 
 import com.github.helenalog.ktsappkmp.core.data.remote.network.RemoteConfigProvider
-import com.github.helenalog.ktsappkmp.core.data.repository.RemoteConfigBannerRepositoryImpl
+import com.github.helenalog.ktsappkmp.core.data.banner.repository.RemoteConfigBannerRepositoryImpl
 import com.github.helenalog.ktsappkmp.core.domain.banner.repository.RemoteConfigBannerRepository
 import com.github.helenalog.ktsappkmp.core.domain.banner.usecase.DismissBannerUseCase
 import com.github.helenalog.ktsappkmp.core.domain.banner.usecase.GetBannersUseCase

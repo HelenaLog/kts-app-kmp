@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.profile.data.repository
 
+import com.github.helenalog.ktsappkmp.core.data.remote.network.asApiException
 import com.github.helenalog.ktsappkmp.core.data.storage.ProfileStorage
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.profile.data.mapper.toDomain
@@ -30,7 +31,7 @@ class ProfileRepositoryImpl(
 
     private suspend fun fetchCachedProfile(e: Throwable): Result<Profile> {
         if (e is CancellationException) throw e
-        val cached = profileStorage.getProfile() ?: return Result.failure(e)
+        val cached = profileStorage.getProfile() ?: return Result.failure(e.asApiException())
         return Result.success(cached)
     }
 }

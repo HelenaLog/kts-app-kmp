@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.conversation.data.repository
 
+import com.github.helenalog.ktsappkmp.core.data.remote.network.asApiException
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.feature.conversation.data.local.dao.ConversationDao
 import com.github.helenalog.ktsappkmp.feature.conversation.data.mapper.toDomain
@@ -85,7 +86,7 @@ class ConversationRepositoryImpl(
                     list.filter { ChannelKind.valueOf(it.channelKind) in filter.selectedChannelKinds }
                 } else list
             }
-        if (cached.isEmpty()) return Result.failure(e)
+        if (cached.isEmpty()) return Result.failure(e.asApiException())
         val pagedCached = cached.drop(offset).take(limit)
         return Result.success(
             ConversationsPage(

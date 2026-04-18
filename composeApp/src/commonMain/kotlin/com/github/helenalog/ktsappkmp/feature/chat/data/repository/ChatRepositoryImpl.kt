@@ -1,5 +1,6 @@
 package com.github.helenalog.ktsappkmp.feature.chat.data.repository
 
+import com.github.helenalog.ktsappkmp.core.data.remote.network.mapToApiError
 import com.github.helenalog.ktsappkmp.core.utils.DateTimeParser
 import com.github.helenalog.ktsappkmp.core.utils.suspendRunCatching
 import com.github.helenalog.ktsappkmp.feature.chat.data.mapper.toDomain
@@ -26,7 +27,7 @@ class ChatRepositoryImpl(
     ): Result<List<ChatMessage>> = suspendRunCatching {
         val response = api.getMessages(conversationId, userId, channelId, limit, fromId)
         response.data.messages.map { it.toDomain(dateTimeParser) }
-    }
+    }.mapToApiError()
 
     override suspend fun sendMessage(
         conversationId: Long,
@@ -41,7 +42,7 @@ class ChatRepositoryImpl(
             )
         )
         Unit
-    }
+    }.mapToApiError()
 
     override suspend fun uploadAttachment(
         fileName: String,
@@ -49,7 +50,7 @@ class ChatRepositoryImpl(
         mimeType: String
     ): Result<ChatAttachment> = suspendRunCatching {
         api.uploadAttachment(fileName, bytes).data.toDomain()
-    }
+    }.mapToApiError()
 
     private fun ChatAttachment.toDto() = SendMessageAttachmentDto(
         id = id,
