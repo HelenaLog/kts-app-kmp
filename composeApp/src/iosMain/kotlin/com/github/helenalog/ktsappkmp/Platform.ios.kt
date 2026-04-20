@@ -1,9 +1,8 @@
 package com.github.helenalog.ktsappkmp
 
-import platform.UIKit.UIDevice
-
-class IOSPlatform: Platform {
-    override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+@OptIn(kotlin.experimental.ExperimentalNativeApi::class)
+class IOSPlatform : Platform {
+    override val name: String = "iOS"
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
